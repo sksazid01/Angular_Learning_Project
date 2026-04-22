@@ -1,15 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ɵsetInjectorProfilerContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HousingService } from '../housing.service';
 import { HousingLocationComponent } from '../housing-location/housing-location.component';
 import { HousingLocation } from '../housinglocation';
+import { DetailsComponent } from '../details/details.component'
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
     CommonModule,
-    HousingLocationComponent
+    HousingLocationComponent,
+    DetailsComponent
   ],
   template: `
     <section>
@@ -17,6 +19,10 @@ import { HousingLocation } from '../housinglocation';
         <input type="text" placeholder="Filter by city">
         <button class="primary" type="button">Search</button>
       </form>
+    </section>
+
+    <section>
+        <app-details> </app-details>
     </section>
 
 
