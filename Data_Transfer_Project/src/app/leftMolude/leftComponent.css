@@ -1,0 +1,18 @@
+.left-box {
+  min-height: 180px;
+  padding: 24px;
+  border-radius: 8px;
+  background: #d8f3dc;
+  color: #1b4332;
+  box-shadow: 0 10px 24px rgba(27, 67, 50, 0.12);
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 28px;
+}
+
+p {
+  margin: 0;
+  font-size: 16px;
+}
