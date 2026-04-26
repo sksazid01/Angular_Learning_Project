@@ -1,9 +1,8 @@
 import { Component, inject, Input } from '@angular/core';
-import { RightService } from '../rightModule/rightService';
+import { RightService } from '../rightComponent/rightService';
 
 @Component({
   selector: 'app-left',
-  standalone: true,
   template: `
     <div class="left-box">
       <h2>Left Box</h2>

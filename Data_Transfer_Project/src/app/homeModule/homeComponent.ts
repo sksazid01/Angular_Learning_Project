@@ -1,22 +1,20 @@
 import { Component, inject } from '@angular/core';
-import { LeftComponent } from '../leftMolude/leftComponent';
-import { RightComponent } from '../rightModule/rightComponent';
-import { RightService } from '../rightModule/rightService';
+import { RightService } from '../rightComponent/rightService';
 
 @Component({
   selector: 'app-home',
-  standalone: true,
-  imports: [LeftComponent, RightComponent],
   template: `
     <section class="home-box">
       <h1>Home Component</h1>
       <p>Home Count: {{ homeCount }}</p>
       <button (click)="increaseHomeCount()">Increase Home Count</button>
       <p>Right Value Received In Home: {{ rightValueFromChild }}</p>
+      <p>Last Value Emitted By Right (Child -> Parent): {{ lastRightEventValue }}</p>
       <div class="child-boxes">
         <app-left [parentHomeCount]="homeCount"></app-left>
         <app-right (rightCountChange)="onRightCountChange($event)"></app-right>
       </div>
+      <app-round></app-round>
     </section>
   `,
   styleUrl: './homeComponent.css'
@@ -25,6 +23,7 @@ export class HomeComponent {
   private readonly rightService = inject(RightService);
 
   homeCount = 0;
+  lastRightEventValue = 0;
 
   increaseHomeCount() {
     this.homeCount += 1;
@@ -35,6 +34,7 @@ export class HomeComponent {
   }
 
   onRightCountChange(value: number) {
-    this.rightService.rightButtonClickCount = value;
+    this.lastRightEventValue = value;
+    this.rightService.setCount(value);
   }
 }

@@ -1,16 +1,10 @@
 import { Component } from '@angular/core';
-import { HomeComponent } from './homeModule/homeComponent';
-import { LeftComponent } from './leftMolude/leftComponent';
-import { RightComponent } from './rightModule/rightComponent';
+import { HomeModule } from './homeModule/home.module';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [
-    HomeComponent, 
-    LeftComponent, 
-    RightComponent
-  ],
+  imports: [HomeModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

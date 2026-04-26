@@ -3,7 +3,6 @@ import { RightService } from './rightService';
 
 @Component({
     selector: 'app-right',
-    standalone: true,
     template: `
     <div class="right-box">
       <h2>Right Box</h2>
