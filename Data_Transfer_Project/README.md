@@ -1,27 +1,107 @@
-# DataTransferProject
+# Data Transfer Project (Angular)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
+This project demonstrates practical Angular data transfer patterns between parent and child components, plus shared state through a service.
 
-## Development server
+## Project Goal
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+The app shows how to:
 
-## Code scaffolding
+1. Send data from parent to child using `@Input`.
+2. Send data from child to parent using `@Output` and `EventEmitter`.
+3. Share state across sibling components using a service (`providedIn: 'root'`).
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Current Component Structure
 
-## Build
+- `AppComponent` renders `HomeComponent`.
+- `HomeComponent` is the parent container.
+- `LeftComponent` and `RightComponent` are children of `HomeComponent`.
+- `RightService` stores and updates shared right-side counter state.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Relevant files:
 
-## Running unit tests
+- `src/app/homeModule/homeComponent.ts`
+- `src/app/leftMolude/leftComponent.ts`
+- `src/app/rightModule/rightComponent.ts`
+- `src/app/rightModule/rightService.ts`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Workflow in This App
 
-## Running end-to-end tests
+### 1) Parent to Child (Home -> Left)
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+- `HomeComponent` owns `homeCount`.
+- `HomeComponent` passes it to `LeftComponent`:
+	- `<app-left [parentHomeCount]="homeCount"></app-left>`
+- `LeftComponent` receives it with:
+	- `@Input() parentHomeCount = 0;`
 
-## Further help
+Result: when Home count increases, Left immediately shows the updated parent value.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### 2) Child to Parent (Right -> Home)
+
+- `RightComponent` exposes an output:
+	- `@Output() rightCountChange = new EventEmitter<number>();`
+- When right button is clicked, it emits the latest count.
+- `HomeComponent` listens for it:
+	- `<app-right (rightCountChange)="onRightCountChange($event)"></app-right>`
+
+Result: Home receives data emitted by child component events.
+
+### 3) Shared Sibling State (Left <-> Right via Service)
+
+- `RightService` contains shared counter state (`rightButtonClickCount`).
+- Both `LeftComponent` and `RightComponent` inject the same service instance.
+- Any update from either component is visible in both places.
+
+Result: Left button can update right-side value through shared service state.
+
+## Data Transfer Theory (Short Notes)
+
+### `@Input`
+
+Use `@Input` when parent provides values to a child.
+
+- Direction: Parent -> Child
+- Best for: display/configuration values controlled by parent
+
+### `@Output` + `EventEmitter`
+
+Use `@Output` when child notifies parent about events or new values.
+
+- Direction: Child -> Parent
+- Best for: button clicks, form submit, state updates from child
+
+### Shared Service
+
+Use a service when multiple components need the same mutable state.
+
+- Direction: any component can read/write shared state
+- Best for: sibling communication and reusable business logic
+
+## Run the Project
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start development server:
+
+```bash
+npm start
+```
+
+Open:
+
+- `http://localhost:4200/`
+
+## Useful Scripts
+
+- `npm start` -> Run Angular dev server
+- `npm run build` -> Build project
+- `npm test` -> Run unit tests
+
+## Notes
+
+- This project currently keeps state simple using plain number fields in a service.
+- For larger apps, consider RxJS (`BehaviorSubject`/`signal`) for reactive shared state.
