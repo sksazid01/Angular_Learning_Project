@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 	providedIn: 'root'
 })
 export class RightService {
-	private readonly rightCountSubject = new BehaviorSubject<number>(0);
+	public readonly rightCountSubject = new BehaviorSubject<number>(0);
 
 	readonly rightButtonClickCount$ = this.rightCountSubject.asObservable();
 
