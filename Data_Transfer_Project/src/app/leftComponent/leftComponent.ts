@@ -1,6 +1,5 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { RightService } from '../rightComponent/rightService';
-import { LeftService } from './leftService';
 
 @Component({
   selector: 'app-left',
@@ -8,9 +7,8 @@ import { LeftService } from './leftService';
     <div class="left-box">
       <h2>Left Box</h2>
       <p>This is the left child component.</p>
-      <p>Home Value In Left: {{ parentHomeCount }}</p>
-      <p>Left Count Value: {{ leftCount }}</p>
-      <p>Right Component Value is: {{ rightButtonClickCount }}</p>
+      <p>Home Count From Parent: {{ parentHomeCount }}</p>
+      <p>Right Component Value is: {{ rightButtonClickCount$ | async }}</p>
       <button (click)="updateRightValue()">Update the Right Component Value</button>
     </div>
   `,
@@ -19,16 +17,9 @@ import { LeftService } from './leftService';
 export class LeftComponent {
     @Input() parentHomeCount = 0;
 
-    private readonly leftService = inject(LeftService);
     private readonly rightService = inject(RightService);
 
-    get leftCount() {
-        return this.leftService.leftCount;
-    }
-
-    get rightButtonClickCount() {
-        return this.rightService.rightButtonClickCount;
-    }
+  readonly rightButtonClickCount$ = this.rightService.rightButtonClickCount$;
 
     updateRightValue() {
         this.rightService.increaseCount();

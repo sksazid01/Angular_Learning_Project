@@ -8,7 +8,7 @@ import { RightService } from '../rightComponent/rightService';
       <h1>Home Component</h1>
       <p>Home Count: {{ homeCount }}</p>
       <button (click)="increaseHomeCount()">Increase Home Count</button>
-      <p>Right Value Received In Home: {{ rightValueFromChild }}</p>
+      <p>Right Value Received In Home: {{ rightValueFromChild$ | async }}</p>
       <p>Last Value Emitted By Right (Child -> Parent): {{ lastRightEventValue }}</p>
       <div class="child-boxes">
         <app-left [parentHomeCount]="homeCount"></app-left>
@@ -21,16 +21,13 @@ import { RightService } from '../rightComponent/rightService';
 })
 export class HomeComponent {
   private readonly rightService = inject(RightService);
+  readonly rightValueFromChild$ = this.rightService.rightButtonClickCount$;
 
   homeCount = 0;
   lastRightEventValue = 0;
 
   increaseHomeCount() {
     this.homeCount += 1;
-  }
-
-  get rightValueFromChild() {
-    return this.rightService.rightButtonClickCount;
   }
 
   onRightCountChange(value: number) {
