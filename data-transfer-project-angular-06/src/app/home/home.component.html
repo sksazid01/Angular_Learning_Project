@@ -1,0 +1,14 @@
+<section class="home-box">
+  <h1>Home Component</h1>
+  <p>Home Count: {{ homeCount }}</p>
+  <button (click)="increaseHomeCount()">Increase Home Count</button>
+  <p>Right Value Received In Home: {{ rightValueFromChild$ | async }}</p>
+  <p>Last Value Emitted By Right (Child -> Parent): {{ lastRightEventValue }}</p>
+
+  <div class="child-boxes">
+    <app-left [parentHomeCount]="homeCount"></app-left>
+    <app-right (rightCountChange)="onRightCountChange($event)"></app-right>
+  </div>
+
+  <app-round></app-round>
+</section>

@@ -1,0 +1,7 @@
+<div class="left-box">
+  <h2>Left Box</h2>
+  <p>This is the left child component.</p>
+  <p>Home Count From Parent: {{ parentHomeCount }}</p>
+  <p>Right Component Value is: {{ rightButtonClickCount$ | async }}</p>
+  <button (click)="updateRightValue()">Update the Right Component Value</button>
+</div>

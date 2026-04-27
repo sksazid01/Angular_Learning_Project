@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'data-transfer-project-angular';
+  title = 'Angular: Data Transfer Project';
 }
