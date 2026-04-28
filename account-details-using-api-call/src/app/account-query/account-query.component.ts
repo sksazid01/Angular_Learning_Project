@@ -6,10 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account-query.component.css']
 })
 export class AccountQueryComponent implements OnInit {
+  selectedAccountId = '';
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onSearch(id: string): void {
+    this.selectedAccountId = (id || '').trim();
   }
 
 }

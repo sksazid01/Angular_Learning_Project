@@ -1,3 +1,8 @@
-<p>
-  account-query works!
-</p>
+<div>
+  <label  for="accountId">Account ID:</label>
+  <input  type="text" id="accountId" #accountIdInput placeholder="Enter account id" />
+  <button type="button" (click)="onSearch(accountIdInput.value)">Search</button>
+</div>
+
+<app-account [accountId]="selectedAccountId"></app-account>
+

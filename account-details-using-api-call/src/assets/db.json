@@ -1,0 +1,22 @@
+{
+  "accounts": [
+    {
+      "id": "1001",
+      "name": "Alice",
+      "type": "Savings",
+      "status": "Active"
+    },
+    {
+      "id": "1002",
+      "name": "Bob",
+      "type": "Current",
+      "status": "Inactive"
+    },
+    {
+      "id": "1003",
+      "name": "Sazid",
+      "type": "Business",
+      "status": "Active"
+    }
+  ]
+}

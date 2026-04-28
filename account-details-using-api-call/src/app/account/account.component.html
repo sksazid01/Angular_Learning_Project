@@ -1,3 +1,19 @@
-<p>
-  account works!
-</p>
+<div *ngIf="!accountId">
+  Enter an account ID and click Search.
+</div>
+
+<div *ngIf="accountId && isLoading">
+  Loading account details...
+</div>
+
+<div *ngIf="accountId && errorMessage">
+  {{ errorMessage }}
+</div>
+
+<div *ngIf="accountId && accountInfo">
+  <h3>Account Details</h3>
+  <p><strong>ID:</strong> {{ accountInfo.id }}</p>
+  <p><strong>Name:</strong> {{ accountInfo.name }}</p>
+  <p><strong>Type:</strong> {{ accountInfo.type }}</p>
+  <p><strong>Status:</strong> {{ accountInfo.status }}</p>
+</div>
