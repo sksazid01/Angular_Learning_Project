@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { AccountInfo } from './account.interface';
 
@@ -8,8 +8,8 @@ import { AccountInfo } from './account.interface';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css']
 })
-export class AccountComponent implements OnChanges {
-  @Input() accountId = '';
+export class AccountComponent {
+  accountId = '';
   accountInfo: AccountInfo | null = null;
   isLoading = false;
   errorMessage = '';
@@ -18,10 +18,9 @@ export class AccountComponent implements OnChanges {
 
   constructor(private http: HttpClient) { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.accountId) {
-      this.fetchAccountInfo();
-    }
+  setAccountId(id: string): void {
+    this.accountId = (id || '').trim();
+    this.fetchAccountInfo(); // When it receives an id, it will fetch the data
   }
 
   private fetchAccountInfo(): void {
