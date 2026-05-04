@@ -31,9 +31,7 @@ export interface Upazila {
 
 export interface PostCode {
   id?: number;
-  division_id: number;
-  district_id: number;
-  upazila: string;
+  upazila_id: number;
   postOffice: string;
   postCode: string;
 }

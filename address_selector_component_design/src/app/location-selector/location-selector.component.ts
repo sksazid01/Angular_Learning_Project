@@ -38,14 +38,14 @@ export class LocationSelectorComponent implements OnInit {
   upazilaError = '';
   postCodeError = '';
 
-locationForm = this.fb.group({
-  countryId: [null as number | null, Validators.required],
-  divisionId: [{ value: null as number | null, disabled: true }, Validators.required],
-  districtId: [{ value: null as number | null, disabled: true }, Validators.required],
-  upazilaId: [{ value: null as number | null, disabled: true }, Validators.required],
-  postCode: [{ value: '', disabled: true }, Validators.required]
-});
-
+  locationForm = this.fb.group({
+    countryId: [null as number | null, Validators.required],
+    divisionId: [{ value: null as number | null, disabled: true }, Validators.required],
+    districtId: [{ value: null as number | null, disabled: true }, Validators.required],
+    upazilaId: [{ value: null as number | null, disabled: true }, Validators.required],
+    postCode: [{ value: '', disabled: true }, Validators.required]
+  });
+  
   ngOnInit(): void {
     this.loadCountries();
 
@@ -172,34 +172,21 @@ locationForm = this.fb.group({
         return;
       }
 
-      const divisionId = this.locationForm.get('divisionId')?.value;
-      const districtId = this.locationForm.get('districtId')?.value;
-
-      const selectedUpazila = this.upazilas.find(
-        upazila => upazila.id === upazilaId
-      );
-
-      if (!divisionId || !districtId || !selectedUpazila) {
-        return;
-      }
-
       this.locationForm.get('postCode')?.enable();
       this.loadingPostCodes = true;
       this.postCodeError = '';
 
-      this.locationService
-        .getPostCodesByUpazila(divisionId, districtId, selectedUpazila.name)
-        .subscribe({
-          next: postCodes => {
-            this.postCodes = postCodes;
-            this.loadingPostCodes = false;
-          },
-          error: error => {
-            console.error(error);
-            this.postCodeError = 'Could not load post offices.';
-            this.loadingPostCodes = false;
-          }
-        });
+      this.locationService.getPostCodesByUpazila(upazilaId).subscribe({
+        next: postCodes => {
+          this.postCodes = postCodes;
+          this.loadingPostCodes = false;
+        },
+        error: error => {
+          console.error(error);
+          this.postCodeError = 'Could not load post offices.';
+          this.loadingPostCodes = false;
+        }
+      });
     });
   }
 

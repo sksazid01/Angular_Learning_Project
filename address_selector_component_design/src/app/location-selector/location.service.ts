@@ -32,15 +32,8 @@ export class LocationService {
     return this.http.get<Upazila[]>(`${this.baseUrl}/upazilas`, { params });
   }
 
-  getPostCodesByUpazila(
-    divisionId: number,
-    districtId: number,
-    upazilaName: string
-  ): Observable<PostCode[]> {
-    const params = new HttpParams()
-      .set('division_id', divisionId)
-      .set('district_id', districtId)
-      .set('upazila', upazilaName);
+  getPostCodesByUpazila(upazilaId: number): Observable<PostCode[]> {
+    const params = new HttpParams().set('upazila_id', String(upazilaId));
 
     return this.http.get<PostCode[]>(`${this.baseUrl}/postcodes`, { params });
   }
