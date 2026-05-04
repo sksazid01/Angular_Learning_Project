@@ -1,15 +1,11 @@
 <h1>Access Data from Parent Component</h1>
 
-
-@if (receivedAddress) {
+<div *ngIf="receivedAddress; else noAddress">
 <h2>Address Received in Parent</h2>
-
-<pre>{{ receivedAddress | json }}</pre> <!-- to use this <pre> tag, CommonModule is need to import -->
-} @else {
+<pre>{{ receivedAddress | json }}</pre>
+</div>
+<ng-template #noAddress>
 <p>No address submitted yet.</p>
-}
+</ng-template>
 
 <app-location-selector (addressSubmit)="onAddressSubmit($event)"></app-location-selector>
-
-<hr />
-

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Country, Division, District, Upazila, PostCode } from './location.model';
@@ -8,7 +8,7 @@ import { Country, Division, District, Upazila, PostCode } from './location.model
   providedIn: 'root'
 })
 export class LocationService {
-  private http = inject(HttpClient);
+  constructor(private http: HttpClient) {}
 
   private baseUrl = 'http://localhost:3000';
 

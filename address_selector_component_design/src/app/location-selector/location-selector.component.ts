@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -8,17 +8,11 @@ import { Country, Division, District, Upazila, PostCode, SelectedAddress } from 
 
 @Component({
   selector: 'app-location-selector',
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule
-  ],
   templateUrl: './location-selector.component.html',
-  styleUrl: './location-selector.component.css'
+  styleUrls: [ './location-selector.component.css' ]
 })
 export class LocationSelectorComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private locationService = inject(LocationService);
+  constructor(private fb: FormBuilder, private locationService: LocationService) {}
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
 

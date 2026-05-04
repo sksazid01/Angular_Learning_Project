@@ -1,180 +1,91 @@
-<form [formGroup]="locationForm" (ngSubmit)="submit()">
+<hr />
 
+<form [formGroup]="locationForm" (ngSubmit)="submit()">
   <h2>Location Selector</h2>
 
   <!-- Country -->
   <div>
     <label>Country</label>
     <br />
-
     <select formControlName="countryId">
-
       <option [ngValue]="null">Select Country</option>
-
-      @for (country of countries; track country.id) {
-      <option [ngValue]="country.id">
+      <option *ngFor="let country of countries" [ngValue]="country.id">
         {{ country.name }}
       </option>
-      }
     </select>
-
-    @if (loadingCountries) {
-    <p>Loading countries...</p>
-    }
-
-    @if (countryError) {
-    <p>{{ countryError }}</p>
-    }
-
-    @if (
-    locationForm.get('countryId')?.touched &&
-    locationForm.get('countryId')?.invalid
-    ) {
-    <p>Country is required.</p>
-    }
+    <p *ngIf="loadingCountries">Loading countries...</p>
+    <p *ngIf="countryError">{{ countryError }}</p>
+    <p *ngIf="locationForm.get('countryId')?.touched && locationForm.get('countryId')?.invalid">Country is required.</p>
   </div>
-
   <br />
 
   <!-- Division -->
   <div>
     <label>Division</label>
     <br />
-
     <select formControlName="divisionId">
       <option [ngValue]="null">Select Division</option>
-
-      @for (division of divisions; track division.id) {
-      <option [ngValue]="division.id">
+      <option *ngFor="let division of divisions" [ngValue]="division.id">
         {{ division.name }} - {{ division.bn_name }}
       </option>
-      }
     </select>
-
-    @if (loadingDivisions) {
-    <p>Loading divisions...</p>
-    }
-
-    @if (divisionError) {
-    <p>{{ divisionError }}</p>
-    }
-
-    @if (
-    locationForm.get('divisionId')?.touched &&
-    locationForm.get('divisionId')?.invalid
-    ) {
-    <p>Division is required.</p>
-    }
+    <p *ngIf="loadingDivisions">Loading divisions...</p>
+    <p *ngIf="divisionError">{{ divisionError }}</p>
+    <p *ngIf="locationForm.get('divisionId')?.touched && locationForm.get('divisionId')?.invalid">Division is required.</p>
   </div>
-
   <br />
 
   <!-- District -->
   <div>
     <label>District</label>
     <br />
-
     <select formControlName="districtId">
       <option [ngValue]="null">Select District</option>
-
-      @for (district of districts; track district.id) {
-      <option [ngValue]="district.id">
+      <option *ngFor="let district of districts" [ngValue]="district.id">
         {{ district.name }} - {{ district.bn_name }}
       </option>
-      }
     </select>
-
-    @if (loadingDistricts) {
-    <p>Loading districts...</p>
-    }
-
-    @if (districtError) {
-    <p>{{ districtError }}</p>
-    }
-
-    @if (
-    locationForm.get('districtId')?.touched &&
-    locationForm.get('districtId')?.invalid
-    ) {
-    <p>District is required.</p>
-    }
+    <p *ngIf="loadingDistricts">Loading districts...</p>
+    <p *ngIf="districtError">{{ districtError }}</p>
+    <p *ngIf="locationForm.get('districtId')?.touched && locationForm.get('districtId')?.invalid">District is required.</p>
   </div>
-
   <br />
 
   <!-- Upazila -->
   <div>
     <label>Upazila</label>
     <br />
-
     <select formControlName="upazilaId">
       <option [ngValue]="null">Select Upazila</option>
-
-      @for (upazila of upazilas; track upazila.id) {
-      <option [ngValue]="upazila.id">
+      <option *ngFor="let upazila of upazilas" [ngValue]="upazila.id">
         {{ upazila.name }} - {{ upazila.bn_name }}
       </option>
-      }
     </select>
-
-    @if (loadingUpazilas) {
-    <p>Loading upazilas...</p>
-    }
-
-    @if (upazilaError) {
-    <p>{{ upazilaError }}</p>
-    }
-
-    @if (
-    locationForm.get('upazilaId')?.touched &&
-    locationForm.get('upazilaId')?.invalid
-    ) {
-    <p>Upazila is required.</p>
-    }
+    <p *ngIf="loadingUpazilas">Loading upazilas...</p>
+    <p *ngIf="upazilaError">{{ upazilaError }}</p>
+    <p *ngIf="locationForm.get('upazilaId')?.touched && locationForm.get('upazilaId')?.invalid">Upazila is required.</p>
   </div>
-
   <br />
 
   <!-- Post Office -->
   <div>
     <label>Post Office</label>
     <br />
-
     <select formControlName="postCode">
-
       <option value="">Select Post Office</option>
-
-      @for (item of postCodes; track item.postCode) {
-      <option [value]="item.postCode">
+      <option *ngFor="let item of postCodes" [value]="item.postCode">
         {{ item.postOffice }} - {{ item.postCode }}
       </option>
-      }
     </select>
-
-    @if (loadingPostCodes) {
-    <p>Loading post offices...</p>
-    }
-
-    @if (postCodeError) {
-    <p>{{ postCodeError }}</p>
-    }
-
-    @if (
-    locationForm.get('postCode')?.touched &&
-    locationForm.get('postCode')?.invalid
-    ) {
-    <p>Post office is required.</p>
-    }
+    <p *ngIf="loadingPostCodes">Loading post offices...</p>
+    <p *ngIf="postCodeError">{{ postCodeError }}</p>
+    <p *ngIf="locationForm.get('postCode')?.touched && locationForm.get('postCode')?.invalid">Post office is required.</p>
   </div>
-
   <br />
 
   <button type="submit">Submit</button>
 
   <hr />
-
   <h3>Current Form Value</h3>
-
   <pre>{{ locationForm.getRawValue() | json }}</pre>
-
 </form>
