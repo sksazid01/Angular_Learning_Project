@@ -35,3 +35,23 @@ export interface PostCode {
   postOffice: string;
   postCode: string;
 }
+
+export interface SelectedAddress {
+  countryId: number | null;
+  countryName: string | null;
+
+  divisionId: number | null;
+  divisionName: string | null;
+  divisionBnName: string | null;
+
+  districtId: number | null;
+  districtName: string | null;
+  districtBnName: string | null;
+
+  upazilaId: number | null;
+  upazilaName: string | null;
+  upazilaBnName: string | null;
+
+  postOffice: string | null;
+  postCode: string | null;
+}

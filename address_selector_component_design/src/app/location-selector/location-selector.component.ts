@@ -1,10 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 
 import { LocationService } from './location.service';
-import { Country, Division, District, Upazila, PostCode } from './location.model';
+import { Country, Division, District, Upazila, PostCode, SelectedAddress } from './location.model';
 
 @Component({
   selector: 'app-location-selector',
@@ -19,6 +19,8 @@ import { Country, Division, District, Upazila, PostCode } from './location.model
 export class LocationSelectorComponent implements OnInit {
   private fb = inject(FormBuilder);
   private locationService = inject(LocationService);
+
+  @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
 
   countries: Country[] = [];
   divisions: Division[] = [];
@@ -45,7 +47,7 @@ export class LocationSelectorComponent implements OnInit {
     upazilaId: [{ value: null as number | null, disabled: true }, Validators.required],
     postCode: [{ value: '', disabled: true }, Validators.required]
   });
-  
+
   ngOnInit(): void {
     this.loadCountries();
 
@@ -248,47 +250,58 @@ export class LocationSelectorComponent implements OnInit {
     this.locationForm.get('postCode')?.disable();
   }
 
-  submit(): void {
-    if (this.locationForm.invalid) {
-      this.locationForm.markAllAsTouched();
-      return;
-    }
 
-    const formValue = this.locationForm.getRawValue();
-
-    const selectedDivision = this.divisions.find(
-      item => item.id === formValue.divisionId
-    );
-
-    const selectedDistrict = this.districts.find(
-      item => item.id === formValue.districtId
-    );
-
-    const selectedUpazila = this.upazilas.find(
-      item => item.id === formValue.upazilaId
-    );
-
-    const selectedPostCode = this.postCodes.find(
-      item => item.postCode === formValue.postCode
-    );
-
-    const selectedAddress = {
-      countryId: formValue.countryId,
-      countryName: this.countries.find(item => item.id === formValue.countryId)?.name,
-
-      divisionId: formValue.divisionId,
-      divisionName: selectedDivision?.name,
-
-      districtId: formValue.districtId,
-      districtName: selectedDistrict?.name,
-
-      upazilaId: formValue.upazilaId,
-      upazilaName: selectedUpazila?.name,
-
-      postOffice: selectedPostCode?.postOffice,
-      postCode: selectedPostCode?.postCode
-    };
-
-    console.log('Selected Address:', selectedAddress);
+submit(): void {
+  if (this.locationForm.invalid) {
+    this.locationForm.markAllAsTouched();
+    return;
   }
+
+  const formValue = this.locationForm.getRawValue();
+
+  const selectedCountry = this.countries.find(
+    item => item.id === formValue.countryId
+  );
+
+  const selectedDivision = this.divisions.find(
+    item => item.id === formValue.divisionId
+  );
+
+  const selectedDistrict = this.districts.find(
+    item => item.id === formValue.districtId
+  );
+
+  const selectedUpazila = this.upazilas.find(
+    item => item.id === formValue.upazilaId
+  );
+
+  const selectedPostCode = this.postCodes.find(
+    item => item.postCode === formValue.postCode
+  );
+
+  const selectedAddress: SelectedAddress = {
+    countryId: formValue.countryId ?? null,
+    countryName: selectedCountry?.name ?? null,
+
+    divisionId: formValue.divisionId ?? null,
+    divisionName: selectedDivision?.name ?? null,
+    divisionBnName: selectedDivision?.bn_name ?? null,
+
+    districtId: formValue.districtId ?? null,
+    districtName: selectedDistrict?.name ?? null,
+    districtBnName: selectedDistrict?.bn_name ?? null,
+
+    upazilaId: formValue.upazilaId ?? null,
+    upazilaName: selectedUpazila?.name ?? null,
+    upazilaBnName: selectedUpazila?.bn_name ?? null,
+
+    postOffice: selectedPostCode?.postOffice ?? null,
+    postCode: selectedPostCode?.postCode ?? null
+  };
+
+  console.log('Selected Address from child-component:', selectedAddress);
+
+  // Emit to parent component
+  this.addressSubmit.emit(selectedAddress);
+}
 }

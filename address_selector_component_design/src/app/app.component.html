@@ -1,1 +1,15 @@
-<app-location-selector></app-location-selector>
+<h1>Access Data from Parent Component</h1>
+
+
+@if (receivedAddress) {
+<h2>Address Received in Parent</h2>
+
+<pre>{{ receivedAddress | json }}</pre> <!-- to use this <pre> tag, CommonModule is need to import -->
+} @else {
+<p>No address submitted yet.</p>
+}
+
+<app-location-selector (addressSubmit)="onAddressSubmit($event)"></app-location-selector>
+
+<hr />
+
