@@ -6,6 +6,10 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LoadingService {
+  private activeRequests = 0;
+  private isLoadingSubject = new BehaviorSubject<boolean>(false);
+  public isLoading$ = this.isLoadingSubject.asObservable();
+
   private loadingMap: Map<string, boolean> = new Map<string, boolean>();
   private loadingSubject = new BehaviorSubject<Map<string, boolean>>(this.loadingMap);
 
@@ -16,19 +20,35 @@ export class LoadingService {
   }
 
   show(url: string): void {
-    const key = this.getKeyFromUrl(url);
-    if (key) {
-      this.loadingMap.set(key, true);
-      this.loadingSubject.next(this.loadingMap);
-    }
+    setTimeout(() => {
+      this.activeRequests++;
+      if (this.activeRequests === 1) {
+        this.isLoadingSubject.next(true);
+      }
+
+      const key = this.getKeyFromUrl(url);
+      if (key) {
+        this.loadingMap.set(key, true);
+        this.loadingSubject.next(this.loadingMap);
+      }
+    });
   }
 
   hide(url: string): void {
-    const key = this.getKeyFromUrl(url);
-    if (key) {
-      this.loadingMap.set(key, false);
-      this.loadingSubject.next(this.loadingMap);
-    }
+    setTimeout(() => {
+      if (this.activeRequests > 0) {
+        this.activeRequests--;
+      }
+      if (this.activeRequests === 0) {
+        this.isLoadingSubject.next(false);
+      }
+
+      const key = this.getKeyFromUrl(url);
+      if (key) {
+        this.loadingMap.set(key, false);
+        this.loadingSubject.next(this.loadingMap);
+      }
+    });
   }
   
   private getKeyFromUrl(url: string): string {

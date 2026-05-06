@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { LocationService } from './location.service';
-import { LoadingService } from '../core/interceptors/loading.service';
+import { LoadingService } from '../core/services/loading.service';
 import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress } from './location.model';
 
