@@ -25,3 +25,33 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Note: LoadingService `setTimeout` behavior
+
+During development the project used a `setTimeout` inside `LoadingService.show()` and `LoadingService.hide()` which delays updating the global loading state by 2 seconds. This means the loader state and the HTTP interceptor delay combine and can produce unexpected timing (double delays, out-of-order increments/decrements) when multiple requests run quickly.
+
+Recommended change for predictable behavior:
+
+- Remove `setTimeout` from `LoadingService` so `show()` and `hide()` update immediately.
+- If you still want to simulate latency during development, keep `delay(2000)` only in `LoadingInterceptor` (dev-only).
+
+Example replacement (in `src/app/core/interceptors/loading.service.ts`):
+
+```typescript
+show(): void {
+	if (this.activeRequests === 0) {
+		this.isLoadingSubject.next(true);
+	}
+	this.activeRequests++;
+}
+
+hide(): void {
+	this.activeRequests--;
+	if (this.activeRequests <= 0) {
+		this.activeRequests = 0;
+		this.isLoadingSubject.next(false);
+	}
+}
+```
+
+This keeps the loading state updates immediate and predictable while letting the interceptor simulate network latency when needed.
