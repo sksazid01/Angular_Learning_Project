@@ -20,6 +20,7 @@ export class LocationSelectorComponent implements OnInit {
   loadingUpazilas$ = this.loadingService.isLoading('upazilas');
   loadingPostCodes$ = this.loadingService.isLoading('postCodes');
 
+
   
   constructor(private fb: FormBuilder, private locationService: LocationService, private loadingService: LoadingService) {
     

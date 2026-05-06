@@ -7,7 +7,7 @@
   <div>
     <label>Country</label>
     <br />
-    <div *ngIf="loadingCountries$ | async" style="color: blue;">Loading countries...</div>
+    <div *ngIf="loadingCountries$ | async" style="color: blue;">Loading...</div>
     <select *ngIf="!(loadingCountries$ | async)" formControlName="countryId">
       <option [ngValue]="null">Select Country</option>
       <option *ngFor="let country of countries" [ngValue]="country.id">
@@ -24,7 +24,7 @@
   <div>
     <label>Division</label>
     <br />
-    <div *ngIf="loadingDivisions$ | async" style="color: blue;">Loading divisions...</div>
+    <div *ngIf="loadingDivisions$ | async" style="color: blue;">Loading...</div>
     <select *ngIf="!(loadingDivisions$ | async)" formControlName="divisionId">
       <option [ngValue]="null">Select Division</option>
       <option *ngFor="let division of divisions" [ngValue]="division.id">
@@ -41,7 +41,7 @@
   <div>
     <label>District</label>
     <br />
-    <div *ngIf="loadingDistricts$ | async" style="color: blue;">Loading districts...</div>
+    <div *ngIf="loadingDistricts$ | async" style="color: blue;">Loading...</div>
     <select *ngIf="!(loadingDistricts$ | async)" formControlName="districtId">
       <option [ngValue]="null">Select District</option>
       <option *ngFor="let district of districts" [ngValue]="district.id">
@@ -58,7 +58,7 @@
   <div>
     <label>Upazila</label>
     <br />
-    <div *ngIf="loadingUpazilas$ | async" style="color: blue;">Loading upazilas...</div>
+    <div *ngIf="loadingUpazilas$ | async" style="color: blue;">Loading...</div>
     <select *ngIf="!(loadingUpazilas$ | async)" formControlName="upazilaId">
       <option [ngValue]="null">Select Upazila</option>
       <option *ngFor="let upazila of upazilas" [ngValue]="upazila.id">
@@ -75,7 +75,7 @@
   <div>
     <label>Post Office</label>
     <br />
-    <div *ngIf="loadingPostCodes$ | async" style="color: blue;">Loading post offices...</div>
+    <div *ngIf="loadingPostCodes$ | async" style="color: blue;">Loading...</div>
     <select *ngIf="!(loadingPostCodes$ | async)" formControlName="postCode">
       <option value="">Select Post Office</option>
       <option *ngFor="let item of postCodes" [value]="item.postCode">
