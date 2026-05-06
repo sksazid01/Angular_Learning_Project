@@ -4,6 +4,8 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 import { LocationService } from './location.service';
+import { LoadingService } from '../core/interceptors/loading.service';
+import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress } from './location.model';
 
 @Component({
@@ -12,7 +14,16 @@ import { Country, Division, District, Upazila, PostCode, SelectedAddress } from 
   styleUrls: [ './location-selector.component.css' ]
 })
 export class LocationSelectorComponent implements OnInit {
-  constructor(private fb: FormBuilder, private locationService: LocationService) {}
+  loadingCountries$ = this.loadingService.isLoading('countries');
+  loadingDivisions$ = this.loadingService.isLoading('divisions');
+  loadingDistricts$ = this.loadingService.isLoading('districts');
+  loadingUpazilas$ = this.loadingService.isLoading('upazilas');
+  loadingPostCodes$ = this.loadingService.isLoading('postCodes');
+
+  
+  constructor(private fb: FormBuilder, private locationService: LocationService, private loadingService: LoadingService) {
+    
+  }
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
 
@@ -21,13 +32,6 @@ export class LocationSelectorComponent implements OnInit {
   districts: District[] = [];
   upazilas: Upazila[] = [];
   postCodes: PostCode[] = [];
-
-  loadingCountries = false;
-  loadingDivisions = false;
-  loadingDistricts = false;
-  loadingUpazilas = false;
-  loadingPostCodes = false;
-
   countryError = '';
   divisionError = '';
   districtError = '';
@@ -52,14 +56,11 @@ export class LocationSelectorComponent implements OnInit {
   }
 
   private loadCountries(): void {
-    this.loadingCountries = true;
     this.countryError = '';
 
     this.locationService.getCountries().subscribe({
       next: countries => {
         this.countries = countries;
-        this.loadingCountries = false;
-
         /*
           Since your database has only one country,
           you can auto-select it.
@@ -73,114 +74,101 @@ export class LocationSelectorComponent implements OnInit {
       error: error => {
         console.error(error);
         this.countryError = 'Could not load countries.';
-        this.loadingCountries = false;
       }
     });
   }
 
   private onCountryChange(): void {
-    this.locationForm.get('countryId')?.valueChanges.subscribe(countryId => {
+    this.locationForm.get('countryId').valueChanges.subscribe(countryId => {
       this.resetFromCountry();
 
       if (!countryId) {
         return;
       }
 
-      this.locationForm.get('divisionId')?.enable();
+      this.locationForm.get('divisionId').enable();
       this.loadDivisions();
     });
   }
 
   private loadDivisions(): void {
-    this.loadingDivisions = true;
     this.divisionError = '';
 
     this.locationService.getDivisions().subscribe({
       next: divisions => {
         this.divisions = divisions;
-        this.loadingDivisions = false;
       },
       error: error => {
         console.error(error);
         this.divisionError = 'Could not load divisions.';
-        this.loadingDivisions = false;
       }
     });
   }
 
   private onDivisionChange(): void {
-    this.locationForm.get('divisionId')?.valueChanges.subscribe(divisionId => {
+    this.locationForm.get('divisionId').valueChanges.subscribe(divisionId => {
       this.resetFromDivision();
 
       if (!divisionId) {
         return;
       }
 
-      this.locationForm.get('districtId')?.enable();
-      this.loadingDistricts = true;
+      this.locationForm.get('districtId').enable();
       this.districtError = '';
 
       this.locationService.getDistrictsByDivision(divisionId).subscribe({
         next: districts => {
           this.districts = districts;
-          this.loadingDistricts = false;
         },
         error: error => {
           console.error(error);
           this.districtError = 'Could not load districts.';
-          this.loadingDistricts = false;
         }
       });
     });
   }
 
   private onDistrictChange(): void {
-    this.locationForm.get('districtId')?.valueChanges.subscribe(districtId => {
+    this.locationForm.get('districtId').valueChanges.subscribe(districtId => {
       this.resetFromDistrict();
 
       if (!districtId) {
         return;
       }
 
-      this.locationForm.get('upazilaId')?.enable();
-      this.loadingUpazilas = true;
+      this.locationForm.get('upazilaId').enable();
       this.upazilaError = '';
 
       this.locationService.getUpazilasByDistrict(districtId).subscribe({
         next: upazilas => {
           this.upazilas = upazilas;
-          this.loadingUpazilas = false;
         },
         error: error => {
           console.error(error);
           this.upazilaError = 'Could not load upazilas.';
-          this.loadingUpazilas = false;
         }
       });
     });
   }
 
   private onUpazilaChange(): void {
-    this.locationForm.get('upazilaId')?.valueChanges.subscribe(upazilaId => {
+    this.locationForm.get('upazilaId').valueChanges.subscribe(upazilaId => {
       this.resetFromUpazila();
 
       if (!upazilaId) {
         return;
       }
 
-      this.locationForm.get('postCode')?.enable();
-      this.loadingPostCodes = true;
+      this.locationForm.get('postCode').enable();
       this.postCodeError = '';
 
       this.locationService.getPostCodesByUpazila(upazilaId).subscribe({
         next: postCodes => {
           this.postCodes = postCodes;
-          this.loadingPostCodes = false;
         },
         error: error => {
           console.error(error);
           this.postCodeError = 'Could not load post offices.';
-          this.loadingPostCodes = false;
         }
       });
     });
@@ -199,10 +187,10 @@ export class LocationSelectorComponent implements OnInit {
     this.upazilas = [];
     this.postCodes = [];
 
-    this.locationForm.get('divisionId')?.disable();
-    this.locationForm.get('districtId')?.disable();
-    this.locationForm.get('upazilaId')?.disable();
-    this.locationForm.get('postCode')?.disable();
+    this.locationForm.get('divisionId').disable();
+    this.locationForm.get('districtId').disable();
+    this.locationForm.get('upazilaId').disable();
+    this.locationForm.get('postCode').disable();
   }
 
   private resetFromDivision(): void {
@@ -216,9 +204,9 @@ export class LocationSelectorComponent implements OnInit {
     this.upazilas = [];
     this.postCodes = [];
 
-    this.locationForm.get('districtId')?.disable();
-    this.locationForm.get('upazilaId')?.disable();
-    this.locationForm.get('postCode')?.disable();
+    this.locationForm.get('districtId').disable();
+    this.locationForm.get('upazilaId').disable();
+    this.locationForm.get('postCode').disable();
   }
 
   private resetFromDistrict(): void {
@@ -230,8 +218,8 @@ export class LocationSelectorComponent implements OnInit {
     this.upazilas = [];
     this.postCodes = [];
 
-    this.locationForm.get('upazilaId')?.disable();
-    this.locationForm.get('postCode')?.disable();
+    this.locationForm.get('upazilaId').disable();
+    this.locationForm.get('postCode').disable();
   }
 
   private resetFromUpazila(): void {
@@ -241,13 +229,13 @@ export class LocationSelectorComponent implements OnInit {
 
     this.postCodes = [];
 
-    this.locationForm.get('postCode')?.disable();
+    this.locationForm.get('postCode').disable();
   }
 
 
 submit(): void {
   if (this.locationForm.invalid) {
-    this.locationForm.markAllAsTouched();
+    Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
     return;
   }
 
@@ -274,23 +262,23 @@ submit(): void {
   );
 
   const selectedAddress: SelectedAddress = {
-    countryId: formValue.countryId ?? null,
-    countryName: selectedCountry?.name ?? null,
+    countryId: formValue.countryId || null,
+    countryName: selectedCountry ? selectedCountry.name : null || null,
 
-    divisionId: formValue.divisionId ?? null,
-    divisionName: selectedDivision?.name ?? null,
-    divisionBnName: selectedDivision?.bn_name ?? null,
+    divisionId: formValue.divisionId || null,
+    divisionName: selectedDivision ? selectedDivision.name : null || null,
+    divisionBnName: selectedDivision ? selectedDivision.bn_name : null || null,
 
-    districtId: formValue.districtId ?? null,
-    districtName: selectedDistrict?.name ?? null,
-    districtBnName: selectedDistrict?.bn_name ?? null,
+    districtId: formValue.districtId || null,
+    districtName: selectedDistrict ? selectedDistrict.name : null || null,
+    districtBnName: selectedDistrict ? selectedDistrict.bn_name : null || null,
 
-    upazilaId: formValue.upazilaId ?? null,
-    upazilaName: selectedUpazila?.name ?? null,
-    upazilaBnName: selectedUpazila?.bn_name ?? null,
+    upazilaId: formValue.upazilaId || null,
+    upazilaName: selectedUpazila ? selectedUpazila.name : null || null,
+    upazilaBnName: selectedUpazila ? selectedUpazila.bn_name : null || null,
 
-    postOffice: selectedPostCode?.postOffice ?? null,
-    postCode: selectedPostCode?.postCode ?? null
+    postOffice: selectedPostCode ? selectedPostCode.postOffice : null || null,
+    postCode: selectedPostCode ? selectedPostCode.postCode : null || null
   };
 
   console.log('Selected Address from child-component:', selectedAddress);

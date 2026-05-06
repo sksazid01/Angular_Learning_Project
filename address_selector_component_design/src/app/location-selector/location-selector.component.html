@@ -2,18 +2,19 @@
 
 <form [formGroup]="locationForm" (ngSubmit)="submit()">
   <h2>Location Selector</h2>
-
+  
   <!-- Country -->
   <div>
     <label>Country</label>
     <br />
-    <select formControlName="countryId">
+    <div *ngIf="loadingCountries$ | async" style="color: blue;">Loading countries...</div>
+    <select *ngIf="!(loadingCountries$ | async)" formControlName="countryId">
       <option [ngValue]="null">Select Country</option>
       <option *ngFor="let country of countries" [ngValue]="country.id">
         {{ country.name }}
       </option>
     </select>
-    <p *ngIf="loadingCountries">Loading countries...</p>
+    
     <p *ngIf="countryError">{{ countryError }}</p>
     <p *ngIf="locationForm.get('countryId')?.touched && locationForm.get('countryId')?.invalid">Country is required.</p>
   </div>
@@ -23,13 +24,14 @@
   <div>
     <label>Division</label>
     <br />
-    <select formControlName="divisionId">
+    <div *ngIf="loadingDivisions$ | async" style="color: blue;">Loading divisions...</div>
+    <select *ngIf="!(loadingDivisions$ | async)" formControlName="divisionId">
       <option [ngValue]="null">Select Division</option>
       <option *ngFor="let division of divisions" [ngValue]="division.id">
         {{ division.name }} - {{ division.bn_name }}
       </option>
     </select>
-    <p *ngIf="loadingDivisions">Loading divisions...</p>
+    
     <p *ngIf="divisionError">{{ divisionError }}</p>
     <p *ngIf="locationForm.get('divisionId')?.touched && locationForm.get('divisionId')?.invalid">Division is required.</p>
   </div>
@@ -39,13 +41,14 @@
   <div>
     <label>District</label>
     <br />
-    <select formControlName="districtId">
+    <div *ngIf="loadingDistricts$ | async" style="color: blue;">Loading districts...</div>
+    <select *ngIf="!(loadingDistricts$ | async)" formControlName="districtId">
       <option [ngValue]="null">Select District</option>
       <option *ngFor="let district of districts" [ngValue]="district.id">
         {{ district.name }} - {{ district.bn_name }}
       </option>
     </select>
-    <p *ngIf="loadingDistricts">Loading districts...</p>
+    
     <p *ngIf="districtError">{{ districtError }}</p>
     <p *ngIf="locationForm.get('districtId')?.touched && locationForm.get('districtId')?.invalid">District is required.</p>
   </div>
@@ -55,13 +58,14 @@
   <div>
     <label>Upazila</label>
     <br />
-    <select formControlName="upazilaId">
+    <div *ngIf="loadingUpazilas$ | async" style="color: blue;">Loading upazilas...</div>
+    <select *ngIf="!(loadingUpazilas$ | async)" formControlName="upazilaId">
       <option [ngValue]="null">Select Upazila</option>
       <option *ngFor="let upazila of upazilas" [ngValue]="upazila.id">
         {{ upazila.name }} - {{ upazila.bn_name }}
       </option>
     </select>
-    <p *ngIf="loadingUpazilas">Loading upazilas...</p>
+    
     <p *ngIf="upazilaError">{{ upazilaError }}</p>
     <p *ngIf="locationForm.get('upazilaId')?.touched && locationForm.get('upazilaId')?.invalid">Upazila is required.</p>
   </div>
@@ -71,13 +75,14 @@
   <div>
     <label>Post Office</label>
     <br />
-    <select formControlName="postCode">
+    <div *ngIf="loadingPostCodes$ | async" style="color: blue;">Loading post offices...</div>
+    <select *ngIf="!(loadingPostCodes$ | async)" formControlName="postCode">
       <option value="">Select Post Office</option>
       <option *ngFor="let item of postCodes" [value]="item.postCode">
         {{ item.postOffice }} - {{ item.postCode }}
       </option>
     </select>
-    <p *ngIf="loadingPostCodes">Loading post offices...</p>
+    
     <p *ngIf="postCodeError">{{ postCodeError }}</p>
     <p *ngIf="locationForm.get('postCode')?.touched && locationForm.get('postCode')?.invalid">Post office is required.</p>
   </div>

@@ -21,13 +21,13 @@ export class LocationService {
   }
 
   getDistrictsByDivision(divisionId: number): Observable<District[]> {
-    const params = new HttpParams().set('division_id', divisionId);
+    const params = new HttpParams().set('division_id', String(divisionId));
 
     return this.http.get<District[]>(`${this.baseUrl}/districts`, { params });
   }
 
   getUpazilasByDistrict(districtId: number): Observable<Upazila[]> {
-    const params = new HttpParams().set('district_id', districtId);
+    const params = new HttpParams().set('district_id', String(districtId));
 
     return this.http.get<Upazila[]>(`${this.baseUrl}/upazilas`, { params });
   }
