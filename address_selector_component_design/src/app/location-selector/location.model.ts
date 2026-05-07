@@ -55,3 +55,11 @@ export interface SelectedAddress {
   postOffice: string | null;
   postCode: string | null;
 }
+
+export class InitialAddress {
+  countryId: number;
+  divisionId: number;
+  districtId: number;
+  upazilaId: number;
+  postCode: string;
+}

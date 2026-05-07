@@ -1,12 +1,12 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 
 import { LocationService } from './location.service';
 import { LoadingService } from '../core/services/loading.service';
 import { Observable } from 'rxjs';
-import { Country, Division, District, Upazila, PostCode, SelectedAddress } from './location.model';
+import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location.model';
 
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
 
@@ -17,12 +17,6 @@ import { ConfirmationService } from '../confirmation-popup/confirmation.service'
 })
 export class LocationSelectorComponent implements OnInit {
   constructor(private fb: FormBuilder, private locationService: LocationService,private loadingService: LoadingService, private confirmationService: ConfirmationService) {}
-  loadingCountries$ = this.loadingService.isLoading('countries');
-  loadingDivisions$ = this.loadingService.isLoading('divisions');
-  loadingDistricts$ = this.loadingService.isLoading('districts');
-  loadingUpazilas$ = this.loadingService.isLoading('upazilas');
-  loadingPostCodes$ = this.loadingService.isLoading('postCodes');
-
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
 
@@ -37,15 +31,22 @@ export class LocationSelectorComponent implements OnInit {
   upazilaError = '';
   postCodeError = '';
 
-  locationForm = this.fb.group({
-    countryId: [null as number | null, Validators.required],
-    divisionId: [{ value: null as number | null, disabled: true }, Validators.required],
-    districtId: [{ value: null as number | null, disabled: true }, Validators.required],
-    upazilaId: [{ value: null as number | null, disabled: true }, Validators.required],
-    postCode: [{ value: '', disabled: true }, Validators.required]
-  });
+  locationForm!: FormGroup;
+
+  prepareForm(formData: InitialAddress): void {
+    formData = formData || new InitialAddress();
+
+    this.locationForm = this.fb.group({
+      countryId: [formData.countryId, Validators.required],
+      divisionId: [formData.divisionId, Validators.required],
+      districtId: [formData.districtId, Validators.required],
+      upazilaId: [formData.upazilaId, Validators.required],
+      postCode: ['postOffice' in formData ? formData.postOffice : formData.postCode, Validators.required]
+    });
+  }
 
   ngOnInit(): void {
+    this.prepareForm(null);
     this.loadCountries();
     this.onCountryChange();
     this.onDivisionChange();
