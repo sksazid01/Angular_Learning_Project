@@ -6,11 +6,14 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { LocationSelectorComponent } from './location-selector/location-selector.component';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { ConfirmationPopupComponent } from './confirmation-popup/confirmation-popup.component';
+import { ConfirmationService } from './confirmation-popup/confirmation.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LocationSelectorComponent
+    LocationSelectorComponent,
+    ConfirmationPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +26,8 @@ import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true
-    }
+    },
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

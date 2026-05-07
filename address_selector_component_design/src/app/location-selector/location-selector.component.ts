@@ -8,6 +8,8 @@ import { LoadingService } from '../core/services/loading.service';
 import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress } from './location.model';
 
+import { ConfirmationService } from '../confirmation-popup/confirmation.service';
+
 @Component({
   selector: 'app-location-selector',
   templateUrl: './location-selector.component.html',
@@ -22,8 +24,7 @@ export class LocationSelectorComponent implements OnInit {
 
 
   
-  constructor(private fb: FormBuilder, private locationService: LocationService, private loadingService: LoadingService) {
-    
+  constructor(private fb: FormBuilder, private locationService: LocationService,private loadingService: LoadingService, private confirmationService: ConfirmationService) {
   }
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
@@ -234,13 +235,24 @@ export class LocationSelectorComponent implements OnInit {
   }
 
 
-submit(): void {
-  if (this.locationForm.invalid) {
-    Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
-    return;
+  onSubmitRequest(): void {
+    if (this.locationForm.invalid) {
+      console.log('Form is invalid! Fields missing.');
+      Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
+      return;
+    }
+    
+    console.log('Form valid, showing popup...');
+    this.confirmationService.confirm('Are you sure to submit?', 'Submit Application').then((confirmed) => {
+      console.log('Popup confirmed:', confirmed);
+      if (confirmed) {
+        this.submit();
+      }
+    });
   }
 
-  const formValue = this.locationForm.getRawValue();
+  submit(): void {
+    const formValue = this.locationForm.getRawValue();
 
   const selectedCountry = this.countries.find(
     item => item.id === formValue.countryId

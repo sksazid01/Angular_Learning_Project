@@ -1,6 +1,6 @@
 <hr />
 
-<form [formGroup]="locationForm" (ngSubmit)="submit()">
+<form [formGroup]="locationForm" (ngSubmit)="onSubmitRequest()">
   <h2>Location Selector</h2>
   
   <!-- Country -->
@@ -94,3 +94,5 @@
   <h3>Current Form Value</h3>
   <pre>{{ locationForm.getRawValue() | json }}</pre>
 </form>
+
+<app-confirmation-popup></app-confirmation-popup>
