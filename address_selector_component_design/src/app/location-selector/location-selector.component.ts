@@ -16,16 +16,13 @@ import { ConfirmationService } from '../confirmation-popup/confirmation.service'
   styleUrls: [ './location-selector.component.css' ]
 })
 export class LocationSelectorComponent implements OnInit {
+  constructor(private fb: FormBuilder, private locationService: LocationService,private loadingService: LoadingService, private confirmationService: ConfirmationService) {}
   loadingCountries$ = this.loadingService.isLoading('countries');
   loadingDivisions$ = this.loadingService.isLoading('divisions');
   loadingDistricts$ = this.loadingService.isLoading('districts');
   loadingUpazilas$ = this.loadingService.isLoading('upazilas');
   loadingPostCodes$ = this.loadingService.isLoading('postCodes');
 
-
-  
-  constructor(private fb: FormBuilder, private locationService: LocationService,private loadingService: LoadingService, private confirmationService: ConfirmationService) {
-  }
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
 
@@ -50,7 +47,6 @@ export class LocationSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCountries();
-
     this.onCountryChange();
     this.onDivisionChange();
     this.onDistrictChange();
@@ -64,8 +60,8 @@ export class LocationSelectorComponent implements OnInit {
       next: countries => {
         this.countries = countries;
         /*
-          Since your database has only one country,
-          you can auto-select it.
+          Since my database has only one country,
+          I can auto-select it.
         */
         if (countries.length === 1) {
           this.locationForm.patchValue({
@@ -243,12 +239,7 @@ export class LocationSelectorComponent implements OnInit {
     }
     
     console.log('Form valid, showing popup...');
-    this.confirmationService.confirm('Are you sure to submit?', 'Submit Application').then((confirmed) => {
-      console.log('Popup confirmed:', confirmed);
-      if (confirmed) {
-        this.submit();
-      }
-    });
+    this.confirmationService.confirm(() => this.submit());
   }
 
   submit(): void {
