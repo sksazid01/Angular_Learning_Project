@@ -37,29 +37,19 @@ export interface PostCode {
 }
 
 export interface SelectedAddress {
-  countryId: number | null;
-  countryName: string | null;
-
-  divisionId: number | null;
-  divisionName: string | null;
-  divisionBnName: string | null;
-
-  districtId: number | null;
-  districtName: string | null;
-  districtBnName: string | null;
-
-  upazilaId: number | null;
-  upazilaName: string | null;
-  upazilaBnName: string | null;
-
-  postOffice: string | null;
-  postCode: string | null;
+  country_name: string | null;
+  division_name: string | null;
+  district_name: string | null;
+  upazila_name: string | null;
+  post_offce_name: string | null;
+  post_code: string | null;
 }
 
 export class InitialAddress {
-  countryId: number;
-  divisionId: number;
-  districtId: number;
-  upazilaId: number;
-  postCode: string;
+  countryId?: number | null;
+  divisionId?: number | null;
+  districtId?: number | null;
+  upazilaId?: number | null;
+  postOffice?: string | null;
+  postCode?: string | null;
 }

@@ -8,12 +8,14 @@ import { LocationSelectorComponent } from './location-selector/location-selector
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { ConfirmationPopupComponent } from './confirmation-popup/confirmation-popup.component';
 import { ConfirmationService } from './confirmation-popup/confirmation.service';
+import { ShowEntriesComponent } from './show-entries/show-entries.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LocationSelectorComponent,
-    ConfirmationPopupComponent
+    ConfirmationPopupComponent,
+    ShowEntriesComponent
   ],
   imports: [
     BrowserModule,

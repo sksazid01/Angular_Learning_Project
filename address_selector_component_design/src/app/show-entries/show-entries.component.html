@@ -1,0 +1,29 @@
+<p>
+  Address:
+</p>
+<table border="1" cellpadding="10" cellspacing="2">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Country</th>
+      <th>Division</th>
+      <th>District</th>
+      <th>Upazila</th>
+      <th>Post Office</th>
+      <th>Post Code</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entry of entries | async">
+      <td>{{ entry.id }} </td>
+      <td>{{ entry.country_name }}</td>
+      <td>{{ entry.division_name }}</td>
+      <td>{{ entry.district_name }}</td>
+      <td>{{ entry.upazila_name }}</td>
+      <td>{{ entry.post_offce_name }}</td>
+      <td>{{ entry.post_code }}</td>
+      <td> <button (click)="editEntry(entry)">Edit</button></td>
+    </tr>
+  </tbody>
+</table>

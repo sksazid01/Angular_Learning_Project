@@ -9,14 +9,21 @@ import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location.model';
 
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
+import { ShowEntriesService } from '../show-entries/show-entries.service';
 
 @Component({
   selector: 'app-location-selector',
   templateUrl: './location-selector.component.html',
-  styleUrls: [ './location-selector.component.css' ]
+  styleUrls: ['./location-selector.component.css']
 })
 export class LocationSelectorComponent implements OnInit {
-  constructor(private fb: FormBuilder, private locationService: LocationService,private loadingService: LoadingService, private confirmationService: ConfirmationService) {}
+  constructor(
+    private fb: FormBuilder,
+    private locationService: LocationService,
+    private loadingService: LoadingService, 
+    private confirmationService: ConfirmationService,
+    private showEntriesService: ShowEntriesService
+  ) { }
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
 
@@ -41,7 +48,7 @@ export class LocationSelectorComponent implements OnInit {
       divisionId: [formData.divisionId, Validators.required],
       districtId: [formData.districtId, Validators.required],
       upazilaId: [formData.upazilaId, Validators.required],
-      postCode: ['postOffice' in formData ? formData.postOffice : formData.postCode, Validators.required]
+      postCode: [formData.postCode, Validators.required]
     });
   }
 
@@ -238,57 +245,52 @@ export class LocationSelectorComponent implements OnInit {
       Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
       return;
     }
-    
+
     console.log('Form valid, showing popup...');
     this.confirmationService.confirm(() => this.submit());
   }
 
+
   submit(): void {
     const formValue = this.locationForm.getRawValue();
 
-  const selectedCountry = this.countries.find(
-    item => item.id === formValue.countryId
-  );
+    const selectedCountry = this.countries.find(
+      item => item.id === formValue.countryId
+    );
 
-  const selectedDivision = this.divisions.find(
-    item => item.id === formValue.divisionId
-  );
+    const selectedDivision = this.divisions.find(
+      item => item.id === formValue.divisionId
+    );
 
-  const selectedDistrict = this.districts.find(
-    item => item.id === formValue.districtId
-  );
+    const selectedDistrict = this.districts.find(
+      item => item.id === formValue.districtId
+    );
 
-  const selectedUpazila = this.upazilas.find(
-    item => item.id === formValue.upazilaId
-  );
+    const selectedUpazila = this.upazilas.find(
+      item => item.id === formValue.upazilaId
+    );
 
-  const selectedPostCode = this.postCodes.find(
-    item => item.postCode === formValue.postCode
-  );
+    const selectedPostCode = this.postCodes.find(
+      item => item.postCode === formValue.postCode
+    );
 
-  const selectedAddress: SelectedAddress = {
-    countryId: formValue.countryId || null,
-    countryName: selectedCountry ? selectedCountry.name : null || null,
+    const selectedAddress: SelectedAddress = {
+      country_name: selectedCountry ? selectedCountry.name : null,
+      division_name: selectedDivision ? selectedDivision.name : null,
+      district_name: selectedDistrict ? selectedDistrict.name : null,
+      upazila_name: selectedUpazila ? selectedUpazila.name : null,
+      post_offce_name: selectedPostCode ? selectedPostCode.postOffice : null,
+      post_code: selectedPostCode ? selectedPostCode.postCode : null
+    };
 
-    divisionId: formValue.divisionId || null,
-    divisionName: selectedDivision ? selectedDivision.name : null || null,
-    divisionBnName: selectedDivision ? selectedDivision.bn_name : null || null,
+    console.log('Selected Address from child-component:', selectedAddress);
 
-    districtId: formValue.districtId || null,
-    districtName: selectedDistrict ? selectedDistrict.name : null || null,
-    districtBnName: selectedDistrict ? selectedDistrict.bn_name : null || null,
-
-    upazilaId: formValue.upazilaId || null,
-    upazilaName: selectedUpazila ? selectedUpazila.name : null || null,
-    upazilaBnName: selectedUpazila ? selectedUpazila.bn_name : null || null,
-
-    postOffice: selectedPostCode ? selectedPostCode.postOffice : null || null,
-    postCode: selectedPostCode ? selectedPostCode.postCode : null || null
-  };
-
-  console.log('Selected Address from child-component:', selectedAddress);
-
-  // Emit to parent component
-  this.addressSubmit.emit(selectedAddress);
-}
+    this.showEntriesService.postEntry(selectedAddress).subscribe(() => {
+      console.log('Entry added successfully!');
+    }, error => {
+      console.error('Error adding entry:', error);
+    });
+    // Emit to parent component
+    this.addressSubmit.emit(selectedAddress);
+  }
 }

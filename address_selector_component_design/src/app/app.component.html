@@ -25,10 +25,11 @@
 
 <h1>Access Data from Parent Component</h1>
 
-<div *ngIf="receivedAddress; else noAddress">
+<!-- <div *ngIf="receivedAddress; else noAddress">
   <h2>Address Received in Parent</h2>
   <pre>{{ receivedAddress | json }}</pre>
-</div>
+</div> -->
+<app-show-entries></app-show-entries>
 
 <ng-template #noAddress>
   <p>No address submitted yet.</p>

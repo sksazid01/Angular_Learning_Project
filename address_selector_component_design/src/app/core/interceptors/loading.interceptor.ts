@@ -23,7 +23,7 @@ export class LoadingInterceptor implements HttpInterceptor {
     this.loadingService.show(request.url);
 
     return next.handle(request).pipe(
-      delay(500),
+      delay(100),
       finalize(() => {
         console.log('HTTP request completed:', request.url);
         this.loadingService.hide(request.url);
