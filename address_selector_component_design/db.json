@@ -1,15 +1,15 @@
 {
-  "saved_addresses": [
+  "address_list": [
     {
       "country_name": "Bangladesh",
       "division_name": "Barishal",
-      "district_name": "Barguna",
-      "upazila_name": "Bamna",
-      "post_offce_name": "Bamna",
-      "post_code": "8730",
+      "district_name": "Barishal",
+      "upazila_name": "Babuganj",
+      "post_offce_name": "Barajalia",
+      "post_code": "8260",
       "division_id": 1,
-      "district_id": 34,
-      "upazila_id": 2,
+      "district_id": 35,
+      "upazila_id": 8,
       "post_office_id": null,
       "id": 1
     },
@@ -77,6 +77,19 @@
       "upazila_id": 1,
       "post_office_id": null,
       "id": 6
+    },
+    {
+      "country_name": "Bangladesh",
+      "division_name": "Barishal",
+      "district_name": "Barishal",
+      "upazila_name": "Wazirpur",
+      "post_offce_name": "Dakuarhat",
+      "post_code": "8223",
+      "division_id": 1,
+      "district_id": 35,
+      "upazila_id": 16,
+      "post_office_id": null,
+      "id": 7
     }
   ],
   "countries": [

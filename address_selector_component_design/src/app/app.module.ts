@@ -4,18 +4,18 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { LocationFormComponent } from './location-form/location-form.component';
+import { AddressFormComponent } from './location-form/location-form.component';
 import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 import { ConfirmationPopupComponent } from './confirmation-popup/confirmation-popup.component';
 import { ConfirmationService } from './confirmation-popup/confirmation.service';
-import { LocationListsComponent } from './location-lists/location-lists.component';
+import { AddressListComponent } from './location-lists/location-lists.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LocationFormComponent,
+    AddressFormComponent,
     ConfirmationPopupComponent,
-    LocationListsComponent
+    AddressListComponent
   ],
   imports: [
     BrowserModule,

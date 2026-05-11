@@ -1,31 +1,41 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 
-import { LocationService } from './location.service';
+import { LocationFormService } from './location-form.service';
 import { LoadingService } from '../core/services/loading.service';
 import { Observable } from 'rxjs';
-import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location.model';
+import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location-form.model';
 
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
-import { LocationListsService } from '../location-lists/address.service';
+import { LocationListService } from '../location-lists/location-lists.service';
 
 @Component({
   selector: 'app-location-form',
   templateUrl: './location-form.component.html',
   styleUrls: ['./location-form.component.css']
 })
-export class LocationFormComponent implements OnInit {
+export class AddressFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
-    private locationService: LocationService,
-    private loadingService: LoadingService, 
+    private locationFormService: LocationFormService,
     private confirmationService: ConfirmationService,
-    private locationEntriesService: LocationListsService
+    private locationListService: LocationListService
   ) { }
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
+
+  private pendingSelectedAddress: SelectedAddress | null = null;
+
+  @Input()
+  set selectedAddress(entry: SelectedAddress | null) {
+    this.pendingSelectedAddress = entry;
+
+    if (entry && this.locationForm) {
+      this.startEdit(entry);
+    }
+  }
 
   countries: Country[] = [];
   divisions: Division[] = [];
@@ -40,7 +50,7 @@ export class LocationFormComponent implements OnInit {
 
   locationForm!: FormGroup;
 
-  prepareForm(formData: InitialAddress): void {
+  prepareForm(formData: InitialAddress | null): void {
     formData = formData || new InitialAddress();
 
     this.locationForm = this.fb.group({
@@ -62,6 +72,10 @@ export class LocationFormComponent implements OnInit {
     this.onDivisionChange();
     this.onDistrictChange();
     this.onUpazilaChange();
+
+    if (this.pendingSelectedAddress) {
+      this.startEdit(this.pendingSelectedAddress);
+    }
   }
 
   public async startEdit(entry: SelectedAddress): Promise<void> {
@@ -94,18 +108,18 @@ export class LocationFormComponent implements OnInit {
 
     try {
       // lists required to populate the dropdowns using (entry.*_id) fields. 
-      this.divisions = await this.locationService.getDivisions().toPromise();
+      this.divisions = await this.locationFormService.getDivisions().toPromise();
       
       if (entry.division_id) {
-        this.districts = await this.locationService.getDistrictsByDivision(entry.division_id).toPromise();
+        this.districts = await this.locationFormService.getDistrictsByDivision(entry.division_id).toPromise();
       }
       
       if (entry.district_id) {
-        this.upazilas = await this.locationService.getUpazilasByDistrict(entry.district_id).toPromise();
+        this.upazilas = await this.locationFormService.getUpazilasByDistrict(entry.district_id).toPromise();
       }
       
       if (entry.upazila_id) {
-        this.postCodes = await this.locationService.getPostCodesByUpazila(entry.upazila_id).toPromise();
+        this.postCodes = await this.locationFormService.getPostCodesByUpazila(entry.upazila_id).toPromise();
       }
 
       // Update existing form with absolute IDs instead of names
@@ -132,7 +146,7 @@ export class LocationFormComponent implements OnInit {
   private loadCountries(): void {
     this.countryError = '';
 
-    this.locationService.getCountries().subscribe({
+    this.locationFormService.getCountries().subscribe({
       next: countries => {
         this.countries = countries;
 
@@ -165,7 +179,7 @@ export class LocationFormComponent implements OnInit {
   private loadDivisions(): void {
     this.divisionError = '';
 
-    this.locationService.getDivisions().subscribe({
+    this.locationFormService.getDivisions().subscribe({
       next: divisions => {
         this.divisions = divisions;
       },
@@ -187,7 +201,7 @@ export class LocationFormComponent implements OnInit {
       this.locationForm.get('districtId').enable();
       this.districtError = '';
 
-      this.locationService.getDistrictsByDivision(divisionId).subscribe({
+      this.locationFormService.getDistrictsByDivision(divisionId).subscribe({
         next: districts => {
           this.districts = districts;
         },
@@ -210,7 +224,7 @@ export class LocationFormComponent implements OnInit {
       this.locationForm.get('upazilaId').enable();
       this.upazilaError = '';
 
-      this.locationService.getUpazilasByDistrict(districtId).subscribe({
+      this.locationFormService.getUpazilasByDistrict(districtId).subscribe({
         next: upazilas => {
           this.upazilas = upazilas;
         },
@@ -233,7 +247,7 @@ export class LocationFormComponent implements OnInit {
       this.locationForm.get('postCode').enable();
       this.postCodeError = '';
 
-      this.locationService.getPostCodesByUpazila(upazilaId).subscribe({
+      this.locationFormService.getPostCodesByUpazila(upazilaId).subscribe({
         next: postCodes => {
           this.postCodes = postCodes;
         },
@@ -355,22 +369,22 @@ export class LocationFormComponent implements OnInit {
     
     if (this.isEditMode && this.editingEntryId) {
       selectedAddress.id = this.editingEntryId;
-      this.locationEntriesService.updateEntry(this.editingEntryId, selectedAddress).subscribe(() => {
+      this.locationListService.updateAddress(this.editingEntryId, selectedAddress).subscribe(() => {
         console.log('Entry updated successfully!');
         this.resetEditMode(); // Reset after edit
+        this.addressSubmit.emit(selectedAddress);
       }, error => {
         console.error('Error updating entry:', error);
       });
     } else {
-      this.locationEntriesService.postEntry(selectedAddress).subscribe(() => {
+      this.locationListService.addAddress(selectedAddress).subscribe(() => {
         console.log('Entry added successfully!');
         this.resetEditMode();
+        this.addressSubmit.emit(selectedAddress);
       }, error => {
         console.error('Error adding entry:', error);
       });
     }
-    // Emit to parent component
-    this.addressSubmit.emit(selectedAddress);
   }
 
   private resetEditMode(): void {

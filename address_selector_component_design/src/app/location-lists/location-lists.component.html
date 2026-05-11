@@ -1,14 +1,12 @@
 <div class="container">
 
   <div class="left">
-    <app-location-form
-      #locationSelector
-      (addressSubmit)="onAddressSubmit($event)">
+    <app-location-form [selectedAddress]="addressBeingEdited" (addressSubmit)="onAddressFormSubmit($event)">
     </app-location-form>
   </div>
 
   <div class="right">
-    <h2><u>Addresses:</u></h2>
+    <h2><u>Location Lists:</u></h2>
 
     <table border="1" cellpadding="10" cellspacing="2">
       <thead>
@@ -25,7 +23,7 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let entry of entries | async">
+        <tr *ngFor="let entry of savedAddresses$ | async">
           <td>{{ entry.id }}</td>
           <td>{{ entry.country_name }}</td>
           <td>{{ entry.division_name }}</td>
@@ -34,7 +32,7 @@
           <td>{{ entry.post_offce_name }}</td>
           <td>{{ entry.post_code }}</td>
           <td>
-            <button (click)="editEntry(entry)">Edit</button>
+            <button (click)="onEditAddress(entry)">Edit</button>
           </td>
         </tr>
       </tbody>

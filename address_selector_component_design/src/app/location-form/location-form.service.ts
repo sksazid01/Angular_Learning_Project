@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Country, Division, District, Upazila, PostCode } from './location.model';
+import { Country, Division, District, Upazila, PostCode } from './location-form.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocationService {
+export class LocationFormService {
   constructor(private http: HttpClient) {}
 
   private baseUrl = 'http://localhost:3000';
