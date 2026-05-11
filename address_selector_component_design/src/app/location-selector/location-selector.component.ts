@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location.model';
 
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
-import { ShowEntriesService } from '../show-entries/address.service';
+import { LocationEntriesService } from '../location-entries/address.service';
 
 @Component({
   selector: 'app-location-selector',
@@ -22,7 +22,7 @@ export class LocationSelectorComponent implements OnInit {
     private locationService: LocationService,
     private loadingService: LoadingService, 
     private confirmationService: ConfirmationService,
-    private showEntriesService: ShowEntriesService
+    private locationEntriesService: LocationEntriesService
   ) { }
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
@@ -355,14 +355,14 @@ export class LocationSelectorComponent implements OnInit {
     
     if (this.isEditMode && this.editingEntryId) {
       selectedAddress.id = this.editingEntryId;
-      this.showEntriesService.updateEntry(this.editingEntryId, selectedAddress).subscribe(() => {
+      this.locationEntriesService.updateEntry(this.editingEntryId, selectedAddress).subscribe(() => {
         console.log('Entry updated successfully!');
         this.resetEditMode(); // Reset after edit
       }, error => {
         console.error('Error updating entry:', error);
       });
     } else {
-      this.showEntriesService.postEntry(selectedAddress).subscribe(() => {
+      this.locationEntriesService.postEntry(selectedAddress).subscribe(() => {
         console.log('Entry added successfully!');
         this.resetEditMode();
       }, error => {

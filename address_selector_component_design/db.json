@@ -64,6 +64,19 @@
       "upazila_id": 1,
       "post_office_id": null,
       "id": 5
+    },
+    {
+      "country_name": "Bangladesh",
+      "division_name": "Barishal",
+      "district_name": "Barguna",
+      "upazila_name": "Amtali",
+      "post_offce_name": "Amtali",
+      "post_code": "8710",
+      "division_id": 1,
+      "district_id": 34,
+      "upazila_id": 1,
+      "post_office_id": null,
+      "id": 6
     }
   ],
   "countries": [

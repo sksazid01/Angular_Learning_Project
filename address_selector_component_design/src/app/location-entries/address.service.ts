@@ -7,7 +7,7 @@ import { SelectedAddress } from '../location-selector/location.model';
 @Injectable({
   providedIn: 'root'
 })
-export class ShowEntriesService {
+export class LocationEntriesService {
 
   entriesSubject: BehaviorSubject<SelectedAddress[]> = new BehaviorSubject<SelectedAddress[]>([]);
   entries$: Observable<SelectedAddress[]> = this.entriesSubject.asObservable();

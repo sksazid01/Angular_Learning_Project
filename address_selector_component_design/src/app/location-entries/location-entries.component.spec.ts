@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShowEntriesComponent } from './show-entries.component';
+import { LocationEntriesComponent } from './location-entries.component';
 
-describe('ShowEntriesComponent', () => {
-  let component: ShowEntriesComponent;
-  let fixture: ComponentFixture<ShowEntriesComponent>;
+describe('LocationEntriesComponent', () => {
+  let component: LocationEntriesComponent;
+  let fixture: ComponentFixture<LocationEntriesComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShowEntriesComponent ]
+      declarations: [ LocationEntriesComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ShowEntriesComponent);
+    fixture = TestBed.createComponent(LocationEntriesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
