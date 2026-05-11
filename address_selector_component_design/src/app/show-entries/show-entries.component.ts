@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { ShowEntriesService } from './show-entries.service';
 import { Observable } from 'rxjs';
 import { SelectedAddress } from '../location-selector/location.model';
@@ -11,6 +11,7 @@ import { OnInit } from '@angular/core';
 })
 export class ShowEntriesComponent implements OnInit {
   entries: Observable<SelectedAddress[]> = new Observable<SelectedAddress[]>(); // Initialize as an empty Observable
+  @Output() editRequest = new EventEmitter<SelectedAddress>();
 
   constructor(private showEntriesService: ShowEntriesService) { }
 
@@ -18,9 +19,9 @@ export class ShowEntriesComponent implements OnInit {
     console.log('ShowEntriesComponent initialized. Fetching entries...');
     this.entries = this.showEntriesService.getEntries();
   }
-  // Method to set the entry to be edited(turn on edit mode)
+  // Method to emit the entry to be edited to the parent
   editEntry(entry: SelectedAddress): void {
-    this.showEntriesService.setEditingEntry(entry);
+    this.editRequest.emit(entry);
   }
 
   addEntry(entry: SelectedAddress): void {

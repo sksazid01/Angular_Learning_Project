@@ -62,26 +62,33 @@ export class LocationSelectorComponent implements OnInit {
     this.onDivisionChange();
     this.onDistrictChange();
     this.onUpazilaChange();
+  }
 
-    this.showEntriesService.editingEntry$.subscribe(entry => {
-      if (entry) {
-        this.isEditMode = true;
-        this.editingEntryId = entry.id!;
-        this.populateForm(entry);
-      } else {
-        this.isEditMode = false;
-        this.editingEntryId = null;
-        if (this.locationForm) {
-           this.locationForm.reset();
-           if (this.countries.length === 1) {
-             this.locationForm.patchValue({ countryId: this.countries[0].id });
-           }
-        }
-      }
-    });
+  public async startEdit(entry: SelectedAddress): Promise<void> {
+    if (entry) {
+      this.isEditMode = true;
+      this.editingEntryId = entry.id!;
+      await this.populateForm(entry);
+    }
   }
 
   private async populateForm(entry: SelectedAddress): Promise<void> {
+    if (entry) {
+        this.isEditMode = true;
+        this.editingEntryId = entry.id!;
+      } 
+    else {
+      this.isEditMode = false;
+      this.editingEntryId = null;
+      if (this.locationForm) {
+          this.locationForm.reset();
+          if (this.countries.length === 1) {
+            this.locationForm.patchValue({ countryId: this.countries[0].id });
+          }
+      }
+      return;
+      }
+
     const country = this.countries.find(c => c.name === entry.country_name);
     const countryId = country ? country.id : 1; 
 
@@ -350,18 +357,35 @@ export class LocationSelectorComponent implements OnInit {
       selectedAddress.id = this.editingEntryId;
       this.showEntriesService.updateEntry(this.editingEntryId, selectedAddress).subscribe(() => {
         console.log('Entry updated successfully!');
-        this.showEntriesService.setEditingEntry(null); // Reset after edit
+        this.resetEditMode(); // Reset after edit
       }, error => {
         console.error('Error updating entry:', error);
       });
     } else {
       this.showEntriesService.postEntry(selectedAddress).subscribe(() => {
         console.log('Entry added successfully!');
+        this.resetEditMode();
       }, error => {
         console.error('Error adding entry:', error);
       });
     }
     // Emit to parent component
     this.addressSubmit.emit(selectedAddress);
+  }
+
+  private resetEditMode(): void {
+    this.isEditMode = false;
+    this.editingEntryId = null;
+    if (this.locationForm) {
+       this.locationForm.reset();
+       if (this.countries.length === 1) {
+         this.locationForm.patchValue({ countryId: this.countries[0].id }, { emitEvent: false });
+         const divCtrl = this.locationForm.get('divisionId');
+         if (divCtrl) {
+            divCtrl.enable({ emitEvent: false });
+         }
+         this.loadDivisions();
+       }
+    }
   }
 }
