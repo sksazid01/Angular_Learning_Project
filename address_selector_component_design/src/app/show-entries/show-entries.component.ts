@@ -1,8 +1,9 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { ShowEntriesService } from './show-entries.service';
+import { Component, ViewChild } from '@angular/core';
+import { ShowEntriesService } from './address.service';
 import { Observable } from 'rxjs';
 import { SelectedAddress } from '../location-selector/location.model';
 import { OnInit } from '@angular/core';
+import { LocationSelectorComponent } from '../location-selector/location-selector.component';
 
 @Component({
   selector: 'app-show-entries',
@@ -11,7 +12,8 @@ import { OnInit } from '@angular/core';
 })
 export class ShowEntriesComponent implements OnInit {
   entries: Observable<SelectedAddress[]> = new Observable<SelectedAddress[]>(); // Initialize as an empty Observable
-  @Output() editRequest = new EventEmitter<SelectedAddress>();
+  
+  @ViewChild('locationSelector') locationSelector!: LocationSelectorComponent;
 
   constructor(private showEntriesService: ShowEntriesService) { }
 
@@ -19,9 +21,14 @@ export class ShowEntriesComponent implements OnInit {
     console.log('ShowEntriesComponent initialized. Fetching entries...');
     this.entries = this.showEntriesService.getEntries();
   }
-  // Method to emit the entry to be edited to the parent
+  
+  // Method to start edit mode via view child reference
   editEntry(entry: SelectedAddress): void {
-    this.editRequest.emit(entry);
+    this.locationSelector.startEdit(entry);
+  }
+
+  onAddressSubmit(entry: SelectedAddress): void {
+    console.log('Form Submitted & Handled inside ShowEntries component!', entry);
   }
 
   addEntry(entry: SelectedAddress): void {

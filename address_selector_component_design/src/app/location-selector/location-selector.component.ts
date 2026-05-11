@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location.model';
 
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
-import { ShowEntriesService } from '../show-entries/show-entries.service';
+import { ShowEntriesService } from '../show-entries/address.service';
 
 @Component({
   selector: 'app-location-selector',
