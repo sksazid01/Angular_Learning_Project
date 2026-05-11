@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SelectedAddress } from '../location-selector/location.model';
+import { SelectedAddress } from '../location-form/location.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocationEntriesService {
+export class LocationListsService {
 
   entriesSubject: BehaviorSubject<SelectedAddress[]> = new BehaviorSubject<SelectedAddress[]>([]);
   entries$: Observable<SelectedAddress[]> = this.entriesSubject.asObservable();

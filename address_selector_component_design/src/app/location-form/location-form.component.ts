@@ -9,20 +9,20 @@ import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location.model';
 
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
-import { LocationEntriesService } from '../location-entries/address.service';
+import { LocationListsService } from '../location-lists/address.service';
 
 @Component({
-  selector: 'app-location-selector',
-  templateUrl: './location-selector.component.html',
-  styleUrls: ['./location-selector.component.css']
+  selector: 'app-location-form',
+  templateUrl: './location-form.component.html',
+  styleUrls: ['./location-form.component.css']
 })
-export class LocationSelectorComponent implements OnInit {
+export class LocationFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private locationService: LocationService,
     private loadingService: LoadingService, 
     private confirmationService: ConfirmationService,
-    private locationEntriesService: LocationEntriesService
+    private locationEntriesService: LocationListsService
   ) { }
 
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
