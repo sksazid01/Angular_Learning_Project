@@ -18,6 +18,10 @@ export class ShowEntriesComponent implements OnInit {
     console.log('ShowEntriesComponent initialized. Fetching entries...');
     this.entries = this.showEntriesService.getEntries();
   }
+  // Method to set the entry to be edited(turn on edit mode)
+  editEntry(entry: SelectedAddress): void {
+    this.showEntriesService.setEditingEntry(entry);
+  }
 
   addEntry(entry: SelectedAddress): void {
     this.showEntriesService.postEntry(entry).subscribe(() => {

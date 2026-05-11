@@ -52,6 +52,9 @@ export class LocationSelectorComponent implements OnInit {
     });
   }
 
+  isEditMode = false;
+  editingEntryId: number | null = null;
+
   ngOnInit(): void {
     this.prepareForm(null);
     this.loadCountries();
@@ -59,6 +62,64 @@ export class LocationSelectorComponent implements OnInit {
     this.onDivisionChange();
     this.onDistrictChange();
     this.onUpazilaChange();
+
+    this.showEntriesService.editingEntry$.subscribe(entry => {
+      if (entry) {
+        this.isEditMode = true;
+        this.editingEntryId = entry.id!;
+        this.populateForm(entry);
+      } else {
+        this.isEditMode = false;
+        this.editingEntryId = null;
+        if (this.locationForm) {
+           this.locationForm.reset();
+           if (this.countries.length === 1) {
+             this.locationForm.patchValue({ countryId: this.countries[0].id });
+           }
+        }
+      }
+    });
+  }
+
+  private async populateForm(entry: SelectedAddress): Promise<void> {
+    const country = this.countries.find(c => c.name === entry.country_name);
+    const countryId = country ? country.id : 1; 
+
+    try {
+      // lists required to populate the dropdowns using (entry.*_id) fields. 
+      this.divisions = await this.locationService.getDivisions().toPromise();
+      
+      if (entry.division_id) {
+        this.districts = await this.locationService.getDistrictsByDivision(entry.division_id).toPromise();
+      }
+      
+      if (entry.district_id) {
+        this.upazilas = await this.locationService.getUpazilasByDistrict(entry.district_id).toPromise();
+      }
+      
+      if (entry.upazila_id) {
+        this.postCodes = await this.locationService.getPostCodesByUpazila(entry.upazila_id).toPromise();
+      }
+
+      // Update existing form with absolute IDs instead of names
+      this.locationForm.patchValue({ 
+        countryId: countryId, 
+        divisionId: entry.division_id, 
+        districtId: entry.district_id, 
+        upazilaId: entry.upazila_id, 
+        postCode: entry.post_code 
+      }, { emitEvent: false });
+      
+      // Ensure all filled controls are enabled so user can edit them
+      if (countryId) this.locationForm.get('countryId').enable({ emitEvent: false });
+      if (entry.division_id) this.locationForm.get('divisionId').enable({ emitEvent: false });
+      if (entry.district_id) this.locationForm.get('districtId').enable({ emitEvent: false });
+      if (entry.upazila_id) this.locationForm.get('upazilaId').enable({ emitEvent: false });
+      if (entry.post_code) this.locationForm.get('postCode').enable({ emitEvent: false });
+
+    } catch (error) {
+      console.error('Failed to populate edit data:', error);
+    }
   }
 
   private loadCountries(): void {
@@ -67,11 +128,8 @@ export class LocationSelectorComponent implements OnInit {
     this.locationService.getCountries().subscribe({
       next: countries => {
         this.countries = countries;
-        /*
-          Since my database has only one country,
-          I can auto-select it.
-        */
-        if (countries.length === 1) {
+
+        if (countries.length === 1 && !this.isEditMode) {
           this.locationForm.patchValue({
             countryId: countries[0].id
           });
@@ -280,16 +338,29 @@ export class LocationSelectorComponent implements OnInit {
       district_name: selectedDistrict ? selectedDistrict.name : null,
       upazila_name: selectedUpazila ? selectedUpazila.name : null,
       post_offce_name: selectedPostCode ? selectedPostCode.postOffice : null,
-      post_code: selectedPostCode ? selectedPostCode.postCode : null
+      post_code: selectedPostCode ? selectedPostCode.postCode : null,
+      
+      division_id: selectedDivision ? selectedDivision.id : null,
+      district_id: selectedDistrict ? selectedDistrict.id : null,
+      upazila_id: selectedUpazila ? selectedUpazila.id : null,
+      post_office_id: selectedPostCode && selectedPostCode.id ? selectedPostCode.id : null
     };
-
-    console.log('Selected Address from child-component:', selectedAddress);
-
-    this.showEntriesService.postEntry(selectedAddress).subscribe(() => {
-      console.log('Entry added successfully!');
-    }, error => {
-      console.error('Error adding entry:', error);
-    });
+    
+    if (this.isEditMode && this.editingEntryId) {
+      selectedAddress.id = this.editingEntryId;
+      this.showEntriesService.updateEntry(this.editingEntryId, selectedAddress).subscribe(() => {
+        console.log('Entry updated successfully!');
+        this.showEntriesService.setEditingEntry(null); // Reset after edit
+      }, error => {
+        console.error('Error updating entry:', error);
+      });
+    } else {
+      this.showEntriesService.postEntry(selectedAddress).subscribe(() => {
+        console.log('Entry added successfully!');
+      }, error => {
+        console.error('Error adding entry:', error);
+      });
+    }
     // Emit to parent component
     this.addressSubmit.emit(selectedAddress);
   }

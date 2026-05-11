@@ -37,8 +37,13 @@ export interface PostCode {
 }
 
 export interface SelectedAddress {
+  id?: number;
   country_name: string | null;
   division_name: string | null;
+  division_id: number | null;
+  district_id: number | null;
+  upazila_id: number | null;
+  post_office_id: number | null;
   district_name: string | null;
   upazila_name: string | null;
   post_offce_name: string | null;
