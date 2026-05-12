@@ -12,22 +12,16 @@ import { NotificationService } from '../notification/notification.service';
   styleUrls: ['./location-form.component.css']
 })
 export class AddressFormComponent implements OnInit {
-  countryError = '';
-  divisionError = '';
-  districtError = '';
-  upazilaError = '';
-  postCodeError = '';
+  private countries: Country[] = [];
+  private divisions: Division[] = [];
+  private districts: District[] = [];
+  private upazilas: Upazila[] = [];
+  private postCodes: PostCode[] = [];
 
-  countries: Country[] = [];
-  divisions: Division[] = [];
-  districts: District[] = [];
-  upazilas: Upazila[] = [];
-  postCodes: PostCode[] = [];
-
-  isEditMode = false;
-  locationForm!: FormGroup;
-  editingAddressId: number | null = null;
-  pendingSelectedAddress: SelectedAddress | null = null;
+  private isEditMode = false;
+  private locationForm!: FormGroup;
+  private editingAddressId: number | null = null;
+  private pendingSelectedAddress: SelectedAddress | null = null;
 
   @Input() selectedAddress: SelectedAddress | null = null;
   @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
@@ -97,7 +91,7 @@ export class AddressFormComponent implements OnInit {
     const countryId = country ? country.id : 1;
 
     if (address) {
-      this.turnOffEditMode();
+      this.turnOnEditMode();
       this.editingAddressId = address.id!;
     }
     else {
@@ -149,8 +143,6 @@ export class AddressFormComponent implements OnInit {
   }
 
   private loadCountries(): void {
-    this.countryError = '';
-
     this.locationFormService.getCountries().subscribe({
       next: countries => {
         this.countries = countries;
@@ -163,7 +155,7 @@ export class AddressFormComponent implements OnInit {
       },
       error: error => {
         console.error(error);
-        this.countryError = 'Could not load countries.';
+        this.notificationService.showNotification('Failed to load countries. Please try again.', true);
       }
     });
   }
@@ -182,15 +174,13 @@ export class AddressFormComponent implements OnInit {
   }
 
   private loadDivisions(): void {
-    this.divisionError = '';
-
     this.locationFormService.getDivisions().subscribe({
       next: divisions => {
         this.divisions = divisions;
       },
       error: error => {
         console.error(error);
-        this.divisionError = 'Could not load divisions.';
+        this.notificationService.showNotification('Failed to load divisions. Please try again.', true);
       }
     });
   }
@@ -204,15 +194,13 @@ export class AddressFormComponent implements OnInit {
       }
 
       this.locationForm.get('districtId')!.enable();
-      this.districtError = '';
-
       this.locationFormService.getDistrictsByDivision(divisionId).subscribe({
         next: districts => {
           this.districts = districts;
         },
         error: error => {
           console.error(error);
-          this.districtError = 'Could not load districts.';
+          this.notificationService.showNotification('Failed to load districts. Please try again.', true);
         }
       });
     });
@@ -227,15 +215,13 @@ export class AddressFormComponent implements OnInit {
       }
 
       this.locationForm.get('upazilaId')!.enable();
-      this.upazilaError = '';
-
       this.locationFormService.getUpazilasByDistrict(districtId).subscribe({
         next: upazilas => {
           this.upazilas = upazilas;
         },
         error: error => {
           console.error(error);
-          this.upazilaError = 'Could not load upazilas.';
+          this.notificationService.showNotification('Failed to load upazilas. Please try again.', true);
         }
       });
     });
@@ -250,15 +236,13 @@ export class AddressFormComponent implements OnInit {
       }
 
       this.locationForm.get('postCode')!.enable();
-      this.postCodeError = '';
-
       this.locationFormService.getPostCodesByUpazila(upazilaId).subscribe({
         next: postCodes => {
           this.postCodes = postCodes;
         },
         error: error => {
           console.error(error);
-          this.postCodeError = 'Could not load post offices.';
+          this.notificationService.showNotification('Failed to load post codes. Please try again.', true);
         }
       });
     });
@@ -324,7 +308,7 @@ export class AddressFormComponent implements OnInit {
 
   onSubmitRequest(): void {
     if (this.locationForm.invalid) {
-      console.log('Form is invalid! Fields missing.');
+      this.notificationService.showNotification('Please fill all required fields correctly before submitting.', true);
       Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
       return;
     }

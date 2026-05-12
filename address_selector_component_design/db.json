@@ -33,10 +33,10 @@
       "upazila_name": "Gopalpur",
       "post_offce_name": "Hemnagar",
       "post_code": "1992",
+      "post_office_id": null,
       "division_id": 3,
       "district_id": 17,
       "upazila_id": 266,
-      "post_office_id": null,
       "id": 3
     },
     {
@@ -59,10 +59,10 @@
       "upazila_name": "Amtali",
       "post_offce_name": "Amtali",
       "post_code": "8710",
+      "post_office_id": null,
       "division_id": 1,
       "district_id": 34,
       "upazila_id": 1,
-      "post_office_id": null,
       "id": 5
     },
     {
@@ -90,6 +90,32 @@
       "upazila_id": 143,
       "post_office_id": null,
       "id": 7
+    },
+    {
+      "country_name": "Bangladesh",
+      "division_name": "Barishal",
+      "district_name": "Barishal",
+      "upazila_name": "Babuganj",
+      "post_offce_name": "Barajalia",
+      "post_code": "8260",
+      "post_office_id": null,
+      "division_id": 1,
+      "district_id": 35,
+      "upazila_id": 8,
+      "id": 8
+    },
+    {
+      "country_name": "Bangladesh",
+      "division_name": "Barishal",
+      "district_name": "Barishal",
+      "upazila_name": "Babuganj",
+      "post_offce_name": "Chandpasha",
+      "post_code": "8212",
+      "post_office_id": null,
+      "division_id": 1,
+      "district_id": 35,
+      "upazila_id": 8,
+      "id": 9
     }
   ],
   "countries": [
