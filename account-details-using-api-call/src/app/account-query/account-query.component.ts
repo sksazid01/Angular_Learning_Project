@@ -10,10 +10,6 @@ export class AccountQueryComponent implements AfterViewInit {
   
   @ViewChild(AccountComponent) accountComponent!: AccountComponent;
 
-  // constructor() { }
-
-  // ngAfterViewInit(): void {}
-
   onSearch(id: string): void {
     if (!this.accountComponent) {
       return;
@@ -21,5 +17,4 @@ export class AccountQueryComponent implements AfterViewInit {
 
     this.accountComponent.setAccountId(id); // It calls the child method and passes the ID data
   }
-
 }
