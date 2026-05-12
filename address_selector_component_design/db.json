@@ -68,19 +68,6 @@
     {
       "country_name": "Bangladesh",
       "division_name": "Barishal",
-      "district_name": "Barguna",
-      "upazila_name": "Amtali",
-      "post_offce_name": "Amtali",
-      "post_code": "8710",
-      "division_id": 1,
-      "district_id": 34,
-      "upazila_id": 1,
-      "post_office_id": null,
-      "id": 6
-    },
-    {
-      "country_name": "Bangladesh",
-      "division_name": "Barishal",
       "district_name": "Barishal",
       "upazila_name": "Wazirpur",
       "post_offce_name": "Dakuarhat",
@@ -88,6 +75,19 @@
       "division_id": 1,
       "district_id": 35,
       "upazila_id": 16,
+      "post_office_id": null,
+      "id": 6
+    },
+    {
+      "country_name": "Bangladesh",
+      "division_name": "Chattogram",
+      "district_name": "Rangamati",
+      "upazila_name": "Nannerchar",
+      "post_offce_name": "Nanichhar",
+      "post_code": "4520",
+      "division_id": 2,
+      "district_id": 50,
+      "upazila_id": 143,
       "post_office_id": null,
       "id": 7
     }

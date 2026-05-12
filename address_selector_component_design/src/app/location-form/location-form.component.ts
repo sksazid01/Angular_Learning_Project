@@ -1,13 +1,7 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angular/forms';
-
-import { CommonModule } from '@angular/common';
-
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { LocationFormService } from './location-form.service';
-import { LoadingService } from '../core/services/loading.service';
-import { Observable } from 'rxjs';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location-form.model';
-
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
 import { LocationListService } from '../location-lists/location-lists.service';
 
@@ -16,54 +10,33 @@ import { LocationListService } from '../location-lists/location-lists.service';
   templateUrl: './location-form.component.html',
   styleUrls: ['./location-form.component.css']
 })
-export class AddressFormComponent implements OnInit {
-  constructor(
-    private fb: FormBuilder,
-    private locationFormService: LocationFormService,
-    private confirmationService: ConfirmationService,
-    private locationListService: LocationListService
-  ) { }
-
-  @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
-
-  private pendingSelectedAddress: SelectedAddress | null = null;
-
-  @Input()
-  set selectedAddress(entry: SelectedAddress | null) {
-    this.pendingSelectedAddress = entry;
-
-    if (entry && this.locationForm) {
-      this.startEdit(entry);
-    }
-  }
-
-  countries: Country[] = [];
-  divisions: Division[] = [];
-  districts: District[] = [];
-  upazilas: Upazila[] = [];
-  postCodes: PostCode[] = [];
+export class AddressFormComponent implements OnInit, OnChanges {
   countryError = '';
   divisionError = '';
   districtError = '';
   upazilaError = '';
   postCodeError = '';
 
-  locationForm!: FormGroup;
-
-  prepareForm(formData: InitialAddress | null): void {
-    formData = formData || new InitialAddress();
-
-    this.locationForm = this.fb.group({
-      countryId: [formData.countryId, Validators.required],
-      divisionId: [formData.divisionId, Validators.required],
-      districtId: [formData.districtId, Validators.required],
-      upazilaId: [formData.upazilaId, Validators.required],
-      postCode: [formData.postCode, Validators.required]
-    });
-  }
+  countries: Country[] = [];
+  divisions: Division[] = [];
+  districts: District[] = [];
+  upazilas: Upazila[] = [];
+  postCodes: PostCode[] = [];
 
   isEditMode = false;
-  editingEntryId: number | null = null;
+  locationForm!: FormGroup;
+  editingAddressId: number | null = null;
+  pendingSelectedAddress: SelectedAddress | null = null;
+
+  @Input() selectedAddress: SelectedAddress | null = null;
+  @Output() addressSubmit = new EventEmitter<SelectedAddress>(); // for transmitting address data to parent component
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private locationFormService: LocationFormService,
+    private confirmationService: ConfirmationService,
+    private locationListService: LocationListService
+  ) { }
 
   ngOnInit(): void {
     this.prepareForm(null);
@@ -78,65 +51,95 @@ export class AddressFormComponent implements OnInit {
     }
   }
 
-  public async startEdit(entry: SelectedAddress): Promise<void> {
-    if (entry) {
-      this.isEditMode = true;
-      this.editingEntryId = entry.id!;
-      await this.populateForm(entry);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedAddress']) {
+      const address = changes['selectedAddress'].currentValue;
+      this.pendingSelectedAddress = address;
+      if (address && this.locationForm) this.startEdit(address);
     }
   }
 
-  private async populateForm(entry: SelectedAddress): Promise<void> {
-    if (entry) {
-        this.isEditMode = true;
-        this.editingEntryId = entry.id!;
-      } 
+
+
+  prepareForm(formData: InitialAddress | null): void {
+    formData = formData || new InitialAddress();
+
+    this.locationForm = this.formBuilder.group({
+      countryId: [formData.countryId, Validators.required],
+      divisionId: [formData.divisionId, Validators.required],
+      districtId: [formData.districtId, Validators.required],
+      upazilaId: [formData.upazilaId, Validators.required],
+      postCode: [formData.postCode, Validators.required]
+    });
+  }
+
+  private turnOnEditMode(): void {
+    this.isEditMode = true;
+  }
+
+  private turnOffEditMode(): void {
+    this.isEditMode = false;
+    this.editingAddressId = null;
+  }
+
+  public async startEdit(address: SelectedAddress): Promise<void> {
+    if (address) {
+      this.turnOnEditMode();
+      this.editingAddressId = address.id!;
+      await this.populateForm(address);
+    }
+  }
+
+  private async populateForm(address: SelectedAddress): Promise<void> {
+    const country = this.countries.find(c => c.name === address.country_name);
+    const countryId = country ? country.id : 1;
+
+    if (address) {
+      this.turnOffEditMode();
+      this.editingAddressId = address.id!;
+    }
     else {
-      this.isEditMode = false;
-      this.editingEntryId = null;
+      this.turnOffEditMode();
       if (this.locationForm) {
-          this.locationForm.reset();
-          if (this.countries.length === 1) {
-            this.locationForm.patchValue({ countryId: this.countries[0].id });
-          }
+        this.locationForm.reset();
+        if (this.countries.length === 1) {
+          this.locationForm.patchValue({ countryId: this.countries[0].id });
+        }
       }
       return;
-      }
-
-    const country = this.countries.find(c => c.name === entry.country_name);
-    const countryId = country ? country.id : 1; 
+    }
 
     try {
-      // lists required to populate the dropdowns using (entry.*_id) fields. 
+      // lists required to populate the dropdowns using (address.*_id) fields. 
       this.divisions = await this.locationFormService.getDivisions().toPromise();
-      
-      if (entry.division_id) {
-        this.districts = await this.locationFormService.getDistrictsByDivision(entry.division_id).toPromise();
+
+      if (address.division_id) {
+        this.districts = await this.locationFormService.getDistrictsByDivision(address.division_id).toPromise();
       }
-      
-      if (entry.district_id) {
-        this.upazilas = await this.locationFormService.getUpazilasByDistrict(entry.district_id).toPromise();
+
+      if (address.district_id) {
+        this.upazilas = await this.locationFormService.getUpazilasByDistrict(address.district_id).toPromise();
       }
-      
-      if (entry.upazila_id) {
-        this.postCodes = await this.locationFormService.getPostCodesByUpazila(entry.upazila_id).toPromise();
+
+      if (address.upazila_id) {
+        this.postCodes = await this.locationFormService.getPostCodesByUpazila(address.upazila_id).toPromise();
       }
 
       // Update existing form with absolute IDs instead of names
-      this.locationForm.patchValue({ 
-        countryId: countryId, 
-        divisionId: entry.division_id, 
-        districtId: entry.district_id, 
-        upazilaId: entry.upazila_id, 
-        postCode: entry.post_code 
+      this.locationForm.patchValue({
+        countryId: countryId,
+        divisionId: address.division_id,
+        districtId: address.district_id,
+        upazilaId: address.upazila_id,
+        postCode: address.post_code
       }, { emitEvent: false });
-      
+
       // Ensure all filled controls are enabled so user can edit them
       if (countryId) this.locationForm.get('countryId')!.enable({ emitEvent: false });
-      if (entry.division_id) this.locationForm.get('divisionId')!.enable({ emitEvent: false });
-      if (entry.district_id) this.locationForm.get('districtId')!.enable({ emitEvent: false });
-      if (entry.upazila_id) this.locationForm.get('upazilaId')!.enable({ emitEvent: false });
-      if (entry.post_code) this.locationForm.get('postCode')!.enable({ emitEvent: false });
+      if (address.division_id) this.locationForm.get('divisionId')!.enable({ emitEvent: false });
+      if (address.district_id) this.locationForm.get('districtId')!.enable({ emitEvent: false });
+      if (address.upazila_id) this.locationForm.get('upazilaId')!.enable({ emitEvent: false });
+      if (address.post_code) this.locationForm.get('postCode')!.enable({ emitEvent: false });
 
     } catch (error) {
       console.error('Failed to populate edit data:', error);
@@ -299,7 +302,7 @@ export class AddressFormComponent implements OnInit {
       upazilaId: null,
       postCode: ''
     }, { emitEvent: false });
-
+    
     this.upazilas = [];
     this.postCodes = [];
 
@@ -313,7 +316,6 @@ export class AddressFormComponent implements OnInit {
     }, { emitEvent: false });
 
     this.postCodes = [];
-
     this.locationForm.get('postCode')!.disable();
   }
 
@@ -324,8 +326,6 @@ export class AddressFormComponent implements OnInit {
       Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
       return;
     }
-
-    console.log('Form valid, showing popup...');
     this.confirmationService.confirm(() => this.submit());
   }
 
@@ -360,46 +360,43 @@ export class AddressFormComponent implements OnInit {
       upazila_name: selectedUpazila ? selectedUpazila.name : null,
       post_offce_name: selectedPostCode ? selectedPostCode.postOffice : null,
       post_code: selectedPostCode ? selectedPostCode.postCode : null,
-      
+      post_office_id: selectedPostCode && selectedPostCode.id ? selectedPostCode.id : null,
       division_id: selectedDivision ? selectedDivision.id : null,
       district_id: selectedDistrict ? selectedDistrict.id : null,
-      upazila_id: selectedUpazila ? selectedUpazila.id : null,
-      post_office_id: selectedPostCode && selectedPostCode.id ? selectedPostCode.id : null
+      upazila_id: selectedUpazila ? selectedUpazila.id : null
     };
-    
-    if (this.isEditMode && this.editingEntryId) {
-      selectedAddress.id = this.editingEntryId;
-      this.locationListService.updateAddress(this.editingEntryId, selectedAddress).subscribe(() => {
-        console.log('Entry updated successfully!');
+
+    if (this.isEditMode && this.editingAddressId) {
+      selectedAddress.id = this.editingAddressId;
+      this.locationListService.updateAddress(this.editingAddressId, selectedAddress).subscribe(() => {
         this.resetEditMode(); // Reset after edit
         this.addressSubmit.emit(selectedAddress);
       }, error => {
-        console.error('Error updating entry:', error);
+        console.error('Error updating address:', error);
       });
     } else {
       this.locationListService.addAddress(selectedAddress).subscribe(() => {
-        console.log('Entry added successfully!');
+        console.log('Address added successfully!');
         this.resetEditMode();
         this.addressSubmit.emit(selectedAddress);
       }, error => {
-        console.error('Error adding entry:', error);
+        console.error('Error adding address:', error);
       });
     }
   }
 
   private resetEditMode(): void {
-    this.isEditMode = false;
-    this.editingEntryId = null;
+    this.turnOffEditMode();
     if (this.locationForm) {
-       this.locationForm.reset();
-       if (this.countries.length === 1) {
-         this.locationForm.patchValue({ countryId: this.countries[0].id }, { emitEvent: false });
-         const divCtrl = this.locationForm.get('divisionId');
-         if (divCtrl) {
-            divCtrl.enable({ emitEvent: false });
-         }
-         this.loadDivisions();
-       }
+      this.locationForm.reset();
+      if (this.countries.length === 1) {
+        this.locationForm.patchValue({ countryId: this.countries[0].id }, { emitEvent: false });
+        const divCtrl = this.locationForm.get('divisionId');
+        if (divCtrl) {
+          divCtrl.enable({ emitEvent: false });
+        }
+        this.loadDivisions();
+      }
     }
   }
 }

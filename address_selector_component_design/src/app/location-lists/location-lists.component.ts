@@ -18,11 +18,11 @@ export class AddressListComponent implements OnInit {
     this.savedAddresses$ = this.locationListService.getAddresses();
   }
   
-  onEditAddress(entry: SelectedAddress): void {
-    this.addressBeingEdited = entry;
+  onEditAddress(address: SelectedAddress): void {
+    this.addressBeingEdited = address;
   }
 
-  onAddressFormSubmit(entry?: SelectedAddress): void {
+  onAddressFormSubmit(address?: SelectedAddress): void {
     this.addressBeingEdited = null;
     this.savedAddresses$ = this.locationListService.getAddresses();
   }

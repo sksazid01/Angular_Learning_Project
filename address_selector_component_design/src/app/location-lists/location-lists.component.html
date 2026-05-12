@@ -23,16 +23,16 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let entry of savedAddresses$ | async">
-          <td>{{ entry.id }}</td>
-          <td>{{ entry.country_name }}</td>
-          <td>{{ entry.division_name }}</td>
-          <td>{{ entry.district_name }}</td>
-          <td>{{ entry.upazila_name }}</td>
-          <td>{{ entry.post_offce_name }}</td>
-          <td>{{ entry.post_code }}</td>
+        <tr *ngFor="let address of savedAddresses$ | async">
+          <td>{{ address.id }}</td>
+          <td>{{ address.country_name }}</td>
+          <td>{{ address.division_name }}</td>
+          <td>{{ address.district_name }}</td>
+          <td>{{ address.upazila_name }}</td>
+          <td>{{ address.post_offce_name }}</td>
+          <td>{{ address.post_code }}</td>
           <td>
-            <button (click)="onEditAddress(entry)">Edit</button>
+            <button (click)="onEditAddress(address)">Edit</button>
           </td>
         </tr>
       </tbody>

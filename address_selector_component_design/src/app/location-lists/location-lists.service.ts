@@ -16,11 +16,11 @@ export class LocationListService {
     return this.http.get<SelectedAddress[]>(`${this.baseUrl}/address_list`);
   }
 
-  addAddress(entry: SelectedAddress): Observable<SelectedAddress> {
-    return this.http.post<SelectedAddress>(`${this.baseUrl}/address_list`, entry);
+  addAddress(address: SelectedAddress): Observable<SelectedAddress> {
+    return this.http.post<SelectedAddress>(`${this.baseUrl}/address_list`, address);
   }
 
-  updateAddress(id: number, entry: SelectedAddress): Observable<SelectedAddress> {
-    return this.http.put<SelectedAddress>(`${this.baseUrl}/address_list/${id}`, entry);
+  updateAddress(id: number, address: SelectedAddress): Observable<SelectedAddress> {
+    return this.http.put<SelectedAddress>(`${this.baseUrl}/address_list/${id}`, address);
   }
 }
