@@ -1,0 +1,13 @@
+<div *ngIf="isNotificationVisible && message" class="notification-container" [ngClass]="{'error': isError, 'success': !isError}">
+  <div class="notification-content">
+    <div class="notification-header">
+      <div *ngIf="title">
+        <h3>{{ title }}</h3>
+      </div>
+      <button class="close-btn" (click)="onCancel()">&times;</button>
+    </div>
+    <div class="notification-body">
+      <p>{{ message }}</p>
+    </div>
+  </div>
+</div>

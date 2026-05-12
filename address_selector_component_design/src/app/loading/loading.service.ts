@@ -9,7 +9,6 @@ export class LoadingService {
   private activeRequests = 0;
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   public isLoading$ = this.isLoadingSubject.asObservable();
-
   private loadingMap: Map<string, boolean> = new Map<string, boolean>();
   private loadingSubject = new BehaviorSubject<Map<string, boolean>>(this.loadingMap);
 

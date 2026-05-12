@@ -4,13 +4,14 @@ import { LocationFormService } from './location-form.service';
 import { Country, Division, District, Upazila, PostCode, SelectedAddress, InitialAddress } from './location-form.model';
 import { ConfirmationService } from '../confirmation-popup/confirmation.service';
 import { LocationListService } from '../location-lists/location-lists.service';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
   selector: 'app-location-form',
   templateUrl: './location-form.component.html',
   styleUrls: ['./location-form.component.css']
 })
-export class AddressFormComponent implements OnInit, OnChanges {
+export class AddressFormComponent implements OnInit {
   countryError = '';
   divisionError = '';
   districtError = '';
@@ -35,7 +36,8 @@ export class AddressFormComponent implements OnInit, OnChanges {
     private formBuilder: FormBuilder,
     private locationFormService: LocationFormService,
     private confirmationService: ConfirmationService,
-    private locationListService: LocationListService
+    private locationListService: LocationListService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -302,7 +304,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
       upazilaId: null,
       postCode: ''
     }, { emitEvent: false });
-    
+
     this.upazilas = [];
     this.postCodes = [];
 
@@ -369,17 +371,21 @@ export class AddressFormComponent implements OnInit, OnChanges {
     if (this.isEditMode && this.editingAddressId) {
       selectedAddress.id = this.editingAddressId;
       this.locationListService.updateAddress(this.editingAddressId, selectedAddress).subscribe(() => {
+        this.notificationService.showNotification('Address updated successfully!');
         this.resetEditMode(); // Reset after edit
         this.addressSubmit.emit(selectedAddress);
       }, error => {
+        this.notificationService.showNotification('Failed to update address. Please try again.', true);
         console.error('Error updating address:', error);
       });
     } else {
       this.locationListService.addAddress(selectedAddress).subscribe(() => {
+        this.notificationService.showNotification('Address added successfully!', false);
         console.log('Address added successfully!');
         this.resetEditMode();
         this.addressSubmit.emit(selectedAddress);
       }, error => {
+        this.notificationService.showNotification('Failed to add address. Please try again.', true);
         console.error('Error adding address:', error);
       });
     }

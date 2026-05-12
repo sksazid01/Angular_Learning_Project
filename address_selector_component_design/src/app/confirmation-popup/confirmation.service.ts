@@ -7,11 +7,8 @@ import { ConfirmationConfig } from './confirmation.model';
 })
 export class ConfirmationService {
   private configSubject = new BehaviorSubject<ConfirmationConfig | null>(null);
-  config$ = this.configSubject.asObservable();
-  
+  config$ = this.configSubject.asObservable();  
   private resolveFn: ((value: boolean) => void) | null = null;
-  
-  // 1. Create class properties to store the functions
   private confirmCallback: Function | null = null;
   private declineCallback: Function | null = null;
 
@@ -22,10 +19,9 @@ export class ConfirmationService {
     title: string = 'Submit Application',
     config?: Partial<ConfirmationConfig> // 2. Added this back so finalConfig doesn't throw an error
   ): Promise<boolean> {
-    
-    // 3. Save the functions so the close() method can use them later
+    // Save the functions so the close() method can use them later
     this.confirmCallback = confirmFn;
-    this.declineCallback = declineFn;
+    this.declineCallback = declineFn!;
 
     const finalConfig: ConfirmationConfig = {
       message: message,
