@@ -132,11 +132,11 @@ export class AddressFormComponent implements OnInit {
       }, { emitEvent: false });
       
       // Ensure all filled controls are enabled so user can edit them
-      if (countryId) this.locationForm.get('countryId').enable({ emitEvent: false });
-      if (entry.division_id) this.locationForm.get('divisionId').enable({ emitEvent: false });
-      if (entry.district_id) this.locationForm.get('districtId').enable({ emitEvent: false });
-      if (entry.upazila_id) this.locationForm.get('upazilaId').enable({ emitEvent: false });
-      if (entry.post_code) this.locationForm.get('postCode').enable({ emitEvent: false });
+      if (countryId) this.locationForm.get('countryId')!.enable({ emitEvent: false });
+      if (entry.division_id) this.locationForm.get('divisionId')!.enable({ emitEvent: false });
+      if (entry.district_id) this.locationForm.get('districtId')!.enable({ emitEvent: false });
+      if (entry.upazila_id) this.locationForm.get('upazilaId')!.enable({ emitEvent: false });
+      if (entry.post_code) this.locationForm.get('postCode')!.enable({ emitEvent: false });
 
     } catch (error) {
       console.error('Failed to populate edit data:', error);
@@ -164,14 +164,14 @@ export class AddressFormComponent implements OnInit {
   }
 
   private onCountryChange(): void {
-    this.locationForm.get('countryId').valueChanges.subscribe(countryId => {
+    this.locationForm.get('countryId')!.valueChanges.subscribe(countryId => {
       this.resetFromCountry();
 
       if (!countryId) {
         return;
       }
 
-      this.locationForm.get('divisionId').enable();
+      this.locationForm.get('divisionId')!.enable();
       this.loadDivisions();
     });
   }
@@ -191,14 +191,14 @@ export class AddressFormComponent implements OnInit {
   }
 
   private onDivisionChange(): void {
-    this.locationForm.get('divisionId').valueChanges.subscribe(divisionId => {
+    this.locationForm.get('divisionId')!.valueChanges.subscribe(divisionId => {
       this.resetFromDivision();
 
       if (!divisionId) {
         return;
       }
 
-      this.locationForm.get('districtId').enable();
+      this.locationForm.get('districtId')!.enable();
       this.districtError = '';
 
       this.locationFormService.getDistrictsByDivision(divisionId).subscribe({
@@ -214,14 +214,14 @@ export class AddressFormComponent implements OnInit {
   }
 
   private onDistrictChange(): void {
-    this.locationForm.get('districtId').valueChanges.subscribe(districtId => {
+    this.locationForm.get('districtId')!.valueChanges.subscribe(districtId => {
       this.resetFromDistrict();
 
       if (!districtId) {
         return;
       }
 
-      this.locationForm.get('upazilaId').enable();
+      this.locationForm.get('upazilaId')!.enable();
       this.upazilaError = '';
 
       this.locationFormService.getUpazilasByDistrict(districtId).subscribe({
@@ -237,14 +237,14 @@ export class AddressFormComponent implements OnInit {
   }
 
   private onUpazilaChange(): void {
-    this.locationForm.get('upazilaId').valueChanges.subscribe(upazilaId => {
+    this.locationForm.get('upazilaId')!.valueChanges.subscribe(upazilaId => {
       this.resetFromUpazila();
 
       if (!upazilaId) {
         return;
       }
 
-      this.locationForm.get('postCode').enable();
+      this.locationForm.get('postCode')!.enable();
       this.postCodeError = '';
 
       this.locationFormService.getPostCodesByUpazila(upazilaId).subscribe({
@@ -272,10 +272,10 @@ export class AddressFormComponent implements OnInit {
     this.upazilas = [];
     this.postCodes = [];
 
-    this.locationForm.get('divisionId').disable();
-    this.locationForm.get('districtId').disable();
-    this.locationForm.get('upazilaId').disable();
-    this.locationForm.get('postCode').disable();
+    this.locationForm.get('divisionId')!.disable();
+    this.locationForm.get('districtId')!.disable();
+    this.locationForm.get('upazilaId')!.disable();
+    this.locationForm.get('postCode')!.disable();
   }
 
   private resetFromDivision(): void {
@@ -289,9 +289,9 @@ export class AddressFormComponent implements OnInit {
     this.upazilas = [];
     this.postCodes = [];
 
-    this.locationForm.get('districtId').disable();
-    this.locationForm.get('upazilaId').disable();
-    this.locationForm.get('postCode').disable();
+    this.locationForm.get('districtId')!.disable();
+    this.locationForm.get('upazilaId')!.disable();
+    this.locationForm.get('postCode')!.disable();
   }
 
   private resetFromDistrict(): void {
@@ -303,8 +303,8 @@ export class AddressFormComponent implements OnInit {
     this.upazilas = [];
     this.postCodes = [];
 
-    this.locationForm.get('upazilaId').disable();
-    this.locationForm.get('postCode').disable();
+    this.locationForm.get('upazilaId')!.disable();
+    this.locationForm.get('postCode')!.disable();
   }
 
   private resetFromUpazila(): void {
@@ -314,7 +314,7 @@ export class AddressFormComponent implements OnInit {
 
     this.postCodes = [];
 
-    this.locationForm.get('postCode').disable();
+    this.locationForm.get('postCode')!.disable();
   }
 
 
