@@ -77,7 +77,7 @@
     <div *ngIf="loadingPostCodes$ | async" style="color: blue;">Loading...</div>
     <select *ngIf="!(loadingPostCodes$ | async)" formControlName="postCode">
       <option value="">Select Post Office</option>
-      <option *ngFor="let item of postCodes" [value]="item.postCode">
+      <option *ngFor="let item of postOffice" [value]="item.postCode">
         {{ item.postOffice }} - {{ item.postCode }}
       </option>
     </select>

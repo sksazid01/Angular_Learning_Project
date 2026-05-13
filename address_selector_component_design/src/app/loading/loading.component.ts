@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LoadingService } from './loading.service';
 
 @Component({
@@ -7,6 +7,13 @@ import { LoadingService } from './loading.service';
   styleUrls: ['./loading.component.css']
 })
 export class LoadingComponent {
+  // =========================
+  // Properties
+  // =========================
+  public isLoading$ = this.loadingService.isLoading$;
+
+  // =========================
+  // Constructor
+  // =========================
   constructor(private loadingService: LoadingService) { }
-  isLoading$ = this.loadingService.isLoading$;
 }

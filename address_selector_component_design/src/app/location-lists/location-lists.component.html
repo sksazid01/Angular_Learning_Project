@@ -1,7 +1,7 @@
 <div class="container">
 
   <div class="left">
-    <app-location-form [selectedAddress]="addressBeingEdited" (addressSubmit)="onAddressFormSubmit($event)">
+    <app-location-form [selectedAddress]="addressBeingEdited" (addressSubmit)="onAddressFormSubmit()">
     </app-location-form>
   </div>
 
@@ -25,12 +25,12 @@
       <tbody>
         <tr *ngFor="let address of savedAddresses$ | async">
           <td>{{ address.id }}</td>
-          <td>{{ address.country_name }}</td>
-          <td>{{ address.division_name }}</td>
-          <td>{{ address.district_name }}</td>
-          <td>{{ address.upazila_name }}</td>
-          <td>{{ address.post_offce_name }}</td>
-          <td>{{ address.post_code }}</td>
+          <td>{{ address.country.name }}</td>
+          <td>{{ address.division.name }}</td>
+          <td>{{ address.district.name }}</td>
+          <td>{{ address.upazila.name }}</td>
+          <td>{{ address.postOffice.postOffice }}</td>
+          <td>{{ address.postOffice.postCode }}</td>
           <td>
             <button (click)="onEditAddress(address)">Edit</button>
           </td>

@@ -7,7 +7,7 @@ Paths referenced below assume the current project layout.
 ## 1. `LoadingService` (per-target tracking)
 File: `src/app/core/interceptors/loading.service.ts`
 
-This service stores a small map of keys (countries/divisions/districts/upazilas/postCodes) and exposes `isLoading(key: string): Observable<boolean>` so components can bind to a specific field's loading state.
+This service stores a small map of keys (countries/divisions/districts/upazilas/postOffice) and exposes `isLoading(key: string): Observable<boolean>` so components can bind to a specific field's loading state.
 
 Example (concept):
 
@@ -72,7 +72,7 @@ loadingCountries$ = this.loadingService.isLoading('countries');
 loadingDivisions$ = this.loadingService.isLoading('divisions');
 loadingDistricts$ = this.loadingService.isLoading('districts');
 loadingUpazilas$ = this.loadingService.isLoading('upazilas');
-loadingPostCodes$ = this.loadingService.isLoading('postCodes');
+loadingPostOffice$ = this.loadingService.isLoading('postOffice');
 ```
 
 These are reactive and require no manual toggling in `subscribe()` callbacks.

@@ -5,17 +5,23 @@ import { BehaviorSubject } from 'rxjs';
     providedIn: 'root'
 })
 export class NotificationService {
+    // =========================
+    // Properties
+    // =========================
     private notificationSubject = new BehaviorSubject<{ message: string, isError: boolean } | null>(null);
-    notification$ = this.notificationSubject.asObservable();
+    public notification$ = this.notificationSubject.asObservable();
 
-    showNotification(message: string, isError: boolean = false) {
+    // =========================
+    // Public Methods
+    // =========================
+    public showNotification(message: string, isError: boolean = false): void {
         this.notificationSubject.next({ message, isError });
         setTimeout(() => {
             this.clearNotification();
         }, 2000);
     }
 
-    clearNotification() {
+    public clearNotification(): void {
         this.notificationSubject.next(null);
     }
-}               
+}

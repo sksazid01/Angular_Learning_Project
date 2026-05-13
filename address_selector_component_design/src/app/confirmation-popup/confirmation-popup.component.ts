@@ -1,35 +1,57 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService } from './confirmation.service';
 import { ConfirmationConfig } from './confirmation.model';
+
 @Component({
   selector: 'app-confirmation-popup',
   templateUrl: './confirmation-popup.component.html',
   styleUrls: ['./confirmation-popup.component.css']
 })
 export class ConfirmationPopupComponent implements OnInit {
-  isOpen = false;
-  config: ConfirmationConfig | null = null;
+  // =========================
+  // Properties
+  // =========================
+  public isOpen = false;
+  public config: ConfirmationConfig | null = null;
 
+  // =========================
+  // Constructor
+  // =========================
   constructor(
     private confirmationService: ConfirmationService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
+  // =========================
+  // Lifecycle Hooks
+  // =========================
   ngOnInit(): void {
+    this.listenToConfirmationConfig();
+  }
+
+  // =========================
+  // Public UI Methods
+  // =========================
+  public onConfirm(): void {
+    this.confirmationService.close(true);
+  }
+
+  public onCancel(): void {
+    this.confirmationService.close(false);
+  }
+
+  // =========================
+  // Private Helpers
+  // =========================
+  private listenToConfirmationConfig(): void {
     console.log('ConfirmationPopupComponent initialized!');
     this.confirmationService.config$.subscribe(config => {
       console.log('Popup received config:', config);
       this.config = config;
       this.isOpen = !!config;
-      this.changeDetectorRef.detectChanges(); // Trigger change detection !!very important to update the view when config changes
+      
+      // Trigger change detection: very important to update the view when config changes
+      this.changeDetectorRef.detectChanges();
     });
-  }
-
-  onConfirm(): void {
-    this.confirmationService.close(true);
-  }
-
-  onCancel(): void {
-    this.confirmationService.close(false);
   }
 }

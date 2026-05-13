@@ -1,10 +1,10 @@
-export interface Country {
+export class Country {
   id: number;
   name: string;
   code: string;
 }
 
-export interface Division {
+export class Division {
   id: number;
   country_id: number;
   name: string;
@@ -13,7 +13,7 @@ export interface Division {
   lng?: string;
 }
 
-export interface District {
+export class District {
   id: number;
   division_id: number;
   name: string;
@@ -22,39 +22,26 @@ export interface District {
   lng?: string;
 }
 
-export interface Upazila {
+export class Upazila {
   id: number;
   district_id: number;
   name: string;
   bn_name: string;
 }
 
-export interface PostCode {
-  id?: number;
+export class PostOffice{
+  id;
   upazila_id: number;
   postOffice: string;
   postCode: string;
 }
 
-export interface SelectedAddress {
+export class SelectedAddress {
   id?: number;
-  country_name: string | null;
-  division_name: string | null;
-  division_id: number | null;
-  district_id: number | null;
-  upazila_id: number | null;
-  post_office_id: number | null;
-  district_name: string | null;
-  upazila_name: string | null;
-  post_offce_name: string | null;
-  post_code: string | null;
+  country: Country;
+  division: Division;
+  district: District;
+  upazila: Upazila;  
+  postOffice : PostOffice
 }
 
-export class InitialAddress {
-  countryId?: number | null;
-  divisionId?: number | null;
-  districtId?: number | null;
-  upazilaId?: number | null;
-  postOffice?: string | null;
-  postCode?: string | null;
-}

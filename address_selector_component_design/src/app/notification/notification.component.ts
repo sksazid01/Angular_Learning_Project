@@ -8,27 +8,27 @@ import { NotificationService } from './notification.service';
   styleUrls: ['./notification.component.css']
 })
 export class NotificationComponent implements OnInit, OnDestroy {
-  isNotificationVisible = true;
-  isError = false;
-  title: string = 'Welcome';
-  message: string = 'Thank you for visiting our website!';
+  // =========================
+  // Properties
+  // =========================
+  public isNotificationVisible = true;
+  public isError = false;
+  public title: string = 'Welcome';
+  public message: string = 'Thank you for visiting our website!';
+  
   private subscription!: Subscription;
 
+  // =========================
+  // Constructor
+  // =========================
   constructor(private notificationService: NotificationService) { }
 
+  // =========================
+  // Lifecycle Hooks
+  // =========================
   ngOnInit() {
     this.subscription = this.notificationService.notification$.subscribe(notification => {
-      if (notification) {
-        this.message = notification.message;
-        this.isError = notification.isError;
-        this.title = this.isError ? 'Error' : 'Success';
-        this.isNotificationVisible = true;
-      }
-      else {
-        setTimeout(() => {
-          this.isNotificationVisible = false;
-        }, 3000);
-      }
+      this.handleNotification(notification);
     });
   }
 
@@ -38,7 +38,26 @@ export class NotificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  onCancel() {
+  // =========================
+  // Public UI Methods
+  // =========================
+  public onCancel(): void {
     this.notificationService.clearNotification();
+  }
+
+  // =========================
+  // Private Helpers
+  // =========================
+  private handleNotification(notification: any): void {
+    if (notification) {
+      this.message = notification.message;
+      this.isError = notification.isError;
+      this.title = this.isError ? 'Error' : 'Success';
+      this.isNotificationVisible = true;
+    } else {
+      setTimeout(() => {
+        this.isNotificationVisible = false;
+      }, 3000);
+    }
   }
 }

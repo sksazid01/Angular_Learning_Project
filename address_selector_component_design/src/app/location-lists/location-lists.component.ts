@@ -9,21 +9,40 @@ import { LocationListService } from './location-lists.service';
   styleUrls: ['./location-lists.component.css']
 })
 export class AddressListComponent implements OnInit {
-  savedAddresses$: Observable<SelectedAddress[]> = new Observable<SelectedAddress[]>(); 
-  addressBeingEdited: SelectedAddress | null = null;
+  // =========================
+  // Properties
+  // =========================
+  public savedAddresses$: Observable<SelectedAddress[]> = new Observable<SelectedAddress[]>();
+  public addressBeingEdited: SelectedAddress | null = null;
 
+  // =========================
+  // Constructor
+  // =========================
   constructor(private locationListService: LocationListService) { }
 
+  // =========================
+  // Lifecycle Hooks
+  // =========================
   ngOnInit(): void {
-    this.savedAddresses$ = this.locationListService.getAddresses();
+    this.loadAddresses();
   }
   
-  onEditAddress(address: SelectedAddress): void {
+  // =========================
+  // Public UI Methods
+  // =========================
+  public onEditAddress(address: SelectedAddress): void {
     this.addressBeingEdited = address;
   }
 
-  onAddressFormSubmit(address?: SelectedAddress): void {
+  public onAddressFormSubmit(): void {
     this.addressBeingEdited = null;
+    this.loadAddresses();
+  }
+
+  // =========================
+  // Data Loaders
+  // =========================
+  private loadAddresses(): void {
     this.savedAddresses$ = this.locationListService.getAddresses();
   }
 }
