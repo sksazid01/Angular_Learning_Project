@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
 import { LocationFormService } from './location-form.service';
-import { Country, Division, District, Upazila, PostOffice, SelectedAddress } from './location-form.model';
-import { ConfirmationService } from '../confirmation-popup/confirmation.service';
+import { Country, Division, District, Upazila, PostOffice, Address } from './location-form.model';
+import { ConfirmationPopupService } from '../confirmation-popup/confirmation-popup.service';
 import { LocationListService } from '../location-lists/location-lists.service';
 import { NotificationService } from '../notification/notification.service';
 
@@ -11,7 +11,7 @@ import { NotificationService } from '../notification/notification.service';
   templateUrl: './location-form.component.html',
   styleUrls: ['./location-form.component.css']
 })
-export class AddressFormComponent implements OnInit, OnChanges {
+export class LocationFormComponent implements OnInit, OnChanges {
   // =========================
   // Properties
   // =========================
@@ -23,14 +23,14 @@ export class AddressFormComponent implements OnInit, OnChanges {
 
   private isEditMode = false;
   private locationForm!: FormGroup;
-  private editingAddressId: number | null = null;
-  private pendingSelectedAddress: SelectedAddress | null = null;
+  private currentAddressIdForEditing: number | null = null;
+  private pendingAddress: Address | null = null;
 
   // =========================
   // Inputs / Outputs
   // =========================
-  @Input() selectedAddress: SelectedAddress | null = null;
-  @Output() addressSubmit = new EventEmitter<SelectedAddress>();
+  @Input() address: Address | null = null;
+  @Output() addressSubmit = new EventEmitter<Address>();
 
   // =========================
   // Constructor
@@ -38,7 +38,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
   constructor(
     private formBuilder: FormBuilder,
     private locationFormService: LocationFormService,
-    private confirmationService: ConfirmationService,
+    private confirmationPopupService: ConfirmationPopupService,
     private locationListService: LocationListService,
     private notificationService: NotificationService
   ) { }
@@ -54,15 +54,15 @@ export class AddressFormComponent implements OnInit, OnChanges {
     this.onDistrictChange();
     this.onUpazilaChange();
 
-    if (this.pendingSelectedAddress) {
-      this.startEdit(this.pendingSelectedAddress);
+    if (this.pendingAddress) {
+      this.startEdit(this.pendingAddress);
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedAddress']) {
-      const address = changes['selectedAddress'].currentValue;
-      this.pendingSelectedAddress = address;
+    if (changes['address']) {
+      const address = changes['address'].currentValue;
+      this.pendingAddress = address;
       if (address && this.locationForm) {
         this.startEdit(address);
       }
@@ -72,8 +72,8 @@ export class AddressFormComponent implements OnInit, OnChanges {
   // =========================
   // Form Initialization
   // =========================
-  private buildForm(formData?: SelectedAddress | null): void {
-    const data = formData || new SelectedAddress();
+  private buildForm(formData?: Address | null): void {
+    const data = formData || new Address();
     this.locationForm = this.formBuilder.group({
       countryId: [data.country ? data.country.id : null, Validators.required],
       divisionId: [data.division ? data.division.id : null, Validators.required],
@@ -92,10 +92,10 @@ export class AddressFormComponent implements OnInit, OnChanges {
       Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
       return;
     }
-    this.confirmationService.confirm(() => this.submit());
+    this.confirmationPopupService.confirm(() => this.submit());
   }
 
-  public async startEdit(address: SelectedAddress): Promise<void> {
+  public async startEdit(address: Address): Promise<void> {
     if (address && address.id) {
       this.enableEditMode(address.id);
       await this.loadAddressForEdit(address);
@@ -107,29 +107,28 @@ export class AddressFormComponent implements OnInit, OnChanges {
   // =========================
   private enableEditMode(addressId: number): void {
     this.isEditMode = true;
-    this.editingAddressId = addressId;
+    this.currentAddressIdForEditing = addressId;
   }
 
   private disableEditMode(): void {
     this.isEditMode = false;
-    this.editingAddressId = null;
+    this.currentAddressIdForEditing = null;
   }
 
   // =========================
   // Form Population
   // =========================
-  private async loadAddressForEdit(address: SelectedAddress): Promise<void> {
+  private async loadAddressForEdit(address: Address): Promise<void> {
     try {
-      await this.loadDependentLocationData(address);
+      await this.loadRelatedLocationsForOptionsPreview(address);
       this.patchAddressValues(address);
       this.enableLocationControls(address);
     } catch (error) {
-      console.error('Failed to populate edit data:', error);
       this.showLoadError('Failed to load address data for editing. Please try again.');
     }
   }
 
-  private async loadDependentLocationData(address: SelectedAddress): Promise<void> {
+  private async loadRelatedLocationsForOptionsPreview(address: Address): Promise<void> {
     this.divisions = await this.locationFormService.getDivisions().toPromise() || [];
 
     if (address.division && address.division.id) {
@@ -146,8 +145,8 @@ export class AddressFormComponent implements OnInit, OnChanges {
   // =========================
   // Update the form values instead of reload the whole form
   // =========================
-  private patchAddressValues(address: SelectedAddress): void {
-    const countryId = this.resolveCountryId(address.country ? address.country.name : null);
+  private patchAddressValues(address: Address): void {
+    const countryId = this.findCountryIdFromCountryName(address.country ? address.country.name : null);
 
     this.locationForm.patchValue({
       countryId: countryId,
@@ -158,8 +157,8 @@ export class AddressFormComponent implements OnInit, OnChanges {
     }, { emitEvent: false });
   }
 
-  private enableLocationControls(address: SelectedAddress): void {
-    const countryId = this.resolveCountryId(address.country ? address.country.name : null);
+  private enableLocationControls(address: Address): void {
+    const countryId = this.findCountryIdFromCountryName(address.country ? address.country.name : null);
 
     if (countryId) this.getControl('countryId').enable({ emitEvent: false });
     if (address.division && address.division.id) this.getControl('divisionId').enable({ emitEvent: false });
@@ -168,7 +167,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     if (address.postOffice && address.postOffice.postCode) this.getControl('postCode').enable({ emitEvent: false });
   }
 
-  private resolveCountryId(countryName: string | null): number {
+  private findCountryIdFromCountryName(countryName: string | null): number {
     if (!countryName) return 1;
     const country = this.countries.find(c => c.name === countryName);
     return country ? country.id : 1;
@@ -245,7 +244,6 @@ export class AddressFormComponent implements OnInit, OnChanges {
         }
       },
       error: error => {
-        console.error(error);
         this.showLoadError('Failed to load countries. Please try again.');
       }
     });
@@ -257,7 +255,6 @@ export class AddressFormComponent implements OnInit, OnChanges {
         this.divisions = divisions;
       },
       error: error => {
-        console.error(error);
         this.showLoadError('Failed to load divisions. Please try again.');
       }
     });
@@ -269,7 +266,6 @@ export class AddressFormComponent implements OnInit, OnChanges {
         this.districts = districts;
       },
       error: error => {
-        console.error(error);
         this.showLoadError('Failed to load districts. Please try again.');
       }
     });
@@ -281,7 +277,6 @@ export class AddressFormComponent implements OnInit, OnChanges {
         this.upazilas = upazilas;
       },
       error: error => {
-        console.error(error);
         this.showLoadError('Failed to load upazilas. Please try again.');
       }
     });
@@ -293,7 +288,6 @@ export class AddressFormComponent implements OnInit, OnChanges {
         this.postOffice = postOffice;
       },
       error: error => {
-        console.error(error);
         this.showLoadError('Failed to load post codes. Please try again.');
       }
     });
@@ -358,17 +352,17 @@ export class AddressFormComponent implements OnInit, OnChanges {
   // Submit Workflow
   // =========================
   public submit(): void {
-    const address = this.buildSelectedAddress();
+    const address = this.buildAddressForSubmit();
 
-    if (this.isEditMode && this.editingAddressId) {
-      address.id = this.editingAddressId;
+    if (this.isEditMode && this.currentAddressIdForEditing) {
+      address.id = this.currentAddressIdForEditing;
       this.updateAddress(address);
     } else {
       this.createAddress(address);
     }
   }
 
-  private buildSelectedAddress(): SelectedAddress {
+  private buildAddressForSubmit(): Address {
     const formValue = this.locationForm.getRawValue();
 
     const selectedCountry = this.countries.find(item => item.id === formValue.countryId);
@@ -386,7 +380,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     };
   }
 
-  private createAddress(address: SelectedAddress): void {
+  private createAddress(address: Address): void {
     this.locationListService.addAddress(address).subscribe({
       next: () => {
         this.showLoadError('Address added successfully!', false);
@@ -395,15 +389,14 @@ export class AddressFormComponent implements OnInit, OnChanges {
       },
       error: error => {
         this.showLoadError('Failed to add address. Please try again.');
-        console.error('Error adding address:', error);
       }
     });
   }
 
-  private updateAddress(address: SelectedAddress): void { 
-    if (!this.editingAddressId) return;
+  private updateAddress(address: Address): void { 
+    if (!this.currentAddressIdForEditing) return;
 
-    this.locationListService.updateAddress(this.editingAddressId, address).subscribe({
+    this.locationListService.updateAddress(this.currentAddressIdForEditing, address).subscribe({
       next: () => {
         this.showLoadError('Address updated successfully!', false);
         this.resetFormForCreateMode();
@@ -411,7 +404,6 @@ export class AddressFormComponent implements OnInit, OnChanges {
       },
       error: error => {
         this.showLoadError('Failed to update address. Please try again.');
-        console.error('Error updating address:', error);
       }
     });
   }

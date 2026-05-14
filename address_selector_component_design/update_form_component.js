@@ -11,7 +11,7 @@ content = content.replace(/\.postAddress\(/g, '.addAddress(');
 // Replace showEntriesService.updateAddress() -> locationListService.updateAddress()
 content = content.replace(/\.updateAddress\(/g, '.updateAddress(');
 
-// Replace locationListService.postAddress(selectedAddress) -> addAddress
+// Replace locationListService.postAddress(address) -> addAddress
 content = content.replace(/locationListService\.postAddress/g, 'locationListService.addAddress');
 
 // Just to be absolutely sure:

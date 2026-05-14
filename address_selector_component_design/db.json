@@ -110,6 +110,43 @@
         "postCode": "6570"
       },
       "id": 3
+    },
+    {
+      "country": {
+        "id": 1,
+        "name": "Bangladesh",
+        "bn_name": "বাংলাদেশ",
+        "lat": "23.6850",
+        "lng": "90.3563"
+      },
+      "division": {
+        "id": 1,
+        "country_id": 1,
+        "name": "Barishal",
+        "bn_name": "বরিশাল",
+        "lat": "22.701002",
+        "lng": "90.353451"
+      },
+      "district": {
+        "id": 35,
+        "division_id": 1,
+        "name": "Barishal",
+        "bn_name": "বরিশাল",
+        "lat": "22.7010",
+        "lng": "90.3535"
+      },
+      "upazila": {
+        "id": 8,
+        "district_id": 35,
+        "name": "Babuganj",
+        "bn_name": "বাবুগঞ্জ"
+      },
+      "postOffice": {
+        "upazila_id": 8,
+        "postOffice": "Madhabpasha",
+        "postCode": "8213"
+      },
+      "id": 4
     }
   ],
   "countries": [

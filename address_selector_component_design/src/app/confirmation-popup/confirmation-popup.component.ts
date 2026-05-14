@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ConfirmationService } from './confirmation.service';
-import { ConfirmationConfig } from './confirmation.model';
+import { ConfirmationPopupService } from './confirmation-popup.service';
+import { ConfirmationConfig } from './confirmation-popup.model';
 
 @Component({
   selector: 'app-confirmation-popup',
@@ -18,7 +18,7 @@ export class ConfirmationPopupComponent implements OnInit {
   // Constructor
   // =========================
   constructor(
-    private confirmationService: ConfirmationService,
+    private confirmationPopupService: ConfirmationPopupService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
@@ -33,11 +33,11 @@ export class ConfirmationPopupComponent implements OnInit {
   // Public UI Methods
   // =========================
   public onConfirm(): void {
-    this.confirmationService.close(true);
+    this.confirmationPopupService.close(true);
   }
 
   public onCancel(): void {
-    this.confirmationService.close(false);
+    this.confirmationPopupService.close(false);
   }
 
   // =========================
@@ -45,7 +45,7 @@ export class ConfirmationPopupComponent implements OnInit {
   // =========================
   private listenToConfirmationConfig(): void {
     console.log('ConfirmationPopupComponent initialized!');
-    this.confirmationService.config$.subscribe(config => {
+    this.confirmationPopupService.config$.subscribe(config => {
       console.log('Popup received config:', config);
       this.config = config;
       this.isOpen = !!config;

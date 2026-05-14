@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SelectedAddress } from '../location-form/location-form.model';
+import { Address } from '../location-form/location-form.model';
 import { LocationListService } from './location-lists.service';
 
 @Component({
@@ -8,12 +8,12 @@ import { LocationListService } from './location-lists.service';
   templateUrl: './location-lists.component.html',
   styleUrls: ['./location-lists.component.css']
 })
-export class AddressListComponent implements OnInit {
+export class LocationListComponent implements OnInit {
   // =========================
   // Properties
   // =========================
-  public savedAddresses$: Observable<SelectedAddress[]> = new Observable<SelectedAddress[]>();
-  public addressBeingEdited: SelectedAddress | null = null;
+  public savedAddresses$: Observable<Address[]> = new Observable<Address[]>();
+  public addressBeingEdited: Address | null = null;
 
   // =========================
   // Constructor
@@ -30,7 +30,7 @@ export class AddressListComponent implements OnInit {
   // =========================
   // Public UI Methods
   // =========================
-  public onEditAddress(address: SelectedAddress): void {
+  public onEditAddress(address: Address): void {
     this.addressBeingEdited = address;
   }
 

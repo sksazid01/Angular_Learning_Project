@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { ConfirmationConfig } from './confirmation.model';
+import { ConfirmationConfig } from './confirmation-popup.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ConfirmationService {
+export class ConfirmationPopupService {
   private configSubject = new BehaviorSubject<ConfirmationConfig | null>(null);
   config$ = this.configSubject.asObservable();  
   private resolveFn: ((value: boolean) => void) | null = null;

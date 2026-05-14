@@ -4,20 +4,20 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { AddressFormComponent } from './location-form/location-form.component';
+import { LocationFormComponent } from './location-form/location-form.component';
 import { LoadingInterceptor } from './loading/loading.interceptor';
 import { ConfirmationPopupComponent } from './confirmation-popup/confirmation-popup.component';
-import { ConfirmationService } from './confirmation-popup/confirmation.service';
-import { AddressListComponent } from './location-lists/location-lists.component';
+import { ConfirmationPopupService } from './confirmation-popup/confirmation-popup.service';
+import { LocationListComponent } from './location-lists/location-lists.component';
 import { NotificationComponent } from './notification/notification.component';
 import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddressFormComponent,
+    LocationFormComponent,
     ConfirmationPopupComponent,
-    AddressListComponent,
+    LocationListComponent,
     NotificationComponent,
     LoadingComponent
   ],
@@ -33,7 +33,7 @@ import { LoadingComponent } from './loading/loading.component';
       useClass: LoadingInterceptor,
       multi: true
     },
-    ConfirmationService
+    ConfirmationPopupService
   ],
   bootstrap: [AppComponent]
 })

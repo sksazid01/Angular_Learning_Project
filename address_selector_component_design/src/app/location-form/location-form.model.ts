@@ -36,7 +36,7 @@ export class PostOffice{
   postCode: string;
 }
 
-export class SelectedAddress {
+export class Address {
   id?: number;
   country: Country;
   division: Division;
