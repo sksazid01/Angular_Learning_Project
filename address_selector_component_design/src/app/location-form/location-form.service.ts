@@ -1,26 +1,24 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
-import { Country, Division, District, Upazila, PostOffice } from './location-form.model';
+import { Country, Division, District, Upazila, PostOffice, Address } from './location-form.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocationFormService {
-  // =========================
-  // Properties
-  // =========================
+  private editAddressSource = new Subject<Address>();
+  private addressFormSubmitSource = new Subject<void>();
+  public editAddress$ = this.editAddressSource.asObservable();
+  public addressFormSubmit$ = this.addressFormSubmitSource.asObservable();
+
   private readonly baseUrl = 'http://localhost:3000';
 
-  // =========================
-  // Constructor
-  // =========================
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  // =========================
-  // Public HTTP API Methods
-  // =========================
   public getCountries(): Observable<Country[]> {
     return this.http.get<Country[]>(`${this.baseUrl}/countries`);
   }
@@ -42,5 +40,13 @@ export class LocationFormService {
   public getPostCodesByUpazila(upazilaId: number): Observable<PostOffice[]> {
     const params = new HttpParams().set('upazila_id', String(upazilaId));
     return this.http.get<PostOffice[]>(`${this.baseUrl}/postoffice`, { params });
+  }
+
+  public onEditAddress(address: Address): void {
+    this.editAddressSource.next(address);
+  }
+
+  public onAddressFormSubmit(): void {
+    this.addressFormSubmitSource.next();
   }
 }

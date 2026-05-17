@@ -143,8 +143,8 @@
       },
       "postOffice": {
         "upazila_id": 8,
-        "postOffice": "Madhabpasha",
-        "postCode": "8213"
+        "postOffice": "Babuganj",
+        "postCode": "8210"
       },
       "id": 4
     },
@@ -173,17 +173,54 @@
         "lng": "92.2183773"
       },
       "upazila": {
-        "id": 43,
+        "id": 44,
         "district_id": 40,
-        "name": "Bandarban Sadar",
-        "bn_name": "বান্দরবন সদর"
+        "name": "Thanchi",
+        "bn_name": "থানচি"
       },
       "postOffice": {
-        "upazila_id": 43,
-        "postOffice": "Bandarban Sadar",
-        "postCode": "4600"
+        "upazila_id": 44,
+        "postOffice": "Thanchi",
+        "postCode": "4630"
       },
       "id": 5
+    },
+    {
+      "country": {
+        "id": 1,
+        "name": "Bangladesh",
+        "bn_name": "বাংলাদেশ",
+        "lat": "23.6850",
+        "lng": "90.3563"
+      },
+      "division": {
+        "id": 2,
+        "country_id": 1,
+        "name": "Chattogram",
+        "bn_name": "চট্টগ্রাম",
+        "lat": "22.356851",
+        "lng": "91.783182"
+      },
+      "district": {
+        "id": 40,
+        "division_id": 2,
+        "name": "Bandarban",
+        "bn_name": "বান্দরবান",
+        "lat": "22.1953275",
+        "lng": "92.2183773"
+      },
+      "upazila": {
+        "id": 44,
+        "district_id": 40,
+        "name": "Thanchi",
+        "bn_name": "থানচি"
+      },
+      "postOffice": {
+        "upazila_id": 44,
+        "postOffice": "Lama",
+        "postCode": "4641"
+      },
+      "id": 6
     }
   ],
   "countries": [

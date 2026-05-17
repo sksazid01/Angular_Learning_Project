@@ -67,8 +67,8 @@
     <label>Post Office</label>
     <br />
     <select formControlName="postCode">
-      <option value="">Select Post Office</option>
-      <option *ngFor="let item of postOffice" [value]="item.postCode">
+      <option [ngValue]="null">Select Post Office</option>
+      <option *ngFor="let item of postOffice" [ngValue]="item.postCode">
         {{ item.postOffice }} - {{ item.postCode }}
       </option>
     </select>

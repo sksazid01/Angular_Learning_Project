@@ -1,8 +1,7 @@
 <div class="container">
 
   <div class="left">
-    <app-location-form [address]="addressBeingEdited" (addressSubmit)="onAddressFormSubmit()">
-    </app-location-form>
+    <app-location-form></app-location-form>
   </div>
 
   <div class="right">
@@ -32,7 +31,7 @@
           <td>{{ address.postOffice.postOffice }}</td>
           <td>{{ address.postOffice.postCode }}</td>
           <td>
-            <button (click)="onEditAddress(address)">Edit</button>
+            <button (click)="editAddress(address)">Edit</button>
           </td>
         </tr>
       </tbody>
