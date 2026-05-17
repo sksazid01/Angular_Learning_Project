@@ -147,6 +147,43 @@
         "postCode": "8213"
       },
       "id": 4
+    },
+    {
+      "country": {
+        "id": 1,
+        "name": "Bangladesh",
+        "bn_name": "বাংলাদেশ",
+        "lat": "23.6850",
+        "lng": "90.3563"
+      },
+      "division": {
+        "id": 2,
+        "country_id": 1,
+        "name": "Chattogram",
+        "bn_name": "চট্টগ্রাম",
+        "lat": "22.356851",
+        "lng": "91.783182"
+      },
+      "district": {
+        "id": 40,
+        "division_id": 2,
+        "name": "Bandarban",
+        "bn_name": "বান্দরবান",
+        "lat": "22.1953275",
+        "lng": "92.2183773"
+      },
+      "upazila": {
+        "id": 43,
+        "district_id": 40,
+        "name": "Bandarban Sadar",
+        "bn_name": "বান্দরবন সদর"
+      },
+      "postOffice": {
+        "upazila_id": 43,
+        "postOffice": "Bandarban Sadar",
+        "postCode": "4600"
+      },
+      "id": 5
     }
   ],
   "countries": [

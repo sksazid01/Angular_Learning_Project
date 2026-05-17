@@ -15,22 +15,22 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // =========================
   // Properties
   // =========================
-  private countries: Country[] = [];
-  private divisions: Division[] = [];
-  private districts: District[] = [];
-  private upazilas: Upazila[] = [];
-  private postOffice: PostOffice[] = [];
+  public countries: Country[] = [];
+  public divisions: Division[] = [];
+  public districts: District[] = [];
+  public upazilas: Upazila[] = [];
+  public postOffice: PostOffice[] = [];
 
-  private isEditMode = false;
-  private locationForm!: FormGroup;
-  private currentAddressIdForEditing: number | null = null;
-  private pendingAddress: Address | null = null;
+  public isEditMode = false;
+  public locationForm!: FormGroup;
+  private currentAddressIdForEditing: number | null = null; // remove
+  private pendingAddress: Address | null = null; // remove
 
   // =========================
   // Inputs / Outputs
   // =========================
   @Input() address: Address | null = null;
-  @Output() addressSubmit = new EventEmitter<Address>();
+  @Output() addressSubmit = new EventEmitter<Address>(); // remove, use ViewChild
 
   // =========================
   // Constructor
@@ -95,10 +95,10 @@ export class LocationFormComponent implements OnInit, OnChanges {
     this.confirmationPopupService.confirm(() => this.submit());
   }
 
-  public async startEdit(address: Address): Promise<void> {
+  public startEdit(address: Address): void {
     if (address && address.id) {
       this.enableEditMode(address.id);
-      await this.loadAddressForEdit(address);
+      this.loadAddressForEdit(address);
     }
   }
 
@@ -118,27 +118,41 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // =========================
   // Form Population
   // =========================
-  private async loadAddressForEdit(address: Address): Promise<void> {
+  private loadAddressForEdit(address: Address): void {
     try {
-      await this.loadRelatedLocationsForOptionsPreview(address);
+      this.loadRelatedLocationsForOptionsPreview(address);
       this.patchAddressValues(address);
-      this.enableLocationControls(address);
     } catch (error) {
       this.showLoadError('Failed to load address data for editing. Please try again.');
     }
   }
 
-  private async loadRelatedLocationsForOptionsPreview(address: Address): Promise<void> {
-    this.divisions = await this.locationFormService.getDivisions().toPromise() || [];
+  private loadRelatedLocationsForOptionsPreview(address: Address): void {
+
+    this.locationFormService.getCountries().subscribe((countries: Country[]) => {
+      this.countries = countries;
+    });
+
+    this.locationFormService.getDivisions().subscribe((divisions: Division[]) => {
+      this.divisions = divisions;
+    });
 
     if (address.division && address.division.id) {
-      this.districts = await this.locationFormService.getDistrictsByDivision(address.division.id).toPromise() || [];
+      this.locationFormService.getDistrictsByDivision(address.division.id).subscribe((districts: District[]) => {
+        this.districts = districts;
+      });
     }
+
     if (address.district && address.district.id) {
-      this.upazilas = await this.locationFormService.getUpazilasByDistrict(address.district.id).toPromise() || [];
+      this.locationFormService.getUpazilasByDistrict(address.district.id).subscribe((upazilas: Upazila[]) => {
+        this.upazilas = upazilas;
+      });
     }
+
     if (address.upazila && address.upazila.id) {
-      this.postOffice = await this.locationFormService.getPostCodesByUpazila(address.upazila.id).toPromise() || [];
+      this.locationFormService.getPostCodesByUpazila(address.upazila.id).subscribe((postOffice: PostOffice[]) => {
+        this.postOffice = postOffice;
+      });
     }
   }
 
@@ -155,16 +169,6 @@ export class LocationFormComponent implements OnInit, OnChanges {
       upazilaId: address.upazila ? address.upazila.id : null,
       postCode: address.postOffice ? address.postOffice.postCode : null
     }, { emitEvent: false });
-  }
-
-  private enableLocationControls(address: Address): void {
-    const countryId = this.findCountryIdFromCountryName(address.country ? address.country.name : null);
-
-    if (countryId) this.getControl('countryId').enable({ emitEvent: false });
-    if (address.division && address.division.id) this.getControl('divisionId').enable({ emitEvent: false });
-    if (address.district && address.district.id) this.getControl('districtId').enable({ emitEvent: false });
-    if (address.upazila && address.upazila.id) this.getControl('upazilaId').enable({ emitEvent: false });
-    if (address.postOffice && address.postOffice.postCode) this.getControl('postCode').enable({ emitEvent: false });
   }
 
   private findCountryIdFromCountryName(countryName: string | null): number {
@@ -184,7 +188,6 @@ export class LocationFormComponent implements OnInit, OnChanges {
   private setDefaultCountryToBangladesh() {
     if (this.countries.length === 1) {
       this.locationForm.patchValue({ countryId: this.countries[0].id }, { emitEvent: false });
-      this.getControl('divisionId').enable({ emitEvent: false });
       this.loadDivisions();
     }
   }
@@ -196,7 +199,6 @@ export class LocationFormComponent implements OnInit, OnChanges {
     this.getControl('countryId').valueChanges.subscribe(countryId => {
       this.resetFromCountry();
       if (countryId) {
-        this.getControl('divisionId').enable();
         this.loadDivisions();
       }
     });
@@ -206,7 +208,6 @@ export class LocationFormComponent implements OnInit, OnChanges {
     this.getControl('divisionId').valueChanges.subscribe(divisionId => {
       this.resetFromDivision();
       if (divisionId) {
-        this.getControl('districtId').enable();
         this.loadDistricts(divisionId);
       }
     });
@@ -216,7 +217,6 @@ export class LocationFormComponent implements OnInit, OnChanges {
     this.getControl('districtId').valueChanges.subscribe(districtId => {
       this.resetFromDistrict();
       if (districtId) {
-        this.getControl('upazilaId').enable();
         this.loadUpazilas(districtId);
       }
     });
@@ -226,7 +226,6 @@ export class LocationFormComponent implements OnInit, OnChanges {
     this.getControl('upazilaId').valueChanges.subscribe(upazilaId => {
       this.resetFromUpazila();
       if (upazilaId) {
-        this.getControl('postCode').enable();
         this.loadPostCodes(upazilaId);
       }
     });
@@ -298,8 +297,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // =========================
   private clearDependencies(
     fieldsToReset: { [key: string]: any },
-    arraysToClear: string[],
-    controlsToDisable: string[] = []
+    arraysToClear: string[]
   ): void {
     this.locationForm.patchValue(fieldsToReset, { emitEvent: false });
 
@@ -308,43 +306,33 @@ export class LocationFormComponent implements OnInit, OnChanges {
     if (arraysToClear.includes('districts')) this.districts = [];
     if (arraysToClear.includes('upazilas')) this.upazilas = [];
     if (arraysToClear.includes('postOffice')) this.postOffice = [];
-
-    if (controlsToDisable) {
-      controlsToDisable.forEach(controlHelper => {
-        this.getControl(controlHelper).disable();
-      });
-    }
   }
 
   private resetFromCountry(): void {
     this.clearDependencies(
       { divisionId: null, districtId: null, upazilaId: null, postCode: '' },
-      ['divisions', 'districts', 'upazilas', 'postOffice'],
-      ['divisionId', 'districtId', 'upazilaId', 'postCode']
+      ['divisions', 'districts', 'upazilas', 'postOffice']
     );
   }
 
   private resetFromDivision(): void {
     this.clearDependencies(
       { districtId: null, upazilaId: null, postCode: '' },
-      ['districts', 'upazilas', 'postOffice'],
-      ['districtId', 'upazilaId', 'postCode']
+      ['districts', 'upazilas', 'postOffice']
     );
   }
 
   private resetFromDistrict(): void {
     this.clearDependencies(
       { upazilaId: null, postCode: '' },
-      ['upazilas', 'postOffice'],
-      ['upazilaId', 'postCode']
+      ['upazilas', 'postOffice']
     );
   }
 
   private resetFromUpazila(): void {
     this.clearDependencies(
       { postCode: '' },
-      ['postOffice'],
-      ['postCode']
+      ['postOffice']
     );
   }
 
@@ -393,7 +381,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
     });
   }
 
-  private updateAddress(address: Address): void { 
+  private updateAddress(address: Address): void {
     if (!this.currentAddressIdForEditing) return;
 
     this.locationListService.updateAddress(this.currentAddressIdForEditing, address).subscribe({
