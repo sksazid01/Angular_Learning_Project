@@ -1,0 +1,7 @@
+.add-supplier-button {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    padding: 10px 20px;
+}

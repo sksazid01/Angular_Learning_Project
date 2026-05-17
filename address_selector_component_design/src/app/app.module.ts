@@ -11,6 +11,10 @@ import { ConfirmationPopupService } from './confirmation-popup/confirmation-popu
 import { LocationListComponent } from './location-lists/location-lists.component';
 import { NotificationComponent } from './notification/notification.component';
 import { LoadingComponent } from './loading/loading.component';
+import { SupplierListComponent } from './supplier-list/supplier-list.component';
+import { SupplierDetailsComponent } from './supplier-details/supplier-details.component';
+import { SupplierInfoUpdateComponent } from './supplier-info-update/supplier-info-update.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -19,10 +23,14 @@ import { LoadingComponent } from './loading/loading.component';
     ConfirmationPopupComponent,
     LocationListComponent,
     NotificationComponent,
-    LoadingComponent
+    LoadingComponent,
+    SupplierListComponent,
+    SupplierDetailsComponent,
+    SupplierInfoUpdateComponent
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule

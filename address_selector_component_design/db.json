@@ -221,6 +221,133 @@
         "postCode": "4641"
       },
       "id": 6
+    },
+    {
+      "country": {
+        "id": 1,
+        "name": "Bangladesh",
+        "bn_name": "বাংলাদেশ",
+        "lat": "23.6850",
+        "lng": "90.3563"
+      },
+      "division": {
+        "id": 5,
+        "country_id": 1,
+        "name": "Rajshahi",
+        "bn_name": "রাজশাহী",
+        "lat": "24.363589",
+        "lng": "88.624135"
+      },
+      "district": {
+        "id": 18,
+        "division_id": 5,
+        "name": "Bogura",
+        "bn_name": "বগুড়া",
+        "lat": "24.8465228",
+        "lng": "89.377755"
+      },
+      "upazila": {
+        "id": 333,
+        "district_id": 18,
+        "name": "Dhupchanchia",
+        "bn_name": "দুপচাচিয়া"
+      },
+      "postOffice": {
+        "upazila_id": 333,
+        "postOffice": "Dupchachia",
+        "postCode": "5880"
+      },
+      "id": 7
+    },
+    {
+      "country": {
+        "id": 1,
+        "name": "Bangladesh",
+        "bn_name": "বাংলাদেশ",
+        "lat": "23.6850",
+        "lng": "90.3563"
+      },
+      "division": {
+        "id": 5,
+        "country_id": 1,
+        "name": "Rajshahi",
+        "bn_name": "রাজশাহী",
+        "lat": "24.363589",
+        "lng": "88.624135"
+      },
+      "district": {
+        "id": 18,
+        "division_id": 5,
+        "name": "Bogura",
+        "bn_name": "বগুড়া",
+        "lat": "24.8465228",
+        "lng": "89.377755"
+      },
+      "upazila": {
+        "id": 333,
+        "district_id": 18,
+        "name": "Dhupchanchia",
+        "bn_name": "দুপচাচিয়া"
+      },
+      "postOffice": {
+        "upazila_id": 333,
+        "postOffice": "Dupchachia",
+        "postCode": "5880"
+      },
+      "id": 8
+    }
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "name": "Acme Corp",
+      "address": {
+        "countryId": 1,
+        "divisionId": 1,
+        "districtId": 34,
+        "upazilaId": 1,
+        "postCode": "8710"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Global Traders",
+      "address": {
+        "country": {
+          "id": 1,
+          "name": "Bangladesh",
+          "bn_name": "বাংলাদেশ",
+          "lat": "23.6850",
+          "lng": "90.3563"
+        },
+        "division": {
+          "id": 2,
+          "country_id": 1,
+          "name": "Chattogram",
+          "bn_name": "চট্টগ্রাম",
+          "lat": "22.356851",
+          "lng": "91.783182"
+        },
+        "district": {
+          "id": 41,
+          "division_id": 2,
+          "name": "Chattogram",
+          "bn_name": "চট্টগ্রাম",
+          "lat": "22.335109",
+          "lng": "91.834073"
+        },
+        "upazila": {
+          "id": 48,
+          "district_id": 41,
+          "name": "Bashkhali",
+          "bn_name": "বাঁশখালী"
+        },
+        "postOffice": {
+          "upazila_id": 48,
+          "postOffice": "Bashkhali",
+          "postCode": "4392"
+        }
+      }
     }
   ],
   "countries": [

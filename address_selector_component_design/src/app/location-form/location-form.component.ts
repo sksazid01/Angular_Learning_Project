@@ -12,6 +12,8 @@ import { NotificationService } from '../notification/notification.service';
   styleUrls: ['./location-form.component.css']
 })
 export class LocationFormComponent implements OnInit, OnChanges {
+  @Input() address?: Address;
+
   public countries: Country[] = [];
   public divisions: Division[] = [];
   public districts: District[] = [];
@@ -49,6 +51,9 @@ export class LocationFormComponent implements OnInit, OnChanges {
       const address = changes['address'].currentValue;
       if (address && this.locationForm) {
         this.startEdit(address);
+      } else if (!address && this.locationForm) {
+        this.isEditMode = false;
+        this.locationForm.reset();
       }
     }
   }
@@ -80,8 +85,12 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   public startEdit(address: Address): void {
-    if (address && address.id) {
-      this.enableEditMode(address.id);
+    if (address) {
+      if (address.id) {
+        this.enableEditMode(address.id);
+      } else {
+        this.isEditMode = true;
+      }
       this.loadAddressForEdit(address);
     }
   }

@@ -1,0 +1,16 @@
+<div>
+  <h2>{{ isNewSupplier ? 'Create New Supplier' : 'Update Supplier: ' + supplier.name }}</h2>
+
+  <div style="margin-bottom: 20px;">
+    <label for="supplierName">Supplier Name:</label>
+    <br/>
+    <input type="text" id="supplierName" [(ngModel)]="supplier.name" placeholder="Enter supplier name" required>
+  </div>
+
+  <app-location-form [address]="supplier.address"></app-location-form>
+
+  <button (click)="saveSupplier()" type="button" class="btn btn-success" style="margin-top: 10px;">
+    {{ isNewSupplier ? 'Save New Supplier' : 'Update Supplier Details' }}
+  </button>
+  
+</div>

@@ -1,0 +1,20 @@
+<div *ngIf="supplier" class="supplier-details">
+  <h2>Supplier Details:</h2>
+
+  <div>
+    <strong>Name:</strong> {{ supplier.name }}
+  </div>
+
+  <div *ngIf="supplier.address.country">
+    <h3>Address:</h3>
+    <p>{{ supplier.address.postOffice?.postOffice }}, {{ supplier.address.upazila?.name }}</p>
+    <p>{{ supplier.address.district?.name }}, {{ supplier.address.division?.name }}</p>
+    <p>{{ supplier.address.country?.name }}</p>
+  </div>
+  <div *ngIf="!supplier.address.country">
+    <p>No address found.</p>
+  </div>
+
+  <button (click)="editSupplier()" type="button" class="btn btn-primary">Edit</button>
+  <button (click)="deleteSupplier()" type="button" class="btn btn-danger">Delete</button>
+</div>
