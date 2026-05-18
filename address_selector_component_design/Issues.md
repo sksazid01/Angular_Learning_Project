@@ -353,13 +353,13 @@ Using magic strings (`'divisions'`, `'districts'`) is fragile. If a property is 
 
 ```ts
 if (this.locationForm && this.locationForm.locationForm && this.locationForm.locationForm.valid) {
-  addressData = this.locationForm.getAddressFromForm();
+  addressData = this.locationForm.getAddressFromAddressForm();
 }
 ```
 
 The parent is accessing `locationForm.locationForm` — a **child's internal `FormGroup`** — directly. This is a deep encapsulation violation. The parent should not know about the child's internal implementation details.
 
-**Suggestion:** Expose only what is needed from the child via a public method like `getAddressFromForm()` (which already exists) or an `@Output() addressChange` event emitter. Do not access `.locationForm` (the FormGroup) from outside.
+**Suggestion:** Expose only what is needed from the child via a public method like `getAddressFromAddressForm()` (which already exists) or an `@Output() addressChange` event emitter. Do not access `.locationForm` (the FormGroup) from outside.
 
 ---
 
@@ -420,7 +420,7 @@ confirmationPopupService.confirm(message).subscribe(result => {
 
 The `standalone` flag fundamentally changes what `submit()` does — either saving data or just notifying a parent. This is a hidden behavioral split. A component should do one thing.
 
-**Suggestion:** When embedded in `supplier-info-update`, do not use `submit()` at all. Instead, let the parent call `getAddressFromForm()` directly when it's ready to save.
+**Suggestion:** When embedded in `supplier-info-update`, do not use `submit()` at all. Instead, let the parent call `getAddressFromAddressForm()` directly when it's ready to save.
 
 ---
 

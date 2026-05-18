@@ -21,7 +21,9 @@ export class SupplierDetailsComponent implements OnInit {
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     if (id) {
-      this.supplierService.getSupplier(id).subscribe(s => this.supplier = s);
+      this.supplierService.getSupplier(id).subscribe(
+        s =>
+          this.supplier = s);
     }
   }
 

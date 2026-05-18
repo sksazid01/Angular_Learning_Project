@@ -1,9 +1,9 @@
 <div>
   <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px;">
-    <h2 style="margin: 0;">{{ isNewSupplier ? 'Create New Supplier:' : 'Update Supplier Info: ' + supplier.name }}</h2>
+    <h2 style="margin: 0;">{{ isNewSupplier ? 'Create New Supplier:' : 'Update Supplier Info: '}}</h2>
     <div>
       <button (click)="onSupplierSave()" type="button" class="btn btn-success" style="margin-right: 5px;">
-        {{ isNewSupplier ? 'Save New Supplier' : 'Update Supplier Info' }}
+        {{ isNewSupplier ? 'Save Now' : 'Update' }}
       </button>
       <button (click)="goBack()" type="button" class="btn btn-secondary">Back</button>
     </div>

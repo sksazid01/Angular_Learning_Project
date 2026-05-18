@@ -327,7 +327,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   // Public helper for parent components to get the Address object without creating it
-  public getAddressFromForm(): Address {
+  public getAddressFromAddressForm(): Address {
     return this.buildAddressForSubmit();
   }
 

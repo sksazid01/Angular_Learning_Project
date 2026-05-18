@@ -49,7 +49,7 @@ export class SupplierInfoUpdateComponent implements OnInit {
   getSupplierLocation() {
     let addressData = new Address();
     if (this.locationForm && this.locationForm.locationForm && this.locationForm.locationForm.valid) {
-      addressData = this.locationForm.getAddressFromForm();
+      addressData = this.locationForm.getAddressFromAddressForm();
     }
 
     this.supplier.address = addressData;
