@@ -14,7 +14,7 @@ export class Supplier {
 })
 export class SupplierService {
 
-  private apiUrl = 'http://localhost:3000/suppliers'; // Assuming you have an endpoint for this in json-server
+  private apiUrl = 'http://localhost:3000/suppliers';
 
   constructor(private http: HttpClient) { }
 
