@@ -1,6 +1,6 @@
 <!-- <hr /> -->
 <form [formGroup]="locationForm">
-  <h2><u>Location Form:</u></h2>
+  <h2><u>Address:</u></h2>
   
   <!-- Country -->
   <div>
@@ -76,6 +76,4 @@
     <p *ngIf="locationForm.get('postCode')?.touched && locationForm.get('postCode')?.invalid">Post office is required.</p>
   </div>
   <br />
-
-  <!-- removed internal submit button; parent component must trigger save -->
 </form>

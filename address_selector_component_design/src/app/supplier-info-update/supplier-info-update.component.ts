@@ -14,6 +14,7 @@ import { ConfirmationPopupService } from '../confirmation-popup/confirmation-pop
 export class SupplierInfoUpdateComponent implements OnInit {
   supplier: Supplier = { id: 0, name: '', address: undefined };
   isNewSupplier = false;
+  
   @ViewChild(LocationFormComponent) locationForm!: LocationFormComponent;
 
   constructor(

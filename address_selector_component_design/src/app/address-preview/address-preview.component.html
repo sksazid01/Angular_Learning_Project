@@ -1,0 +1,38 @@
+<h3>Address:</h3>
+<div class="address-preview" *ngIf="address && address.country">
+  <table class="table table-bordered address-table" border="1" cellspacing="2">
+    <tbody>
+      <tr>
+        <th class="address-th">Country</th>
+        <td class="address-td">{{ address.country?.name }}</td>
+      </tr>
+      <tr>
+        <th class="address-th">Division</th>
+        <td class="address-td">{{ address.division?.name }}</td>
+      </tr>
+      <tr>
+        <th class="address-th">District</th>
+        <td class="address-td">{{ address.district?.name }}</td>
+      </tr>
+      <tr>
+        <th class="address-th">Upazila</th>
+        <td class="address-td">{{ address.upazila?.name }}</td>
+      </tr>
+      <tr>
+        <th class="address-th">Postcode</th>
+        <td class="address-td">
+          {{ address.postOffice?.postCode }}
+          <span *ngIf="address.postOffice?.postOffice">({{ address.postOffice?.postOffice }})</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="address-preview" *ngIf="!address || !address.country">
+  <table class="table table-bordered address-table" border="1" cellspacing="2">
+    <tr>
+      <td class="address-td" colspan="2">N/A</td>
+    </tr>
+  </table>
+</div>

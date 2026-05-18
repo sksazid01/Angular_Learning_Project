@@ -15,6 +15,7 @@ import { SupplierListComponent } from './supplier-list/supplier-list.component';
 import { SupplierDetailsComponent } from './supplier-details/supplier-details.component';
 import { SupplierInfoUpdateComponent } from './supplier-info-update/supplier-info-update.component';
 import { AppRoutingModule } from './app-routing.module';
+import { AddressPreviewComponent } from './address-preview/address-preview.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { AppRoutingModule } from './app-routing.module';
     LoadingComponent,
     SupplierListComponent,
     SupplierDetailsComponent,
-    SupplierInfoUpdateComponent
+    SupplierInfoUpdateComponent,
+    AddressPreviewComponent
   ],
   imports: [
     BrowserModule,

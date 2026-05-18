@@ -1,16 +1,31 @@
 <div class="supplier-list-container">
   <h2>Suppliers List:</h2>
-  <table border="1" cellpadding="15" cellspacing="2">
+  <table border="1" cellpadding="10" cellspacing="2">
     <thead>
       <tr>
+        <th>Supplier ID</th>
         <th>Name</th>
         <th>Address</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let supplier of suppliers$ | async" [routerLink]="['/suppliers', supplier.id]" class="clickable-row">
+        <td>{{ supplier.id }}</td>
         <td>{{ supplier.name }}</td>
-        <td>{{(supplier.address?.upazila?.name || 'No address')}}</td>
+        <td>
+          <div *ngIf="supplier.address?.country">
+            <p>
+              {{ supplier.address?.postOffice?.postOffice }}, {{ supplier.address?.upazila?.name }}
+              {{ supplier.address?.district?.name }}, {{ supplier.address?.division?.name }}
+              {{ supplier.address?.country?.name }}
+            </p>
+          </div>
+
+          <div *ngIf="!supplier.address?.country">
+            <p>N/A</p>
+          </div>
+
+        </td>
       </tr>
     </tbody>
   </table>
