@@ -320,21 +320,21 @@
         "district": {
           "id": 41,
           "division_id": 2,
-          "name": "Chattogram",
-          "bn_name": "চট্টগ্রাম",
-          "lat": "22.335109",
-          "lng": "91.834073"
+          "name": "Brahmanbaria",
+          "bn_name": "ব্রাহ্মণবাড়িয়া",
+          "lat": "23.9570904",
+          "lng": "91.1119286"
         },
         "upazila": {
-          "id": 48,
+          "id": 58,
           "district_id": 41,
-          "name": "Bashkhali",
-          "bn_name": "বাঁশখালী"
+          "name": "Bancharampur",
+          "bn_name": "বাঞ্ছারামপুর"
         },
         "postOffice": {
-          "upazila_id": 48,
-          "postOffice": "Bashkhali",
-          "postCode": "4392"
+          "upazila_id": 58,
+          "postOffice": "Banchharampur",
+          "postCode": "3420"
         }
       }
     },
