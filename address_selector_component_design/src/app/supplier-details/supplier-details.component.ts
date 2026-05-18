@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Supplier, SupplierService } from '../supplier.service';
+import { ConfirmationPopupService } from '../confirmation-popup/confirmation-popup.service';
 
 @Component({
   selector: 'app-supplier-details',
@@ -13,7 +14,8 @@ export class SupplierDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private supplierService: SupplierService
+    private supplierService: SupplierService,
+    private confirmationPopupService: ConfirmationPopupService
   ) { }
 
   ngOnInit(): void {
@@ -23,11 +25,15 @@ export class SupplierDetailsComponent implements OnInit {
     }
   }
 
+  deleteConfirmed() {
+    this.supplierService.deleteSupplier(this.supplier.id).subscribe(() => {
+      this.router.navigate(['/suppliers']);
+    });
+  }
+
   deleteSupplier() {
     if (this.supplier && this.supplier.id) {
-      this.supplierService.deleteSupplier(this.supplier.id).subscribe(() => {
-        this.router.navigate(['/suppliers']);
-      });
+      this.confirmationPopupService.confirm(this.deleteConfirmed.bind(this), null, 'Are you sure to delete?', 'Delete Confirmation');
     }
   }
 

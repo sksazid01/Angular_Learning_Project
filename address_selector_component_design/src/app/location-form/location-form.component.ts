@@ -13,6 +13,7 @@ import { NotificationService } from '../notification/notification.service';
 })
 export class LocationFormComponent implements OnInit, OnChanges {
   @Input() address?: Address;
+  @Input() standalone: boolean = true; // when true, this component handles creating/updating addresses itself
 
   public countries: Country[] = [];
   public divisions: Division[] = [];
@@ -308,12 +309,26 @@ export class LocationFormComponent implements OnInit, OnChanges {
 
     if (this.isEditMode && this.currentAddressIdForEditing) {
       address.id = this.currentAddressIdForEditing;
-      this.updateAddress(address);
+      if (this.standalone) {
+        this.updateAddress(address);
+      } else {
+        // when embedded in supplier-info-update, do not create/update address here
+        this.locationFormService.onAddressFormSubmit();
+      }
       this.disableEditMode();
     } else {
-      this.createAddress(address);
+      if (this.standalone) {
+        this.createAddress(address);
+      } else {
+        this.locationFormService.onAddressFormSubmit();
+      }
     }
     this.resetFromCountry();
+  }
+
+  // Public helper for parent components to get the Address object without creating it
+  public getAddressFromForm(): Address {
+    return this.buildAddressForSubmit();
   }
 
   private buildAddressForSubmit(): Address {

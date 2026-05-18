@@ -1,5 +1,5 @@
 <!-- <hr /> -->
-<form [formGroup]="locationForm" (ngSubmit)="onSubmitRequest()">
+<form [formGroup]="locationForm">
   <h2><u>Location Form:</u></h2>
   
   <!-- Country -->
@@ -77,7 +77,7 @@
   </div>
   <br />
 
-  <button type="submit">{{ address ? 'Update' : 'Add' }}</button>
+  <!-- removed internal submit button; parent component must trigger save -->
 </form>
 
 <app-confirmation-popup></app-confirmation-popup>

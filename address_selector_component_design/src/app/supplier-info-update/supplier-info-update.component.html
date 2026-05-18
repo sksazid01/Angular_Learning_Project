@@ -7,10 +7,12 @@
     <input type="text" id="supplierName" [(ngModel)]="supplier.name" placeholder="Enter supplier name" required>
   </div>
 
-  <app-location-form [address]="supplier.address"></app-location-form>
+  <app-location-form [address]="supplier.address" [standalone]="false"></app-location-form>
 
-  <button (click)="saveSupplier()" type="button" class="btn btn-success" style="margin-top: 10px;">
+  <button (click)="onSupplierSave()" type="button" class="btn btn-success" style="margin-top: 10px;">
     {{ isNewSupplier ? 'Save New Supplier' : 'Update Supplier Details' }}
   </button>
   
 </div>
+
+<app-confirmation-popup> </app-confirmation-popup>

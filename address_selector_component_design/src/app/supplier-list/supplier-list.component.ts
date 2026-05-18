@@ -10,7 +10,9 @@ import { Observable } from 'rxjs';
 export class SupplierListComponent implements OnInit {
   suppliers$!: Observable<Supplier[]>;
 
-  constructor(private supplierService: SupplierService) { }
+  constructor(
+    private supplierService: SupplierService
+  ) { }
 
   ngOnInit(): void {
     this.suppliers$ = this.supplierService.getSuppliers();

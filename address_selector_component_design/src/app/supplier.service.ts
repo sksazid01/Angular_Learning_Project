@@ -6,7 +6,7 @@ import { Address } from './location-form/location-form.model';
 export class Supplier {
   id: number;
   name: string;
-  address?: Address;
+  address: Address;
 }
 
 @Injectable({
