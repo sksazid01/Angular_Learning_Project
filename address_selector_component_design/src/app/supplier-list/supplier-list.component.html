@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let supplier of suppliers$ | async" [routerLink]="['/suppliers', supplier.id]" class="clickable-row">
+      <tr *ngFor="let supplier of suppliers" [routerLink]="['/suppliers', supplier.id]" class="clickable-row">
         <td>{{ supplier.id }}</td>
         <td>{{ supplier.name }}</td>
         <td>

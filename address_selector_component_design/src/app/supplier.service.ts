@@ -13,7 +13,6 @@ export class Supplier {
   providedIn: 'root'
 })
 export class SupplierService {
-
   private apiUrl = 'http://localhost:3000/suppliers';
 
   constructor(private http: HttpClient) { }

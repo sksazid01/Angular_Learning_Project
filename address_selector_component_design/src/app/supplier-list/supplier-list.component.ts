@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Supplier, SupplierService } from '../supplier.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-supplier-list',
@@ -8,13 +7,14 @@ import { Observable } from 'rxjs';
   styleUrls: ['./supplier-list.component.css']
 })
 export class SupplierListComponent implements OnInit {
-  suppliers$!: Observable<Supplier[]>;
+  suppliers!: Supplier[];
 
   constructor(
     private supplierService: SupplierService
   ) { }
 
   ngOnInit(): void {
-    this.suppliers$ = this.supplierService.getSuppliers();
+    this.supplierService.getSuppliers()
+      .subscribe(s => this.suppliers = s);
   }
 }
