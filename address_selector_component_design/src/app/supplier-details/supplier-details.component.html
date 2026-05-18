@@ -1,5 +1,12 @@
 <div *ngIf="supplier" class="supplier-details">
-  <h3>Supplier Details:</h3>
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 20px;">
+    <h3 style="margin: 0;">Supplier Details:</h3>
+    <div>
+      <button (click)="editSupplier()" type="button" class="btn btn-primary" style="margin-right: 5px;">Edit</button>
+      <button (click)="deleteSupplier()" type="button" class="btn btn-danger" style="margin-right: 5px;">Delete</button>
+      <button (click)="goBack()" type="button" class="btn btn-secondary">Back</button>
+    </div>
+  </div>
   <table align="center" border="1">
     <tbody>
       <tr>
@@ -16,7 +23,4 @@
   <div style="margin-bottom: 20px;">
     <app-address-preview [address]="supplier.address"></app-address-preview>
   </div>
-
-  <button (click)="editSupplier()" type="button" class="btn btn-primary">Edit</button>
-  <button (click)="deleteSupplier()" type="button" class="btn btn-danger">Delete</button>
 </div>

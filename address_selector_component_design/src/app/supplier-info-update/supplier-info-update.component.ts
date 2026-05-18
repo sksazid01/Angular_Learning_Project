@@ -76,4 +76,12 @@ export class SupplierInfoUpdateComponent implements OnInit {
     this.getSupplierLocation();
     this.saveSupplier();
   }
+
+  goBack() {
+    if (this.isNewSupplier) {
+      this.router.navigate(['/suppliers']);
+    } else {
+      this.router.navigate(['/suppliers', this.supplier.id]);
+    }
+  }
 }

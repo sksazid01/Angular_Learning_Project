@@ -42,4 +42,8 @@ export class SupplierDetailsComponent implements OnInit {
       this.router.navigate(['/suppliers', this.supplier.id, 'edit']);
     }
   }
+
+  goBack() {
+    this.router.navigate(['/suppliers']);
+  }
 }

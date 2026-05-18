@@ -1,5 +1,10 @@
 <div class="supplier-list-container">
-  <h2>Suppliers List:</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Suppliers List:</h2>
+    <div class="add-supplier-button">
+      <button [routerLink]="['/suppliers/new']" class="btn btn-primary">Add New Supplier</button>
+    </div>
+  </div>
   <table border="1" cellpadding="10" cellspacing="2">
     <thead>
       <tr>
@@ -29,5 +34,4 @@
       </tr>
     </tbody>
   </table>
-  <div class="add-supplier-button"> <button [routerLink]="['/suppliers/new']">Add New Supplier</button></div>
 </div>

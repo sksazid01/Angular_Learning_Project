@@ -380,7 +380,7 @@
     },
     {
       "id": 5,
-      "name": "Acme Corp",
+      "name": "Acme Corp t",
       "address": {
         "country": {
           "id": 1,
@@ -422,6 +422,46 @@
       "id": 6,
       "name": "Bd",
       "address": {}
+    },
+    {
+      "id": 7,
+      "name": "MISL",
+      "address": {
+        "country": {
+          "id": 1,
+          "name": "Bangladesh",
+          "bn_name": "বাংলাদেশ",
+          "lat": "23.6850",
+          "lng": "90.3563"
+        },
+        "division": {
+          "id": 3,
+          "country_id": 1,
+          "name": "Dhaka",
+          "bn_name": "ঢাকা",
+          "lat": "23.810332",
+          "lng": "90.412518"
+        },
+        "district": {
+          "id": 1,
+          "division_id": 3,
+          "name": "Dhaka",
+          "bn_name": "ঢাকা",
+          "lat": "23.7115253",
+          "lng": "90.4111451"
+        },
+        "upazila": {
+          "id": 146,
+          "district_id": 1,
+          "name": "Dohar",
+          "bn_name": "দোহার"
+        },
+        "postOffice": {
+          "upazila_id": 146,
+          "postOffice": "Mirpur TSO",
+          "postCode": "1216"
+        }
+      }
     }
   ],
   "countries": [
