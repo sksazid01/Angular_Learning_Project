@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Address } from './location-form/location-form.model';
+import { Address } from './address-form/address-form.model';
 
 export class Supplier {
   id: number;

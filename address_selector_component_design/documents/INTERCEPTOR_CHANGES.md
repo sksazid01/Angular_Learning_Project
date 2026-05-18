@@ -62,8 +62,8 @@ File: `src/app/app.module.ts`
 
 Register the interceptor the usual way using `HTTP_INTERCEPTORS` so all `HttpClient` calls are observed.
 
-## 4. Component usage (`LocationSelectorComponent`)
-File: `src/app/location-selector/location-selector.component.ts`
+## 4. Component usage (`AddressSelectorComponent`)
+File: `src/app/address-selector/address-selector.component.ts`
 
 Expose per-field loading observables derived from the `LoadingService` so the template can bind each dropdown to its own loading state:
 
@@ -78,7 +78,7 @@ loadingPostOffice$ = this.loadingService.isLoading('postOffice');
 These are reactive and require no manual toggling in `subscribe()` callbacks.
 
 ## 5. Template (inline localized loader)
-File: `src/app/location-selector/location-selector.component.html`
+File: `src/app/address-selector/address-selector.component.html`
 
 Each field hides its `<select>` while the corresponding loading observable is true, and shows a simple `Loading...` text in the same place. Example for `district`:
 

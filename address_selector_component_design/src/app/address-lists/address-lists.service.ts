@@ -1,12 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Address } from '../location-form/location-form.model';
+import { Address } from '../address-form/address-form.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocationListService {
+export class AddressListService {
   // =========================
   // Properties
   // =========================

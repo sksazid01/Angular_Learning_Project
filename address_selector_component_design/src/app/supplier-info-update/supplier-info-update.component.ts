@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Supplier, SupplierService } from '../supplier.service';
-import { LocationFormComponent } from '../location-form/location-form.component';
+import { AddressFormComponent } from '../address-form/address-form.component';
 import { NotificationService } from '../notification/notification.service';
-import { Address } from '../location-form/location-form.model';
+import { Address } from '../address-form/address-form.model';
 import { ConfirmationPopupService } from '../confirmation-popup/confirmation-popup.service';
 
 @Component({
@@ -15,7 +15,7 @@ export class SupplierInfoUpdateComponent implements OnInit {
   supplier: Supplier = { id: 0, name: '', address: undefined };
   isNewSupplier = false;
   
-  @ViewChild(LocationFormComponent) locationForm!: LocationFormComponent;
+  @ViewChild(AddressFormComponent) addressForm!: AddressFormComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,11 +45,11 @@ export class SupplierInfoUpdateComponent implements OnInit {
     return true;
   }
 
-  // If location form exists and valid, get address; else use empty address
-  getSupplierLocation() {
+  // If address form exists and valid, get address; else use empty address
+  getSupplierAddress() {
     let addressData = new Address();
-    if (this.locationForm && this.locationForm.locationForm && this.locationForm.locationForm.valid) {
-      addressData = this.locationForm.getAddressFromAddressForm();
+    if (this.addressForm && this.addressForm.addressForm && this.addressForm.addressForm.valid) {
+      addressData = this.addressForm.getAddressFromAddressForm();
     }
 
     this.supplier.address = addressData;
@@ -73,7 +73,7 @@ export class SupplierInfoUpdateComponent implements OnInit {
 
   onSupplierSave() {
     if (!this.isSupplierValid()) return;
-    this.getSupplierLocation();
+    this.getSupplierAddress();
     this.saveSupplier();
   }
 

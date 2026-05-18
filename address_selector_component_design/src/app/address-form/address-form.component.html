@@ -1,5 +1,5 @@
 <!-- <hr /> -->
-<form [formGroup]="locationForm">
+<form [formGroup]="addressForm">
   <h2><u>Address:</u></h2>
   
   <!-- Country -->
@@ -13,7 +13,7 @@
       </option>
     </select>
     
-    <p *ngIf="locationForm.get('countryId')?.touched && locationForm.get('countryId')?.invalid">Country is required.</p>
+    <p *ngIf="addressForm.get('countryId')?.touched && addressForm.get('countryId')?.invalid">Country is required.</p>
   </div>
   <br />
 
@@ -28,7 +28,7 @@
       </option>
     </select>
     
-    <p *ngIf="locationForm.get('divisionId')?.touched && locationForm.get('divisionId')?.invalid">Division is required.</p>
+    <p *ngIf="addressForm.get('divisionId')?.touched && addressForm.get('divisionId')?.invalid">Division is required.</p>
   </div>
   <br />
 
@@ -43,7 +43,7 @@
       </option>
     </select>
     
-    <p *ngIf="locationForm.get('districtId')?.touched && locationForm.get('districtId')?.invalid">District is required.</p>
+    <p *ngIf="addressForm.get('districtId')?.touched && addressForm.get('districtId')?.invalid">District is required.</p>
   </div>
   <br />
 
@@ -58,7 +58,7 @@
       </option>
     </select>
     
-    <p *ngIf="locationForm.get('upazilaId')?.touched && locationForm.get('upazilaId')?.invalid">Upazila is required.</p>
+    <p *ngIf="addressForm.get('upazilaId')?.touched && addressForm.get('upazilaId')?.invalid">Upazila is required.</p>
   </div>
   <br />
 
@@ -73,7 +73,7 @@
       </option>
     </select>
     
-    <p *ngIf="locationForm.get('postCode')?.touched && locationForm.get('postCode')?.invalid">Post office is required.</p>
+    <p *ngIf="addressForm.get('postCode')?.touched && addressForm.get('postCode')?.invalid">Post office is required.</p>
   </div>
   <br />
 </form>

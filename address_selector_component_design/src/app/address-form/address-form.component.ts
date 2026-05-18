@@ -1,17 +1,17 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
-import { LocationFormService } from './location-form.service';
-import { Country, Division, District, Upazila, PostOffice, Address } from './location-form.model';
+import { AddressFormService } from './address-form.service';
+import { Country, Division, District, Upazila, PostOffice, Address } from './address-form.model';
 import { ConfirmationPopupService } from '../confirmation-popup/confirmation-popup.service';
-import { LocationListService } from '../location-lists/location-lists.service';
+import { AddressListService } from '../address-lists/address-lists.service';
 import { NotificationService } from '../notification/notification.service';
 
 @Component({
-  selector: 'app-location-form',
-  templateUrl: './location-form.component.html',
-  styleUrls: ['./location-form.component.css']
+  selector: 'app-address-form',
+  templateUrl: './address-form.component.html',
+  styleUrls: ['./address-form.component.css']
 })
-export class LocationFormComponent implements OnInit, OnChanges {
+export class AddressFormComponent implements OnInit, OnChanges {
   @Input() address?: Address;
   @Input() standalone: boolean = true; // when true, this component handles creating/updating addresses itself
 
@@ -22,14 +22,14 @@ export class LocationFormComponent implements OnInit, OnChanges {
   public postOffice: PostOffice[] = [];
 
   public isEditMode = false;
-  public locationForm!: FormGroup;
+  public addressForm!: FormGroup;
   private currentAddressIdForEditing: number | null = null; // remove
 
   constructor(
     private formBuilder: FormBuilder,
-    private locationFormService: LocationFormService,
+    private addressFormService: AddressFormService,
     private confirmationPopupService: ConfirmationPopupService,
-    private locationListService: LocationListService,
+    private addressListService: AddressListService,
     private notificationService: NotificationService
   ) { }
 
@@ -42,7 +42,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
     this.onDistrictChange();
     this.onUpazilaChange();
 
-    this.locationFormService.editAddress$.subscribe(address => {
+    this.addressFormService.editAddress$.subscribe(address => {
       this.startEdit(address);
     });
   }
@@ -50,11 +50,11 @@ export class LocationFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['address']) {
       const address = changes['address'].currentValue;
-      if (address && this.locationForm) {
+      if (address && this.addressForm) {
         this.startEdit(address);
-      } else if (!address && this.locationForm) {
+      } else if (!address && this.addressForm) {
         this.isEditMode = false;
-        this.locationForm.reset();
+        this.addressForm.reset();
       }
     }
   }
@@ -64,7 +64,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // =========================
   private buildForm(formData?: Address | null): void {
     const data = formData || new Address();
-    this.locationForm = this.formBuilder.group({
+    this.addressForm = this.formBuilder.group({
       countryId: [1, Validators.required],
       divisionId: [data.division ? data.division.id : null, Validators.required],
       districtId: [data.district ? data.district.id : null, Validators.required],
@@ -77,9 +77,9 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // Public UI Methods
   // =========================
   public onSubmitRequest(): void {
-    if (this.locationForm.invalid) {
+    if (this.addressForm.invalid) {
       this.showLoadError('Please fill all required fields correctly before submitting.');
-      Object.values(this.locationForm.controls).forEach(control => control.markAsTouched());
+      Object.values(this.addressForm.controls).forEach(control => control.markAsTouched());
       return;
     }
     this.confirmationPopupService.confirm(() => this.submit());
@@ -114,36 +114,36 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // =========================
   private loadAddressForEdit(address: Address): void {
     try {
-      this.loadRelatedLocationsForOptionsPreview(address);
+      this.loadRelatedAddresssForOptionsPreview(address);
       this.patchAddressValues(address);
     } catch (error) {
       this.showLoadError('Failed to load address data for editing. Please try again.');
     }
   }
 
-  private loadRelatedLocationsForOptionsPreview(address: Address): void {
-    this.locationFormService.getCountries().subscribe((countries: Country[]) => {
+  private loadRelatedAddresssForOptionsPreview(address: Address): void {
+    this.addressFormService.getCountries().subscribe((countries: Country[]) => {
       this.countries = countries;
     });
 
-    this.locationFormService.getDivisions().subscribe((divisions: Division[]) => {
+    this.addressFormService.getDivisions().subscribe((divisions: Division[]) => {
       this.divisions = divisions;
     });
 
     if (address.division && address.division.id) {
-      this.locationFormService.getDistrictsByDivision(address.division.id).subscribe((districts: District[]) => {
+      this.addressFormService.getDistrictsByDivision(address.division.id).subscribe((districts: District[]) => {
         this.districts = districts;
       });
     }
 
     if (address.district && address.district.id) {
-      this.locationFormService.getUpazilasByDistrict(address.district.id).subscribe((upazilas: Upazila[]) => {
+      this.addressFormService.getUpazilasByDistrict(address.district.id).subscribe((upazilas: Upazila[]) => {
         this.upazilas = upazilas;
       });
     }
 
     if (address.upazila && address.upazila.id) {
-      this.locationFormService.getPostCodesByUpazila(address.upazila.id).subscribe((postOffice: PostOffice[]) => {
+      this.addressFormService.getPostCodesByUpazila(address.upazila.id).subscribe((postOffice: PostOffice[]) => {
         this.postOffice = postOffice;
       });
     }
@@ -153,7 +153,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // Update the form values instead of reload the whole form
   // =========================
   private patchAddressValues(address: Address): void {
-    this.locationForm.patchValue({
+    this.addressForm.patchValue({
       countryId: 1,
       divisionId: address.division ? address.division.id : null,
       districtId: address.district ? address.district.id : null,
@@ -203,7 +203,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // Data Loaders
   // =========================
   private loadCountries(): void {
-    this.locationFormService.getCountries().subscribe({
+    this.addressFormService.getCountries().subscribe({
       next: countries => {
         this.countries = countries;
       },
@@ -214,7 +214,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   private loadDivisions(): void {
-    this.locationFormService.getDivisions().subscribe({
+    this.addressFormService.getDivisions().subscribe({
       next: divisions => {
         this.divisions = divisions;
       },
@@ -225,7 +225,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   private loadDistricts(divisionId: number): void {
-    this.locationFormService.getDistrictsByDivision(divisionId).subscribe({
+    this.addressFormService.getDistrictsByDivision(divisionId).subscribe({
       next: districts => {
         this.districts = districts;
       },
@@ -236,7 +236,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   private loadUpazilas(districtId: number): void {
-    this.locationFormService.getUpazilasByDistrict(districtId).subscribe({
+    this.addressFormService.getUpazilasByDistrict(districtId).subscribe({
       next: upazilas => {
         this.upazilas = upazilas;
       },
@@ -247,7 +247,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   private loadPostCodes(upazilaId: number): void {
-    this.locationFormService.getPostCodesByUpazila(upazilaId).subscribe({
+    this.addressFormService.getPostCodesByUpazila(upazilaId).subscribe({
       next: postOffice => {
         this.postOffice = postOffice;
       },
@@ -264,7 +264,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
     fieldsToReset: { [key: string]: any },
     arraysToClear: string[]
   ): void {
-    this.locationForm.patchValue(fieldsToReset, { emitEvent: false });
+    this.addressForm.patchValue(fieldsToReset, { emitEvent: false });
 
     // Using simple approach to clear arrays
     if (arraysToClear.includes('divisions')) this.divisions = [];
@@ -313,14 +313,14 @@ export class LocationFormComponent implements OnInit, OnChanges {
         this.updateAddress(address);
       } else {
         // when embedded in supplier-info-update, do not create/update address here
-        this.locationFormService.onAddressFormSubmit();
+        this.addressFormService.onAddressFormSubmit();
       }
       this.disableEditMode();
     } else {
       if (this.standalone) {
         this.createAddress(address);
       } else {
-        this.locationFormService.onAddressFormSubmit();
+        this.addressFormService.onAddressFormSubmit();
       }
     }
     this.resetFromCountry();
@@ -332,7 +332,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   private buildAddressForSubmit(): Address {
-    const formValue = this.locationForm.getRawValue();
+    const formValue = this.addressForm.getRawValue();
 
     const selectedCountry = this.countries.find(item => item.id === formValue.countryId);
     const selectedDivision = this.divisions.find(item => item.id === formValue.divisionId);
@@ -350,10 +350,10 @@ export class LocationFormComponent implements OnInit, OnChanges {
   }
 
   private createAddress(address: Address): void {
-    this.locationListService.addAddress(address).subscribe({
+    this.addressListService.addAddress(address).subscribe({
       next: () => {
         this.showLoadError('Address added successfully!', false);
-        this.locationFormService.onAddressFormSubmit();
+        this.addressFormService.onAddressFormSubmit();
       },
       error: error => {
         this.showLoadError('Failed to add address. Please try again.');
@@ -364,10 +364,10 @@ export class LocationFormComponent implements OnInit, OnChanges {
   private updateAddress(address: Address): void {
     if (!this.currentAddressIdForEditing) return;
 
-    this.locationListService.updateAddress(this.currentAddressIdForEditing, address).subscribe({
+    this.addressListService.updateAddress(this.currentAddressIdForEditing, address).subscribe({
       next: () => {
         this.showLoadError('Address updated successfully!', false);
-        this.locationFormService.onAddressFormSubmit();
+        this.addressFormService.onAddressFormSubmit();
       },
       error: error => {
         this.showLoadError('Failed to update address. Please try again.');
@@ -379,7 +379,7 @@ export class LocationFormComponent implements OnInit, OnChanges {
   // Returns the form control object through the control name
   // =========================
   private getControl(controlName: string): AbstractControl {
-    const control = this.locationForm.get(controlName);
+    const control = this.addressForm.get(controlName);
     if (!control) {
       this.showLoadError(`Control ${controlName} not found in form`);
       throw new Error(`Control ${controlName} not found in form`);

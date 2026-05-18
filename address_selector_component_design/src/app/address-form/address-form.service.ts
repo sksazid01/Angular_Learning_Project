@@ -2,12 +2,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-import { Country, Division, District, Upazila, PostOffice, Address } from './location-form.model';
+import { Country, Division, District, Upazila, PostOffice, Address } from './address-form.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocationFormService {
+export class AddressFormService {
   private editAddressSource = new Subject<Address>();
   private addressFormSubmitSource = new Subject<void>();
   public editAddress$ = this.editAddressSource.asObservable();

@@ -1,6 +1,6 @@
 # Angular Address Selector — Code Review & Improvement Suggestions
 
-> **Scope:** `location-form`, `location-lists`, `supplier-*`, `confirmation-popup`, `notification`, `loading`, `address-preview`, and shared services.
+> **Scope:** `address-form`, `address-lists`, `supplier-*`, `confirmation-popup`, `notification`, `loading`, `address-preview`, and shared services.
 > **Note:** These are *suggestions only* — no code has been changed.
 
 ---
@@ -9,14 +9,14 @@
 
 ### 1.1 Memory Leaks — Unsubscribed Observables
 
-**Files:** `location-form.component.ts`, `location-lists.component.ts`
+**Files:** `address-form.component.ts`, `address-lists.component.ts`
 
 ```ts
-// location-form.component.ts — ngOnInit
-this.locationFormService.editAddress$.subscribe(address => { ... });
+// address-form.component.ts — ngOnInit
+this.addressFormService.editAddress$.subscribe(address => { ... });
 
-// location-lists.component.ts — ngOnInit
-this.locationFormService.addressFormSubmit$.subscribe(() => { ... });
+// address-lists.component.ts — ngOnInit
+this.addressFormService.addressFormSubmit$.subscribe(() => { ... });
 ```
 
 Neither subscription is stored and unsubscribed in `ngOnDestroy`. If the component is destroyed and re-created (e.g. via routing), the old subscriptions keep running, causing **memory leaks** and duplicate executions.
@@ -27,7 +27,7 @@ Neither subscription is stored and unsubscribed in `ngOnDestroy`. If the compone
 
 ### 1.2 `valueChanges` Subscriptions Also Leak
 
-**File:** `location-form.component.ts` lines 168–200
+**File:** `address-form.component.ts` lines 168–200
 
 ```ts
 private onCountryChange(): void {
@@ -39,9 +39,9 @@ All four `onXxxChange()` methods subscribe to `valueChanges` but never unsubscri
 
 ---
 
-### 1.3 Race Condition in `loadRelatedLocationsForOptionsPreview`
+### 1.3 Race Condition in `loadRelatedAddresssForOptionsPreview`
 
-**File:** `location-form.component.ts` lines 124–150
+**File:** `address-form.component.ts` lines 124–150
 
 When editing an address, countries and divisions are fetched **again** even though `loadCountries()` and `loadDivisions()` already fetched them in `ngOnInit`. If both calls finish in different orders, the dropdown arrays can be overwritten inconsistently.
 
@@ -49,11 +49,11 @@ When editing an address, countries and divisions are fetched **again** even thou
 
 ---
 
-### 1.4 `patchAddressValues` Calls `{ emitEvent: false }` But `loadRelatedLocationsForOptionsPreview` Depends on the Same Subscriptions
+### 1.4 `patchAddressValues` Calls `{ emitEvent: false }` But `loadRelatedAddresssForOptionsPreview` Depends on the Same Subscriptions
 
-**File:** `location-form.component.ts` lines 115–163
+**File:** `address-form.component.ts` lines 115–163
 
-`patchAddressValues` correctly uses `{ emitEvent: false }` to avoid triggering the `valueChanges` cascade. However, it means downstream dropdowns (districts, upazilas, post offices) are populated manually via `loadRelatedLocationsForOptionsPreview`. If the patch finishes **before** the HTTP calls return, the form shows valid IDs but empty dropdowns, and the user sees no options selected.
+`patchAddressValues` correctly uses `{ emitEvent: false }` to avoid triggering the `valueChanges` cascade. However, it means downstream dropdowns (districts, upazilas, post offices) are populated manually via `loadRelatedAddresssForOptionsPreview`. If the patch finishes **before** the HTTP calls return, the form shows valid IDs but empty dropdowns, and the user sees no options selected.
 
 **Suggestion:** Chain the HTTP calls sequentially using `switchMap` or `forkJoin`, then patch the form after all data is available.
 
@@ -110,7 +110,7 @@ Class properties have no default values and no `!` non-null assertion, causing T
 
 ### 1.8 `currentAddressIdForEditing` is Marked `// remove` But Still Used
 
-**File:** `location-form.component.ts` line 26
+**File:** `address-form.component.ts` line 26
 
 ```ts
 private currentAddressIdForEditing: number | null = null; // remove
@@ -140,15 +140,15 @@ The notification is **visible on page load** with a welcome message, even though
 
 ### 1.10 `loadAddresses()` Reassigns Observable on Every Submit
 
-**File:** `location-lists.component.ts` lines 22–28
+**File:** `address-lists.component.ts` lines 22–28
 
 ```ts
-this.locationFormService.addressFormSubmit$.subscribe(() => {
+this.addressFormService.addressFormSubmit$.subscribe(() => {
   this.loadAddresses(); // reassigns savedAddresses$ every time
 });
 
 private loadAddresses(): void {
-  this.savedAddresses$ = this.locationListService.getAddresses();
+  this.savedAddresses$ = this.addressListService.getAddresses();
 }
 ```
 
@@ -183,7 +183,7 @@ The service body uses **4-space indentation** while the rest of the project uses
 
 ### 2.2 Missing Semicolons in Model
 
-**File:** `location-form.model.ts` lines 44–45
+**File:** `address-form.model.ts` lines 44–45
 
 ```ts
 upazila: Upazila;  
@@ -210,7 +210,7 @@ Multiple templates use inline `style=""` attributes rather than CSS classes. Thi
 
 ### 2.4 Deprecated HTML Attributes
 
-**Files:** `location-lists.component.html`, `address-preview.component.html`, `supplier-details.component.html`
+**Files:** `address-lists.component.html`, `address-preview.component.html`, `supplier-details.component.html`
 
 ```html
 <table border="1" cellpadding="10" cellspacing="2" align="center">
@@ -222,7 +222,7 @@ Multiple templates use inline `style=""` attributes rather than CSS classes. Thi
 
 ### 2.5 Commented-Out Code Left in Template
 
-**File:** `location-form.component.html` line 1
+**File:** `address-form.component.html` line 1
 
 ```html
 <!-- <hr /> -->
@@ -248,15 +248,15 @@ Debug `console.log` calls should be removed from production code. Use a proper l
 
 ## 3. 🏷️ Function & Variable Naming Issues
 
-| Location | Current Name | Issue | Suggested Name |
+| Address | Current Name | Issue | Suggested Name |
 |---|---|---|---|
-| `location-form.component.ts:22` | `postOffice: PostOffice[]` | Array named as singular concept; confusing | `postOffices: PostOffice[]` |
-| `location-form.component.ts:393` | `showLoadError()` | Misleading — used for both errors AND success messages | `showNotification()` |
-| `supplier-info-update.component.ts:49` | `getSupplierLocation()` | Sounds like it *returns* something, but it mutates `supplier.address` as a side-effect | `assignSupplierAddress()` |
+| `address-form.component.ts:22` | `postOffice: PostOffice[]` | Array named as singular concept; confusing | `postOffices: PostOffice[]` |
+| `address-form.component.ts:393` | `showLoadError()` | Misleading — used for both errors AND success messages | `showNotification()` |
+| `supplier-info-update.component.ts:49` | `getSupplierAddress()` | Sounds like it *returns* something, but it mutates `supplier.address` as a side-effect | `assignSupplierAddress()` |
 | `supplier-info-update.component.ts:74` | `onSupplierSave()` | Inconsistent with Angular convention where `on` prefix is for event handlers from template | `handleSaveClick()` or `saveSupplier()` (and rename the private one) |
-| `location-form.component.ts:115` | `loadAddressForEdit()` | Ambiguous — "load" suggests HTTP, but it also patches the form | `populateFormForEdit()` |
-| `location-form.component.ts:124` | `loadRelatedLocationsForOptionsPreview()` | Too long and awkward | `preloadDropdownOptions()` |
-| `location-lists.component.ts (class)` | `LocationListComponent` | File is named `location-lists` (plural) but class is `LocationListComponent` (singular) | `LocationListsComponent` — keep consistent |
+| `address-form.component.ts:115` | `loadAddressForEdit()` | Ambiguous — "load" suggests HTTP, but it also patches the form | `populateFormForEdit()` |
+| `address-form.component.ts:124` | `loadRelatedAddresssForOptionsPreview()` | Too long and awkward | `preloadDropdownOptions()` |
+| `address-lists.component.ts (class)` | `AddressListComponent` | File is named `address-lists` (plural) but class is `AddressListComponent` (singular) | `AddressListsComponent` — keep consistent |
 | `confirmation-popup.service.ts:12–13` | `confirmCallback`, `declineCallback` | Using broad `Function` type | Type as `(() => void) \| null` |
 | `loading.service.ts:12` | `activeRequests` | Private field, OK, but naming doesn't follow the `_` prefix convention used nowhere else | Keep consistent, just ensure it's always private |
 | `supplier-details.component.ts:28` | `deleteConfirmed()` | Sounds like it's a callback name, not a method name | `onDeleteConfirmed()` or `executeDelete()` |
@@ -265,9 +265,9 @@ Debug `console.log` calls should be removed from production code. Use a proper l
 
 ## 4. ✂️ Function Splitting by Responsibility
 
-### 4.1 `ngOnInit` in `LocationFormComponent` Does Too Much
+### 4.1 `ngOnInit` in `AddressFormComponent` Does Too Much
 
-**File:** `location-form.component.ts` lines 36–48
+**File:** `address-form.component.ts` lines 36–48
 
 ```ts
 ngOnInit(): void {
@@ -278,7 +278,7 @@ ngOnInit(): void {
   this.onDivisionChange(); // sets up subscription
   this.onDistrictChange(); // sets up subscription
   this.onUpazilaChange();  // sets up subscription
-  this.locationFormService.editAddress$.subscribe(...); // another subscription
+  this.addressFormService.editAddress$.subscribe(...); // another subscription
 }
 ```
 
@@ -291,7 +291,7 @@ ngOnInit(): void {
 
 ### 4.2 `submit()` Has Branching Responsibilities
 
-**File:** `location-form.component.ts` lines 307–327
+**File:** `address-form.component.ts` lines 307–327
 
 ```ts
 public submit(): void {
@@ -300,11 +300,11 @@ public submit(): void {
   if (this.isEditMode && this.currentAddressIdForEditing) {
     address.id = this.currentAddressIdForEditing;
     if (this.standalone) { this.updateAddress(address); }
-    else { this.locationFormService.onAddressFormSubmit(); }
+    else { this.addressFormService.onAddressFormSubmit(); }
     this.disableEditMode();
   } else {
     if (this.standalone) { this.createAddress(address); }
-    else { this.locationFormService.onAddressFormSubmit(); }
+    else { this.addressFormService.onAddressFormSubmit(); }
   }
   this.resetFromCountry();
 }
@@ -323,18 +323,18 @@ This single method handles four distinct paths. Split into:
 ```ts
 onSupplierSave() {
   if (!this.isSupplierValid()) return;
-  this.getSupplierLocation();  // side-effect: mutates supplier.address
+  this.getSupplierAddress();  // side-effect: mutates supplier.address
   this.saveSupplier();          // triggers confirmation popup + HTTP
 }
 ```
 
-`getSupplierLocation()` should not mutate state silently. Consider returning the address and passing it directly to `saveSupplier(address)` instead.
+`getSupplierAddress()` should not mutate state silently. Consider returning the address and passing it directly to `saveSupplier(address)` instead.
 
 ---
 
 ### 4.4 `clearDependencies` Uses String-Based Array Clearing
 
-**File:** `location-form.component.ts` lines 263–274
+**File:** `address-form.component.ts` lines 263–274
 
 ```ts
 if (arraysToClear.includes('divisions')) this.divisions = [];
@@ -352,24 +352,24 @@ Using magic strings (`'divisions'`, `'districts'`) is fragile. If a property is 
 **File:** `supplier-info-update.component.ts` lines 51–52
 
 ```ts
-if (this.locationForm && this.locationForm.locationForm && this.locationForm.locationForm.valid) {
-  addressData = this.locationForm.getAddressFromAddressForm();
+if (this.addressForm && this.addressForm.addressForm && this.addressForm.addressForm.valid) {
+  addressData = this.addressForm.getAddressFromAddressForm();
 }
 ```
 
-The parent is accessing `locationForm.locationForm` — a **child's internal `FormGroup`** — directly. This is a deep encapsulation violation. The parent should not know about the child's internal implementation details.
+The parent is accessing `addressForm.addressForm` — a **child's internal `FormGroup`** — directly. This is a deep encapsulation violation. The parent should not know about the child's internal implementation details.
 
-**Suggestion:** Expose only what is needed from the child via a public method like `getAddressFromAddressForm()` (which already exists) or an `@Output() addressChange` event emitter. Do not access `.locationForm` (the FormGroup) from outside.
+**Suggestion:** Expose only what is needed from the child via a public method like `getAddressFromAddressForm()` (which already exists) or an `@Output() addressChange` event emitter. Do not access `.addressForm` (the FormGroup) from outside.
 
 ---
 
-### 5.2 `LocationFormComponent` Has Two Conflicting Input Mechanisms
+### 5.2 `AddressFormComponent` Has Two Conflicting Input Mechanisms
 
-**File:** `location-form.component.ts`
+**File:** `address-form.component.ts`
 
 The component accepts an address via:
 1. `@Input() address?: Address` — for parent → child (used in `supplier-info-update`)
-2. `locationFormService.editAddress$` — service Observable (used in `location-lists`)
+2. `addressFormService.editAddress$` — service Observable (used in `address-lists`)
 
 Both trigger `startEdit()`. Having **two entry points** for the same action makes the component unpredictable and hard to test. The caller must know *which* mechanism to use.
 
@@ -377,17 +377,17 @@ Both trigger `startEdit()`. Having **two entry points** for the same action make
 
 ---
 
-### 5.3 `LocationFormService` Is Overloaded — Mixes HTTP and UI State
+### 5.3 `AddressFormService` Is Overloaded — Mixes HTTP and UI State
 
-**File:** `location-form.service.ts`
+**File:** `address-form.service.ts`
 
 This service:
 - Makes HTTP calls (`getCountries`, `getDivisions`, etc.)
 - Manages UI event bus (`editAddress$`, `addressFormSubmit$`)
 
 These are two separate concerns. Consider splitting into:
-- `LocationDataService` — HTTP calls only
-- `LocationFormService` — UI state/event coordination only
+- `AddressDataService` — HTTP calls only
+- `AddressFormService` — UI state/event coordination only
 
 ---
 
@@ -412,7 +412,7 @@ confirmationPopupService.confirm(message).subscribe(result => {
 
 ### 5.5 `standalone` Input Flag Creates Implicit Behavior Split
 
-**File:** `location-form.component.ts` line 16
+**File:** `address-form.component.ts` line 16
 
 ```ts
 @Input() standalone: boolean = true;
@@ -426,29 +426,29 @@ The `standalone` flag fundamentally changes what `submit()` does — either savi
 
 ## 6. 👪 Child-Parent Relationship Issues
 
-### 6.1 `LocationListComponent` and `LocationFormComponent` Are Siblings Communicating via Service
+### 6.1 `AddressListComponent` and `AddressFormComponent` Are Siblings Communicating via Service
 
-**File:** `location-lists.component.html` — both components are in the same template
+**File:** `address-lists.component.html` — both components are in the same template
 
 ```html
 <div class="left">
-  <app-location-form></app-location-form>
+  <app-address-form></app-address-form>
 </div>
 <div class="right">
   <!-- list uses editAddress$ from service -->
 </div>
 ```
 
-The parent `LocationListComponent` passes no data to `LocationFormComponent` directly — all communication goes through `LocationFormService`. This is fine for sibling communication, but since they share the same parent, the parent could act as a mediator, keeping the service cleaner.
+The parent `AddressListComponent` passes no data to `AddressFormComponent` directly — all communication goes through `AddressFormService`. This is fine for sibling communication, but since they share the same parent, the parent could act as a mediator, keeping the service cleaner.
 
 ---
 
-### 6.2 `SupplierInfoUpdateComponent` → `LocationFormComponent` Relationship Is Implicit
+### 6.2 `SupplierInfoUpdateComponent` → `AddressFormComponent` Relationship Is Implicit
 
 **File:** `supplier-info-update.component.html` line 18
 
 ```html
-<app-location-form [address]="supplier.address" [standalone]="false"></app-location-form>
+<app-address-form [address]="supplier.address" [standalone]="false"></app-address-form>
 ```
 
 The parent passes `[standalone]="false"` to change child behavior, and then queries the child via `@ViewChild`. This creates a **tight coupling** between parent and child. The child is not truly reusable — it behaves differently depending on what the parent passes.
@@ -561,23 +561,23 @@ Model/entity classes should live in their own `*.model.ts` file, not inside a se
 
 ### 8.1 Countries & Divisions Are Fetched Twice on Edit
 
-**File:** `location-form.component.ts`
+**File:** `address-form.component.ts`
 
 When editing an address:
 1. `ngOnInit` calls `loadCountries()` and `loadDivisions()` → **2 HTTP calls**
-2. `loadRelatedLocationsForOptionsPreview()` calls `getCountries()` and `getDivisions()` again → **2 more HTTP calls**
+2. `loadRelatedAddresssForOptionsPreview()` calls `getCountries()` and `getDivisions()` again → **2 more HTTP calls**
 
 This results in **4 redundant calls** for data that never changes per session (countries/divisions are static reference data).
 
 **Suggestion:**
 - Cache countries and divisions in the service using `shareReplay(1)` so subsequent subscriptions reuse the same response.
-- In `loadRelatedLocationsForOptionsPreview`, skip fetching countries/divisions if the arrays are already populated.
+- In `loadRelatedAddresssForOptionsPreview`, skip fetching countries/divisions if the arrays are already populated.
 
 ---
 
 ### 8.2 No Caching for Any Reference Data
 
-**File:** `location-form.service.ts`
+**File:** `address-form.service.ts`
 
 All HTTP methods return a fresh `http.get(...)` on every call. Countries, divisions, districts, upazilas, and post offices are all static/reference data that changes rarely.
 
@@ -598,7 +598,7 @@ public getCountries(): Observable<Country[]> { return this.countries$; }
 
 ### 8.3 `addressFormSubmit$` Triggers a Full List Reload on Every Save
 
-**File:** `location-lists.component.ts` lines 22–28
+**File:** `address-lists.component.ts` lines 22–28
 
 Every time a form is submitted (create or update), `getAddresses()` is called again, fetching the **entire address list**. For large datasets this is inefficient.
 
