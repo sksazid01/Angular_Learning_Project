@@ -6,8 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  // =========================
-  // Properties
-  // =========================
   public title = 'address_selector_component_design';
 }

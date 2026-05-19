@@ -8,30 +8,18 @@ import { ConfirmationConfig } from './confirmation-popup.model';
   styleUrls: ['./confirmation-popup.component.css']
 })
 export class ConfirmationPopupComponent implements OnInit {
-  // =========================
-  // Properties
-  // =========================
   public isOpen = false;
   public config: ConfirmationConfig | null = null;
 
-  // =========================
-  // Constructor
-  // =========================
   constructor(
     private confirmationPopupService: ConfirmationPopupService,
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  // =========================
-  // Lifecycle Hooks
-  // =========================
   ngOnInit(): void {
     this.listenToConfirmationConfig();
   }
 
-  // =========================
-  // Public UI Methods
-  // =========================
   public onConfirm(): void {
     this.confirmationPopupService.close(true);
   }
@@ -40,9 +28,6 @@ export class ConfirmationPopupComponent implements OnInit {
     this.confirmationPopupService.close(false);
   }
 
-  // =========================
-  // Private Helpers
-  // =========================
   private listenToConfirmationConfig(): void {
     console.log('ConfirmationPopupComponent initialized!');
     this.confirmationPopupService.config$.subscribe(config => {

@@ -59,9 +59,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     }
   }
 
-  // =========================
   // Form Initialization
-  // =========================
   private buildForm(formData?: Address | null): void {
     const data = formData || new Address();
     this.addressForm = this.formBuilder.group({
@@ -73,9 +71,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     });
   }
 
-  // =========================
   // Public UI Methods
-  // =========================
   public onSubmitRequest(): void {
     if (this.addressForm.invalid) {
       this.showLoadError('Please fill all required fields correctly before submitting.');
@@ -96,9 +92,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     }
   }
 
-  // =========================
   // Edit Mode Helpers
-  // =========================
   private enableEditMode(addressId: number): void {
     this.isEditMode = true;
     this.currentAddressIdForEditing = addressId;
@@ -109,9 +103,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     this.currentAddressIdForEditing = null;
   }
 
-  // =========================
   // Form Population
-  // =========================
   private loadAddressForEdit(address: Address): void {
     try {
       this.loadRelatedAddresssForOptionsPreview(address);
@@ -149,9 +141,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     }
   }
 
-  // =========================
   // Update the form values instead of reload the whole form
-  // =========================
   private patchAddressValues(address: Address): void {
     this.addressForm.patchValue({
       countryId: 1,
@@ -162,9 +152,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     }, { emitEvent: false });
   }
 
-  // =========================
   // Dropdown Change Handlers
-  // =========================
   private onCountryChange(): void {
     this.getControl('countryId').valueChanges.subscribe(countryId => {
       this.resetFromCountry();
@@ -199,9 +187,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     });
   }
 
-  // =========================
   // Data Loaders
-  // =========================
   private loadCountries(): void {
     this.addressFormService.getCountries().subscribe({
       next: countries => {
@@ -257,9 +243,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     });
   }
 
-  // =========================
   // Reset Helpers
-  // =========================
   private clearDependencies(
     fieldsToReset: { [key: string]: any },
     arraysToClear: string[]
@@ -301,9 +285,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     );
   }
 
-  // =========================
   // Submit Workflow
-  // =========================
   public submit(): void {
     const address = this.buildAddressForSubmit();
 
@@ -375,9 +357,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     });
   }
 
-  // =========================
   // Returns the form control object through the control name
-  // =========================
   private getControl(controlName: string): AbstractControl {
     const control = this.addressForm.get(controlName);
     if (!control) {
@@ -387,9 +367,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
     return control;
   }
 
-  // =========================
   // Error Handling
-  // =========================
   private showLoadError(message: string, isError: boolean = true): void {
     this.notificationService.showNotification(message, isError);
   }

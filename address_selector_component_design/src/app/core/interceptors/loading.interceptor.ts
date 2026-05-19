@@ -12,14 +12,10 @@ import { LoadingService } from '../services/loading.service';
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
 
-  // =========================
-  // Constructor
-  // =========================
-  constructor(private loadingService: LoadingService) {}
+  constructor(
+    private loadingService: LoadingService
+  ) {}
 
-  // =========================
-  // Core Interceptor logic
-  // =========================
   public intercept(
     request: HttpRequest<any>,
     next: HttpHandler

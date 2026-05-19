@@ -8,9 +8,6 @@ import { NotificationService } from '../../../core/services/notification.service
   styleUrls: ['./notification.component.css']
 })
 export class NotificationComponent implements OnInit, OnDestroy {
-  // =========================
-  // Properties
-  // =========================
   public isNotificationVisible = true;
   public isError = false;
   public title: string = 'Welcome';
@@ -18,14 +15,8 @@ export class NotificationComponent implements OnInit, OnDestroy {
   
   private subscription!: Subscription;
 
-  // =========================
-  // Constructor
-  // =========================
   constructor(private notificationService: NotificationService) { }
 
-  // =========================
-  // Lifecycle Hooks
-  // =========================
   ngOnInit() {
     this.subscription = this.notificationService.notification$.subscribe(notification => {
       this.handleNotification(notification);
@@ -38,16 +29,10 @@ export class NotificationComponent implements OnInit, OnDestroy {
     }
   }
 
-  // =========================
-  // Public UI Methods
-  // =========================
   public onCancel(): void {
     this.notificationService.clearNotification();
   }
 
-  // =========================
-  // Private Helpers
-  // =========================
   private handleNotification(notification: any): void {
     if (notification) {
       this.message = notification.message;

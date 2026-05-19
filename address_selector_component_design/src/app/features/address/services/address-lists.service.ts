@@ -7,19 +7,10 @@ import { Address } from '../models/address.model';
   providedIn: 'root'
 })
 export class AddressListService {
-  // =========================
-  // Properties
-  // =========================
   private readonly baseUrl = 'http://localhost:3000';
 
-  // =========================
-  // Constructor
-  // =========================
   constructor(private http: HttpClient) { }
 
-  // =========================
-  // Public HTTP API Methods
-  // =========================
   public getAddresses(): Observable<Address[]> {
     return this.http.get<Address[]>(`${this.baseUrl}/address_list`);
   }

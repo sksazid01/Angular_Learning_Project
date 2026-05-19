@@ -6,9 +6,6 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class LoadingService {
-  // =========================
-  // Properties
-  // =========================
   private activeRequests = 0;
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   public isLoading$ = this.isLoadingSubject.asObservable();
@@ -16,9 +13,6 @@ export class LoadingService {
   private loadingMap: Map<string, boolean> = new Map<string, boolean>();
   private loadingSubject = new BehaviorSubject<Map<string, boolean>>(this.loadingMap);
 
-  // =========================
-  // Public Methods
-  // =========================
   public isLoading(key: string): Observable<boolean> {
     return this.loadingSubject.asObservable().pipe(
       map(stateMap => !!stateMap.get(key))
@@ -57,9 +51,6 @@ export class LoadingService {
     });
   }
   
-  // =========================
-  // Private Helpers
-  // =========================
   private getKeyFromUrl(url: string): string {
     if (url.includes('/countries')) return 'countries';
     if (url.includes('/divisions')) return 'divisions';
