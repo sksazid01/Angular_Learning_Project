@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-import { Country, Division, District, Upazila, PostOffice, Address } from './address-form.model';
+import { Country, Division, District, Upazila, PostOffice, Address } from '../models/address.model';
 
 @Injectable({
   providedIn: 'root'

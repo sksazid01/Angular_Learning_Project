@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Address } from '../address-form/address-form.model';
-import { AddressListService } from './address-lists.service';
-import { AddressFormService } from '../address-form/address-form.service';
+import { Address } from '../../models/address.model';
+import { AddressFormService } from '../../services/address-form.service';
+import { AddressListService } from '../../services/address-lists.service';
 
 @Component({
   selector: 'app-address-lists',

@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Address } from './address-form/address-form.model';
 
-export class Supplier {
-  id: number;
-  name: string;
-  address: Address;
-}
+import { Supplier } from '../models/supplier.model';
 
 @Injectable({
   providedIn: 'root'

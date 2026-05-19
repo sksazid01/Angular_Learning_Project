@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Supplier, SupplierService } from '../supplier.service';
-import { ConfirmationPopupService } from '../confirmation-popup/confirmation-popup.service';
+import { ConfirmationPopupService } from '../../../../shared/components/confirmation-popup/confirmation-popup.service';
+import { Supplier } from '../../models/supplier.model';
+import { SupplierService } from '../../services/supplier.service';
 
 @Component({
   selector: 'app-supplier-details',

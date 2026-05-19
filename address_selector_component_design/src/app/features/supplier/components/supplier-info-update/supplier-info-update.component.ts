@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Supplier, SupplierService } from '../supplier.service';
-import { AddressFormComponent } from '../address-form/address-form.component';
-import { NotificationService } from '../notification/notification.service';
-import { Address } from '../address-form/address-form.model';
-import { ConfirmationPopupService } from '../confirmation-popup/confirmation-popup.service';
+import { NotificationService } from '../../../../core/services/notification.service';
+import { ConfirmationPopupService } from '../../../../shared/components/confirmation-popup/confirmation-popup.service';
+import { AddressFormComponent } from '../../../address/components/address-form/address-form.component';
+import { Address } from '../../../address/models/address.model';
+import { Supplier } from '../../models/supplier.model';
+import { SupplierService } from '../../services/supplier.service';
 
 @Component({
   selector: 'app-supplier-info-update',

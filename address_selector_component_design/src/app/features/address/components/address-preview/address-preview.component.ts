@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Address } from '../address-form/address-form.model';
+import { Address } from '../../models/address.model';
 
 @Component({
   selector: 'app-address-preview',
