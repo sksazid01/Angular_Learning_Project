@@ -15,15 +15,15 @@ export class BaseUrlInterceptor implements HttpInterceptor {
     public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         // skip if already an absolute URL (like external API calls)
-        // if (req.url.startsWith('http')) {
-        //     return next.handle(req);
-        // }
+        if (req.url.startsWith('http')) {
+            return next.handle(req);
+        }
 
-        const apiReq = req.clone({
-            url: `${environment.apiUrl}${req.url}`
+        const apiUrl = req.clone({
+            url: `${environment.baseUrl}${req.url}`
         });
-        console.log('BaseUrlInterceptor modified request URL:', apiReq.url);
+        // console.log('BaseUrlInterceptor modified request URL:', apiUrl.url);
 
-        return next.handle(apiReq);
+        return next.handle(apiUrl);
     }
 }

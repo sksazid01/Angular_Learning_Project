@@ -7,7 +7,6 @@ export const ENDPOINTS = {
     districts: '/districts',
     upazilas: '/upazilas',
     postOffice: '/postoffice',
-    addressList: '/address_list',
     addressListById: (id: number) => `/address_list/${id}`
   },
   suppliers: {

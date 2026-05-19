@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationPopupService } from '../../../../shared/components/confirmation-popup/confirmation-popup.service';
-import { Supplier } from '../../models/supplier.model';
+import { Supplier } from '../../domain/supplier.domain';
 import { SupplierService } from '../../services/supplier.service';
 
 @Component({
@@ -28,15 +28,13 @@ export class SupplierDetailsComponent implements OnInit {
     }
   }
 
-  deleteConfirmed() {
-    this.supplierService.deleteSupplier(this.supplier.id).subscribe(() => {
-      this.router.navigate(['/suppliers']);
-    });
-  }
-
   deleteSupplier() {
     if (this.supplier && this.supplier.id) {
-      this.confirmationPopupService.confirm(this.deleteConfirmed.bind(this), null, 'Are you sure to delete?', 'Delete Confirmation');
+      this.confirmationPopupService.confirm(() => {
+        this.supplierService.deleteSupplier(this.supplier.id).subscribe(() => {
+          this.router.navigate(['/suppliers']);
+        });
+      });
     }
   }
 

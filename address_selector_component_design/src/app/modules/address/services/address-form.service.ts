@@ -3,16 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { ENDPOINTS } from '../../../core/constants/endpoints';
-import { Country, Division, District, Upazila, PostOffice, Address } from '../models/address.model';
+import { Country, Division, District, Upazila, PostOffice, Address } from '../domain/address.domain';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AddressFormService {
-  private editAddressSource = new Subject<Address>();
-  private addressFormSubmitSource = new Subject<void>();
-  public editAddress$ = this.editAddressSource.asObservable();
-  public addressFormSubmit$ = this.addressFormSubmitSource.asObservable();
 
   constructor(
     private http: HttpClient
@@ -39,13 +35,5 @@ export class AddressFormService {
   public getPostCodesByUpazila(upazilaId: number): Observable<PostOffice[]> {
     const params = new HttpParams().set('upazila_id', String(upazilaId));
     return this.http.get<PostOffice[]>(ENDPOINTS.address.postOffice, { params });
-  }
-
-  public onEditAddress(address: Address): void {
-    this.editAddressSource.next(address);
-  }
-
-  public onAddressFormSubmit(): void {
-    this.addressFormSubmitSource.next();
   }
 }

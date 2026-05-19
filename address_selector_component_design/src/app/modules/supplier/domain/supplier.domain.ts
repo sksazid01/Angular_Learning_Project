@@ -1,4 +1,4 @@
-import { Address } from '../../address/models/address.model';
+import { Address } from '../../address/domain/address.domain';
 
 export class Supplier {
   id: number;

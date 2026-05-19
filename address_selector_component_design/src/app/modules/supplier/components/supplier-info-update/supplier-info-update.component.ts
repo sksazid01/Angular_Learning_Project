@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ConfirmationPopupService } from '../../../../shared/components/confirmation-popup/confirmation-popup.service';
 import { AddressFormComponent } from '../../../address/components/address-form/address-form.component';
-import { Address } from '../../../address/models/address.model';
-import { Supplier } from '../../models/supplier.model';
+import { Address } from '../../../address/domain/address.domain';
+import { Supplier } from '../../domain/supplier.domain';
 import { SupplierService } from '../../services/supplier.service';
 
 @Component({
@@ -13,9 +13,8 @@ import { SupplierService } from '../../services/supplier.service';
   styleUrls: ['./supplier-info-update.component.css']
 })
 export class SupplierInfoUpdateComponent implements OnInit {
-  supplier: Supplier = { id: 0, name: '', address: undefined };
   isNewSupplier = false;
-
+  supplier: Supplier = { id: 0, name: '', address: undefined };
   @ViewChild(AddressFormComponent) addressForm!: AddressFormComponent;
 
   constructor(

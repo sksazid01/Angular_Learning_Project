@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Supplier } from '../../models/supplier.model';
+import { Supplier } from '../../domain/supplier.domain';
 import { SupplierService } from '../../services/supplier.service';
 
 @Component({

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { ENDPOINTS } from '../../../core/constants/endpoints';
-import { Supplier } from '../models/supplier.model';
+import { Supplier } from '../domain/supplier.domain';
 
 @Injectable({
   providedIn: 'root'

@@ -183,7 +183,7 @@ The service body uses **4-space indentation** while the rest of the project uses
 
 ### 2.2 Missing Semicolons in Model
 
-**File:** `address-form.model.ts` lines 44–45
+**File:** `address-form.domain.ts` lines 44–45
 
 ```ts
 upazila: Upazila;  
@@ -551,9 +551,9 @@ export class Supplier {
 }
 ```
 
-Model/entity classes should live in their own `*.model.ts` file, not inside a service file. This forces any component that only needs the type to import the entire service.
+Model/entity classes should live in their own `*.domain.ts` file, not inside a service file. This forces any component that only needs the type to import the entire service.
 
-**Suggestion:** Move `Supplier` to `supplier.model.ts`.
+**Suggestion:** Move `Supplier` to `supplier.domain.ts`.
 
 ---
 
