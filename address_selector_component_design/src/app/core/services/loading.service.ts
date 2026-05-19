@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { ENDPOINTS } from '../constants/endpoints';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -52,11 +54,11 @@ export class LoadingService {
   }
   
   private getKeyFromUrl(url: string): string {
-    if (url.includes('/countries')) return 'countries';
-    if (url.includes('/divisions')) return 'divisions';
-    if (url.includes('/districts')) return 'districts';
-    if (url.includes('/upazilas')) return 'upazilas';
-    if (url.includes('/postoffice')) return 'postOffices';
+    if (url.includes(ENDPOINTS.address.countries)) return 'countries';
+    if (url.includes(ENDPOINTS.address.divisions)) return 'divisions';
+    if (url.includes(ENDPOINTS.address.districts)) return 'districts';
+    if (url.includes(ENDPOINTS.address.upazilas)) return 'upazilas';
+    if (url.includes(ENDPOINTS.address.postOffice)) return 'postOffices';
     return '';
   }
 }

@@ -15,7 +15,7 @@ import { SupplierService } from '../../services/supplier.service';
 export class SupplierInfoUpdateComponent implements OnInit {
   supplier: Supplier = { id: 0, name: '', address: undefined };
   isNewSupplier = false;
-  
+
   @ViewChild(AddressFormComponent) addressForm!: AddressFormComponent;
 
   constructor(
@@ -33,6 +33,12 @@ export class SupplierInfoUpdateComponent implements OnInit {
     } else {
       this.isNewSupplier = true;
     }
+  }
+
+  onSupplierSave() {
+    if (!this.isSupplierValid()) return;
+    this.getSupplierAddress();
+    this.saveSupplier();
   }
 
   // validate name
@@ -70,12 +76,6 @@ export class SupplierInfoUpdateComponent implements OnInit {
         });
       }, null, 'Are you sure to update this supplier?', 'Update Confirmation');
     }
-  }
-
-  onSupplierSave() {
-    if (!this.isSupplierValid()) return;
-    this.getSupplierAddress();
-    this.saveSupplier();
   }
 
   goBack() {

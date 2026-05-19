@@ -8,6 +8,7 @@ import { SupplierService } from '../../services/supplier.service';
   styleUrls: ['./supplier-list.component.css']
 })
 export class SupplierListComponent implements OnInit {
+  
   suppliers!: Supplier[];
 
   constructor(
