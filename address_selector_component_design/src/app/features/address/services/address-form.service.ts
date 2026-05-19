@@ -13,33 +13,31 @@ export class AddressFormService {
   public editAddress$ = this.editAddressSource.asObservable();
   public addressFormSubmit$ = this.addressFormSubmitSource.asObservable();
 
-  private readonly baseUrl = 'http://localhost:3000';
-
   constructor(
     private http: HttpClient
   ) { }
 
   public getCountries(): Observable<Country[]> {
-    return this.http.get<Country[]>(`${this.baseUrl}/countries`);
+    return this.http.get<Country[]>(`/countries`);
   }
 
   public getDivisions(): Observable<Division[]> {
-    return this.http.get<Division[]>(`${this.baseUrl}/divisions`);
+    return this.http.get<Division[]>(`/divisions`);
   }
 
   public getDistrictsByDivision(divisionId: number): Observable<District[]> {
     const params = new HttpParams().set('division_id', String(divisionId));
-    return this.http.get<District[]>(`${this.baseUrl}/districts`, { params });
+    return this.http.get<District[]>(`/districts`, { params });
   }
 
   public getUpazilasByDistrict(districtId: number): Observable<Upazila[]> {
     const params = new HttpParams().set('district_id', String(districtId));
-    return this.http.get<Upazila[]>(`${this.baseUrl}/upazilas`, { params });
+    return this.http.get<Upazila[]>(`/upazilas`, { params });
   }
 
   public getPostCodesByUpazila(upazilaId: number): Observable<PostOffice[]> {
     const params = new HttpParams().set('upazila_id', String(upazilaId));
-    return this.http.get<PostOffice[]>(`${this.baseUrl}/postoffice`, { params });
+    return this.http.get<PostOffice[]>(`/postoffice`, { params });
   }
 
   public onEditAddress(address: Address): void {

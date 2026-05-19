@@ -8,27 +8,25 @@ import { Supplier } from '../models/supplier.model';
   providedIn: 'root'
 })
 export class SupplierService {
-  private apiUrl = 'http://localhost:3000/suppliers';
-
   constructor(private http: HttpClient) { }
 
   getSuppliers(): Observable<Supplier[]> {
-    return this.http.get<Supplier[]>(this.apiUrl);
+    return this.http.get<Supplier[]>(`/suppliers`);
   }
 
   getSupplier(id: number): Observable<Supplier> {
-    return this.http.get<Supplier>(`${this.apiUrl}/${id}`);
+    return this.http.get<Supplier>(`/suppliers/${id}`);
   }
 
   addSupplier(supplier: Supplier): Observable<Supplier> {
-    return this.http.post<Supplier>(this.apiUrl, supplier);
+    return this.http.post<Supplier>(`/suppliers`, supplier);
   }
 
   updateSupplier(id: number, supplier: Supplier): Observable<Supplier> {
-    return this.http.put<Supplier>(`${this.apiUrl}/${id}`, supplier);
+    return this.http.put<Supplier>(`/suppliers/${id}`, supplier);
   }
 
   deleteSupplier(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`/suppliers/${id}`);
   }
 }

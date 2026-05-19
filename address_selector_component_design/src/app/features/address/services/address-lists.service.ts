@@ -7,19 +7,17 @@ import { Address } from '../models/address.model';
   providedIn: 'root'
 })
 export class AddressListService {
-  private readonly baseUrl = 'http://localhost:3000';
-
   constructor(private http: HttpClient) { }
 
   public getAddresses(): Observable<Address[]> {
-    return this.http.get<Address[]>(`${this.baseUrl}/address_list`);
+    return this.http.get<Address[]>(`/address_list`);
   }
 
   public addAddress(address: Address): Observable<Address> {
-    return this.http.post<Address>(`${this.baseUrl}/address_list`, address);
+    return this.http.post<Address>(`/address_list`, address);
   }
 
   public updateAddress(id: number, address: Address): Observable<Address> {
-    return this.http.put<Address>(`${this.baseUrl}/address_list/${id}`, address);
+    return this.http.put<Address>(`/address_list/${id}`, address);
   }
 }

@@ -2,6 +2,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 
 import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { BaseUrlInterceptor } from './interceptors/base-url.interceptor';
 
 @NgModule({
   imports: [
@@ -12,7 +13,12 @@ import { LoadingInterceptor } from './interceptors/loading.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: LoadingInterceptor,
       multi: true
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BaseUrlInterceptor,
+      multi: true
+    },
   ]
 })
 export class CoreModule {

@@ -11,15 +11,11 @@ import { LoadingService } from '../services/loading.service';
 
 @Injectable()
 export class LoadingInterceptor implements HttpInterceptor {
-
   constructor(
     private loadingService: LoadingService
-  ) {}
+  ) { }
 
-  public intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log('HTTP request started:', request.url);
 
     this.loadingService.show(request.url);
@@ -27,8 +23,8 @@ export class LoadingInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       delay(100),
       finalize(() => {
-        console.log('HTTP request completed:', request.url);
         this.loadingService.hide(request.url);
+        // console.log('HTTP request completed:', request.url);
       })
     );
   }
