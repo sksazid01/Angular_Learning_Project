@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { ENDPOINTS } from '../../../core/constants/endpoints';
-import { Country, Division, District, Upazila, PostOffice, Address } from '../domain/address.domain';
+import { Country, Division, District, Upazila, PostOffice } from '../domain/address.domain';
 
 @Injectable({
   providedIn: 'root'

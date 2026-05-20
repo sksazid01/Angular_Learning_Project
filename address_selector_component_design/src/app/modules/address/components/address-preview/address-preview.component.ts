@@ -7,5 +7,5 @@ import { Address } from '../../domain/address.domain';
   styleUrls: ['./address-preview.component.css']
 })
 export class AddressPreviewComponent {
-  @Input() address: Address | undefined;
+  @Input() address: Address | null | undefined;
 }

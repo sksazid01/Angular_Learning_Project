@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { Country, Division, District, Upazila, PostOffice, Address } from '../../domain/address.domain';
 import { AddressFormService } from '../../services/address-form.service';
@@ -17,7 +17,6 @@ export class AddressFormComponent implements OnInit, OnChanges {
   public districts: District[] = [];
   public upazilas: Upazila[] = [];
   public postOffice: PostOffice[] = [];
-
   public addressForm!: FormGroup;
 
   constructor(
@@ -25,6 +24,18 @@ export class AddressFormComponent implements OnInit, OnChanges {
     private addressFormService: AddressFormService,
     private notificationService: NotificationService
   ) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['address']) {
+      const address = changes['address'].currentValue;
+      if (address && this.addressForm) {
+        this.loadCascadingOptionsForAddress(address);
+        this.patchAddressValues(address);
+      } else if (!address && this.addressForm) {
+        this.addressForm.reset();
+      }
+    }
+  }
 
   ngOnInit(): void {
     this.buildForm();
@@ -36,54 +47,30 @@ export class AddressFormComponent implements OnInit, OnChanges {
     this.onUpazilaChange();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['address']) {
-      const address = changes['address'].currentValue;
-      if (address && this.addressForm) {
-        this.loadRelatedAddresssForOptionsPreview(address);
-        this.patchAddressValues(address);
-      } else if (!address && this.addressForm) {
-        this.addressForm.reset();
-      }
-    }
-  }
-
-  private buildForm(formData?: Address | null): void {
-    const data = formData || new Address();
+  private buildForm(): void {
     this.addressForm = this.formBuilder.group({
       countryId: [1, Validators.required],
-      divisionId: [data.division ? data.division.id : null, Validators.required],
-      districtId: [data.district ? data.district.id : null, Validators.required],
-      upazilaId: [data.upazila ? data.upazila.id : null, Validators.required],
-      postCode: [data.postOffice ? data.postOffice.postCode : null, Validators.required]
+      divisionId: [null, Validators.required],
+      districtId: [null, Validators.required],
+      upazilaId: [null, Validators.required],
+      postCode: [null, Validators.required]
     });
   }
 
-  private loadRelatedAddresssForOptionsPreview(address: Address): void {
-    this.addressFormService.getCountries().subscribe((countries: Country[]) => {
-      this.countries = countries;
-    });
-
-    this.addressFormService.getDivisions().subscribe((divisions: Division[]) => {
-      this.divisions = divisions;
-    });
+  private loadCascadingOptionsForAddress(address: Address): void {
+    this.loadCountries();
+    this.loadDivisions();
 
     if (address.division && address.division.id) {
-      this.addressFormService.getDistrictsByDivision(address.division.id).subscribe((districts: District[]) => {
-        this.districts = districts;
-      });
+      this.loadDistricts(address.division.id);
     }
 
     if (address.district && address.district.id) {
-      this.addressFormService.getUpazilasByDistrict(address.district.id).subscribe((upazilas: Upazila[]) => {
-        this.upazilas = upazilas;
-      });
+      this.loadUpazilas(address.district.id);
     }
 
     if (address.upazila && address.upazila.id) {
-      this.addressFormService.getPostCodesByUpazila(address.upazila.id).subscribe((postOffice: PostOffice[]) => {
-        this.postOffice = postOffice;
-      });
+      this.loadPostCodes(address.upazila.id);
     }
   }
 
@@ -102,7 +89,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
   private onCountryChange(): void {
     const control = this.addressForm.get('countryId');
     if(control) {
-      control.valueChanges.subscribe(countryId => {
+      control.valueChanges.subscribe(() => {
         this.resetFromCountry();
         this.loadDivisions();
       });
@@ -151,7 +138,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
       next: countries => {
         this.countries = countries;
       },
-      error: error => {
+      error: () => {
         this.showLoadError('Failed to load countries. Please try again.');
       }
     });
@@ -162,7 +149,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
       next: divisions => {
         this.divisions = divisions;
       },
-      error: error => {
+      error: () => {
         this.showLoadError('Failed to load divisions. Please try again.');
       }
     });
@@ -173,7 +160,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
       next: districts => {
         this.districts = districts;
       },
-      error: error => {
+      error: () => {
         this.showLoadError('Failed to load districts. Please try again.');
       }
     });
@@ -184,7 +171,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
       next: upazilas => {
         this.upazilas = upazilas;
       },
-      error: error => {
+      error: () => {
         this.showLoadError('Failed to load upazilas. Please try again.');
       }
     });
@@ -195,7 +182,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
       next: postOffice => {
         this.postOffice = postOffice;
       },
-      error: error => {
+      error: () => {
         this.showLoadError('Failed to load post codes. Please try again.');
       }
     });
@@ -252,17 +239,15 @@ export class AddressFormComponent implements OnInit, OnChanges {
     const postCode = this.postOffice.find(item => item.postCode === formValue.postCode);
 
     return {
-      country: country ? country : null,
-      division: division ? division : null,
-      district: district ? district : null,
-      upazila: upazila ? upazila : null,
-      postOffice: postCode ? postCode : null,
+      country: country || null,
+      division: division || null,
+      district: district || null,
+      upazila: upazila || null,
+      postOffice: postCode || null,
     };
   }
 
-
-  // Error Handling
-  private showLoadError(message: string, isError: boolean = true): void {
-    this.notificationService.showNotification(message, isError);
+  private showLoadError(message: string): void {
+    this.notificationService.showNotification(message, true);
   }
 }

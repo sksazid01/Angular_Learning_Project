@@ -14,7 +14,8 @@ import { SupplierService } from '../../services/supplier.service';
 })
 export class SupplierInfoUpdateComponent implements OnInit {
   isNewSupplier = false;
-  supplier: Supplier = { id: 0, name: '', address: undefined };
+  supplier: Supplier = { id: 0, name: '', address: null };
+
   @ViewChild(AddressFormComponent) addressForm!: AddressFormComponent;
 
   constructor(
@@ -34,50 +35,50 @@ export class SupplierInfoUpdateComponent implements OnInit {
     }
   }
 
-  onSupplierSave() {
-    if (!this.isSupplierValid()) return;
-    this.getSupplierAddress();
-    this.saveSupplier();
+  onSupplierSave(): void {
+    if (!this.isSupplierNameValid()) return;
+    const currentAddress = this.buildAddressFromForm();
+    if (this.isNewSupplier) {
+      this.addSupplier(currentAddress);
+    } else {
+      this.updateExistingSupplier(currentAddress);
+    }
   }
 
-  // validate name
-  isSupplierValid(): boolean {
-    if (!this.supplier) return false;
-
-    if (!this.supplier.name || this.supplier.name.trim() === '') {
+  private isSupplierNameValid(): boolean {
+    if (!this.supplier || !this.supplier.name || this.supplier.name.trim() === '') {
       this.notificationService.showNotification('Supplier name is required', true);
       return false;
     }
     return true;
   }
 
-  // If address form exists and valid, get address; else use empty address
-  getSupplierAddress() {
-    let addressData = new Address();
+  private buildAddressFromForm(): Address | null {
     if (this.addressForm && this.addressForm.addressForm && this.addressForm.addressForm.valid) {
-      addressData = this.addressForm.getAddressFromAddressForm();
+      return this.addressForm.getAddressFromAddressForm();
     }
-
-    this.supplier.address = addressData;
+    return null;
   }
 
-  saveSupplier() {
-    if (this.isNewSupplier) {
-      this.confirmationPopupService.confirm(() => {
-        this.supplierService.addSupplier(this.supplier).subscribe(newSupplier => {
-          this.router.navigate(['/suppliers', newSupplier.id]);
-        });
-      }, null, 'Are you sure to add this supplier?', 'Add Confirmation');
-    } else {
-      this.confirmationPopupService.confirm(() => {
-        this.supplierService.updateSupplier(this.supplier.id, this.supplier).subscribe(() => {
-          this.router.navigate(['/suppliers', this.supplier!.id]);
-        });
-      }, null, 'Are you sure to update this supplier?', 'Update Confirmation');
-    }
+  private addSupplier(address: Address | null): void {
+    this.confirmationPopupService.confirm(() => {
+      this.supplier.address = address;
+      this.supplierService.addSupplier(this.supplier).subscribe(newSupplier => {
+        this.router.navigate(['/suppliers', newSupplier.id]);
+      });
+    }, undefined, 'Are you sure to add this supplier?', 'Add Confirmation');
   }
 
-  goBack() {
+  private updateExistingSupplier(address: Address | null): void {
+    this.confirmationPopupService.confirm(() => {
+      this.supplier.address = address;
+      this.supplierService.updateSupplier(this.supplier.id, this.supplier).subscribe(() => {
+        this.router.navigate(['/suppliers', this.supplier.id]);
+      });
+    }, undefined, 'Are you sure to update this supplier?', 'Update Confirmation');
+  }
+
+  goBack(): void {
     if (this.isNewSupplier) {
       this.router.navigate(['/suppliers']);
     } else {

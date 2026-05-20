@@ -7,7 +7,7 @@ import { ConfirmationConfig } from './confirmation-popup.model';
 })
 export class ConfirmationPopupService {
   private configSubject = new BehaviorSubject<ConfirmationConfig | null>(null);
-  config$ = this.configSubject.asObservable();  
+  config$ = this.configSubject.asObservable();
   private resolveFn: ((value: boolean) => void) | null = null;
   private confirmCallback: Function | null = null;
   private declineCallback: Function | null = null;
@@ -17,7 +17,7 @@ export class ConfirmationPopupService {
     declineFn?: Function,
     message: string = "Are you sure to submit?",
     title: string = 'Submit Application',
-    config?: Partial<ConfirmationConfig> // 2. Added this back so finalConfig doesn't throw an error
+    config?: Partial<ConfirmationConfig>
   ): Promise<boolean> {
     // Save the functions so the close() method can use them later
     this.confirmCallback = confirmFn;

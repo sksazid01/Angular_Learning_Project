@@ -29,9 +29,7 @@ export class ConfirmationPopupComponent implements OnInit {
   }
 
   private listenToConfirmationConfig(): void {
-    console.log('ConfirmationPopupComponent initialized!');
     this.confirmationPopupService.config$.subscribe(config => {
-      console.log('Popup received config:', config);
       this.config = config;
       this.isOpen = !!config;
       

@@ -29,7 +29,7 @@ export class Upazila {
   bn_name: string;
 }
 
-export class PostOffice{
+export class PostOffice {
   id;
   upazila_id: number;
   postOffice: string;
@@ -41,7 +41,7 @@ export class Address {
   country: Country;
   division: Division;
   district: District;
-  upazila: Upazila;  
-  postOffice : PostOffice
+  upazila: Upazila;
+  postOffice: PostOffice
 }
 

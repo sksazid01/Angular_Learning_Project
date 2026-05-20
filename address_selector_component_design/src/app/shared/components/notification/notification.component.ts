@@ -12,18 +12,18 @@ export class NotificationComponent implements OnInit, OnDestroy {
   public isError = false;
   public title: string = 'Welcome';
   public message: string = 'Thank you for visiting our website!';
-  
+
   private subscription!: Subscription;
 
   constructor(private notificationService: NotificationService) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.subscription = this.notificationService.notification$.subscribe(notification => {
       this.handleNotification(notification);
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
     }
@@ -33,7 +33,7 @@ export class NotificationComponent implements OnInit, OnDestroy {
     this.notificationService.clearNotification();
   }
 
-  private handleNotification(notification: any): void {
+  private handleNotification(notification: { message: string, isError: boolean } | null): void {
     if (notification) {
       this.message = notification.message;
       this.isError = notification.isError;

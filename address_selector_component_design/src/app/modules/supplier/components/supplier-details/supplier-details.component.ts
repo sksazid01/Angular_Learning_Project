@@ -28,23 +28,23 @@ export class SupplierDetailsComponent implements OnInit {
     }
   }
 
-  deleteSupplier() {
-    if (this.supplier && this.supplier.id) {
+  deleteSupplier(): void {
+    if (this.supplier && this.supplier.id !== undefined) {
       this.confirmationPopupService.confirm(() => {
-        this.supplierService.deleteSupplier(this.supplier.id).subscribe(() => {
+        this.supplierService.deleteSupplier(this.supplier!.id).subscribe(() => {
           this.router.navigate(['/suppliers']);
         });
       });
     }
   }
 
-  editSupplier() {
+  editSupplier(): void {
     if (this.supplier) {
       this.router.navigate(['/suppliers', this.supplier.id, 'edit']);
     }
   }
 
-  goBack() {
+  goBack(): void {
     this.router.navigate(['/suppliers']);
   }
 }
