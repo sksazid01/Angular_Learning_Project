@@ -8,15 +8,18 @@ import { SupplierService } from '../../services/supplier.service';
   styleUrls: ['./supplier-list.component.css']
 })
 export class SupplierListComponent implements OnInit {
-  
-  suppliers!: Supplier[];
+
+  supplierList!: Supplier[];
 
   constructor(
     private supplierService: SupplierService
   ) { }
 
   ngOnInit(): void {
-    this.supplierService.getSuppliers()
-      .subscribe(s => this.suppliers = s);
+    this.supplierService
+      .getSupplierList()
+      .subscribe(
+        supplierList =>
+          this.supplierList = supplierList);
   }
 }

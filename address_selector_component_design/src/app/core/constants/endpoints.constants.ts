@@ -6,7 +6,7 @@ export const ENDPOINTS = {
     upazilas: '/upazilas',
     postOffice: '/postoffice'
   },
-  suppliers: {
+  supplier: {
     list: '/supplier_list',
     byId: (id: number) => `/supplier_list/${id}`
   }

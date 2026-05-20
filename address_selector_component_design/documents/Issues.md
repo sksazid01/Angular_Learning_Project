@@ -158,16 +158,16 @@ This pattern creates a **new Observable** reference on every form submit. The `a
 
 ---
 
-### 1.11 Route Ordering Issue — `suppliers/new` vs `suppliers/:id`
+### 1.11 Route Ordering Issue — `supplierList/new` vs `supplierList/:id`
 
 **File:** `app-routing.module.ts` lines 10–11
 
 ```ts
-{ path: 'suppliers/new', component: SupplierInfoUpdateComponent },
-{ path: 'suppliers/:id', component: SupplierDetailsComponent },
+{ path: 'supplierList/new', component: SupplierInfoUpdateComponent },
+{ path: 'supplierList/:id', component: SupplierDetailsComponent },
 ```
 
-Angular's router matches routes top-to-bottom. `suppliers/new` is correctly placed **before** `suppliers/:id`. However, inside `SupplierInfoUpdateComponent`, the check `if (id && id !== 'new')` is a code smell — the `new` route should ideally be a completely separate route or the check should not be needed at all if routing is structured correctly.
+Angular's router matches routes top-to-bottom. `supplierList/new` is correctly placed **before** `supplierList/:id`. However, inside `SupplierInfoUpdateComponent`, the check `if (id && id !== 'new')` is a code smell — the `new` route should ideally be a completely separate route or the check should not be needed at all if routing is structured correctly.
 
 ---
 

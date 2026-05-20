@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationPopupService } from '../../../../shared/components/confirmation-popup/confirmation-popup.service';
 import { Supplier } from '../../domain/supplier.domain';
 import { SupplierService } from '../../services/supplier.service';
-import { ROUTES } from 'src/app/core/constants/routes.constants';
 
 @Component({
   selector: 'app-supplier-details',
@@ -21,9 +20,13 @@ export class SupplierDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.getSupplierDetails();
+  }
+
+  getSupplierDetails(): void {
+    const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.supplierService.getSupplier(id).subscribe(
+      this.supplierService.getSupplierById(Number(id)).subscribe(
         supplier => this.supplier = supplier
       );
     }
@@ -33,7 +36,7 @@ export class SupplierDetailsComponent implements OnInit {
     if (this.supplier && this.supplier.id !== undefined) {
       this.confirmationPopupService.confirm(() => {
         this.supplierService.deleteSupplier(this.supplier!.id).subscribe(() => {
-          this.router.navigate(['/', 'supplier', ROUTES.supplier.list]);
+          this.router.navigate(['/', 'supplier', 'list']);
         });
       });
     }
@@ -46,6 +49,6 @@ export class SupplierDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/', 'supplier', ROUTES.supplier.list]);
+    this.router.navigate(['/', 'supplier', 'list']);
   }
 }

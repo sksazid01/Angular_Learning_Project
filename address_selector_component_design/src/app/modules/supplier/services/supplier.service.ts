@@ -11,23 +11,23 @@ import { Supplier } from '../domain/supplier.domain';
 export class SupplierService {
   constructor(private http: HttpClient) { }
 
-  getSuppliers(): Observable<Supplier[]> {
-    return this.http.get<Supplier[]>(ENDPOINTS.suppliers.list);
+  getSupplierList(): Observable<Supplier[]> {
+    return this.http.get<Supplier[]>(ENDPOINTS.supplier.list);
   }
 
-  getSupplier(id: number): Observable<Supplier> {
-    return this.http.get<Supplier>(ENDPOINTS.suppliers.byId(id));
+  getSupplierById(id: number): Observable<Supplier> {
+    return this.http.get<Supplier>(ENDPOINTS.supplier.byId(id));
   }
 
   addSupplier(supplier: Supplier): Observable<Supplier> {
-    return this.http.post<Supplier>(ENDPOINTS.suppliers.list, supplier);
+    return this.http.post<Supplier>(ENDPOINTS.supplier.list, supplier);
   }
 
   updateSupplier(id: number, supplier: Supplier): Observable<Supplier> {
-    return this.http.put<Supplier>(ENDPOINTS.suppliers.byId(id), supplier);
+    return this.http.put<Supplier>(ENDPOINTS.supplier.byId(id), supplier);
   }
 
   deleteSupplier(id: number): Observable<any> {
-    return this.http.delete(ENDPOINTS.suppliers.byId(id));
+    return this.http.delete(ENDPOINTS.supplier.byId(id));
   }
 }

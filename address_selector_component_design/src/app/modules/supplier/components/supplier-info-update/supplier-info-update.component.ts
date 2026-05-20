@@ -7,7 +7,6 @@ import { AddressFormComponent } from '../../../address/components/address-form/a
 import { Address } from '../../../address/domain/address.domain';
 import { Supplier } from '../../domain/supplier.domain';
 import { SupplierService } from '../../services/supplier.service';
-import { ROUTES } from 'src/app/core/constants/routes.constants';
 
 @Component({
   selector: 'app-supplier-info-update',
@@ -31,11 +30,20 @@ export class SupplierInfoUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.prepareForm();
+    this.getSupplierList();
+  }
 
+  prepareForm(supplier?: Supplier): void {
+    this.supplierForm = this.formBuilder.group({
+      name: [supplier ? supplier.name : '', Validators.required]
+    });
+  }
+
+  getSupplierList(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.supplierService
-        .getSupplier(Number(id))
+        .getSupplierById(Number(id))
         .subscribe(
           supplier => {
             this.supplier = supplier;
@@ -45,12 +53,6 @@ export class SupplierInfoUpdateComponent implements OnInit {
     } else {
       this.isNewSupplier = true;
     }
-  }
-
-  prepareForm(supplier?: Supplier): void {
-    this.supplierForm = this.formBuilder.group({
-      name: [supplier ? supplier.name : '', Validators.required]
-    });
   }
 
   onSupplierSave(): void {
@@ -93,7 +95,7 @@ export class SupplierInfoUpdateComponent implements OnInit {
 
   goBack(): void {
     if (this.isNewSupplier) {
-      this.router.navigate(['/', 'supplier', ROUTES.supplier.list]);
+      this.router.navigate(['/', 'supplier', 'list']);
     } else {
       this.router.navigate(['/', 'supplier', 'details', this.supplier.id]);
     }
