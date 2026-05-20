@@ -612,7 +612,7 @@ Every time a form is submitted (create or update), `getAddresses()` is called ag
 
 When a user visits the list page and then navigates to a detail page, a separate `getSupplier(id)` HTTP call is made. Since the list data was already fetched, the individual supplier data could be served from that cache.
 
-**Suggestion:** Add a `getSupplierById(id)` method in `SupplierService` that first checks an in-memory cache from the list call before making a new HTTP request.
+**Suggestion:** Add a `fetchSupplierById(id)` method in `SupplierService` that first checks an in-memory cache from the list call before making a new HTTP request.
 
 ---
 

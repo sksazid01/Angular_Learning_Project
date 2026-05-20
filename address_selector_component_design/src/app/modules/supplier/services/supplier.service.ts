@@ -11,11 +11,11 @@ import { Supplier } from '../domain/supplier.domain';
 export class SupplierService {
   constructor(private http: HttpClient) { }
 
-  getSupplierList(): Observable<Supplier[]> {
+  fetchSupplierList(): Observable<Supplier[]> {
     return this.http.get<Supplier[]>(ENDPOINTS.supplier.list);
   }
 
-  getSupplierById(id: number): Observable<Supplier> {
+  fetchSupplierById(id: number): Observable<Supplier> {
     return this.http.get<Supplier>(ENDPOINTS.supplier.byId(id));
   }
 

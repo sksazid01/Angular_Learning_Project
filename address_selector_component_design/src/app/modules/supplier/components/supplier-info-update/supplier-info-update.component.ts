@@ -15,10 +15,10 @@ import { SupplierService } from '../../services/supplier.service';
 })
 export class SupplierInfoUpdateComponent implements OnInit {
   isNewSupplier = false;
+  supplierId: number;
   supplierForm!: FormGroup;
   supplier: Supplier = new Supplier();
   @ViewChild(AddressFormComponent) addressForm!: AddressFormComponent;
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -29,85 +29,78 @@ export class SupplierInfoUpdateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.prepareForm();
-    this.getSupplierById();
+    this.prepareForm(null);
+    this.route.params.subscribe((params) => {
+      this.supplierId = params.id;
+      this.isNewSupplier = !this.supplierId;
+      this.fetchSupplierById(this.supplierId);
+    })
   }
 
-  prepareForm(supplier?: Supplier): void {
+  prepareForm(formData: Supplier): void {
+    formData = formData || new Supplier();
+
     this.supplierForm = this.formBuilder.group({
-      name: [supplier ? supplier.name : '', Validators.required]
+      id: [formData.id],
+      name: [formData.name, Validators.required]
     });
   }
 
-  getSupplierById(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.supplierService
-        .getSupplierById(Number(id))
-        .subscribe(
-          supplier => {
-            this.supplier = supplier;
-            this.prepareForm(supplier);
-          }
-        );
-    } else {
-      this.isNewSupplier = true;
-    }
+  fetchSupplierById(id: number): void {
+    if (!id) { return; }
+
+    this.supplierService.fetchSupplierById(id)
+      .subscribe(supplier => {
+        this.supplier = supplier;
+        this.prepareForm(supplier);
+      }
+      );
   }
   onSupplierSave(): void {
-    if (!this.isSupplierInfoValid()) return;
+    this.supplierForm.markAsTouched();
+    if (!this.supplierForm.valid || !this.addressForm.isFormValid()) {
+      this.notificationService.showNotification('Form invalid', true);
+      return;
+    }
 
-    this.supplier.name = this.supplierForm.get('name') ? this.supplierForm.get('name')!.value : '';
+    this.supplier = this.supplierForm.getRawValue();
+    this.supplier.address = this.buildAddressFromForm();
+
     this.confirmationPopupService.confirm(() => {
-      this.supplier.address = this.buildAddressFromForm();
       this.isNewSupplier ? this.addSupplier(this.supplier) : this.updateExistingSupplier(this.supplier);
     });
   }
 
-  private isSupplierInfoValid(): boolean {
-    return this.isSupplierNameValid() && this.isAddressValid();
-  }
-
-  private isSupplierNameValid(): boolean {
-    if (this.supplierForm.invalid) {
-      this.supplierForm.markAsTouched();
-      this.notificationService.showNotification('Supplier information is invalid', true);
-      return false;
-    }
-    return true;
-  }
-
-  private isAddressValid(): boolean {
-    if (this.addressForm && !this.addressForm.isAddressFormValid()) {
-      return false;
-    }
-    return true;
-  }
-
   private buildAddressFromForm(): Address | null {
     if (this.addressForm && this.addressForm.addressForm && this.addressForm.addressForm.valid) {
-      return this.addressForm.getAddressFromAddressForm();
+      return this.addressForm.getAddressValues();
     }
     return null;
   }
 
   private addSupplier(supplier: Supplier): void {
     this.supplierService.addSupplier(supplier).subscribe(newSupplier => {
-      this.router.navigate(['/', 'supplier', 'details', newSupplier.id]);
+      this.navigateToSupplierDetails();
     });
   }
 
   private updateExistingSupplier(supplier: Supplier): void {
     this.supplierService.updateSupplier(supplier.id, supplier).subscribe(() => {
-      this.router.navigate(['/', 'supplier', 'details', supplier.id]);
+      this.navigateToSupplierDetails();
     });
   }
 
-  goBack(): void {
-    if (this.isNewSupplier) {
-      this.router.navigate(['/', 'supplier', 'list']);
-    } else {
-      this.router.navigate(['/', 'supplier', 'details', this.supplier.id]);
+  navigateToSupplierDetails(): void {
+    if (this.supplier && this.supplier.id) {
+      this.router.navigate(['/', 'supplier', 'details', this.supplierId]);
     }
+  }
+
+  navigateToSupplierList(): void {
+    this.router.navigate(['/', 'supplier', 'list']);
+  }
+
+  goBack(): void {
+    this.isNewSupplier ? this.navigateToSupplierList() : this.navigateToSupplierDetails();
   }
 }

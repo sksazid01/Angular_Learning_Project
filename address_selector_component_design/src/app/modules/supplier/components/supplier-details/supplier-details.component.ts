@@ -20,24 +20,26 @@ export class SupplierDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getSupplierDetails();
+    const id = this.route.snapshot.paramMap.get('id');
+    this.fetchSupplierDetails(id);
   }
 
-  getSupplierDetails(): void {
-    const id = this.route.snapshot.paramMap.get('id');
+  fetchSupplierDetails(id: string): void {
     if (id) {
-      this.supplierService.getSupplierById(Number(id)).subscribe(
-        supplier => this.supplier = supplier
-      );
+      this.supplierService.fetchSupplierById(Number(id))
+        .subscribe(supplier =>
+          this.supplier = supplier
+        );
     }
   }
 
   deleteSupplier(): void {
     if (this.supplier && this.supplier.id !== undefined) {
       this.confirmationPopupService.confirm(() => {
-        this.supplierService.deleteSupplier(this.supplier!.id).subscribe(() => {
-          this.router.navigate(['/', 'supplier', 'list']);
-        });
+        this.supplierService.deleteSupplier(this.supplier!.id)
+          .subscribe(() => {
+            this.router.navigate(['/', 'supplier', 'list']);
+          });
       });
     }
   }

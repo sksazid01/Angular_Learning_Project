@@ -16,20 +16,22 @@ export class SupplierListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.supplierService.getSupplierList()
+    this.supplierService.fetchSupplierList()
       .subscribe(supplierList => {
         this.supplierList = supplierList
+        this.supplierList.forEach(supplier => {
+          if (supplier.address) {
+            supplier.addressName =
+              (supplier.address.postOffice ? (supplier.address.postOffice.postOffice + ' ') : '') +
+              (supplier.address.postOffice ? ('(' + supplier.address.postOffice.postCode + '), ') : '') +
+              (supplier.address.upazila ? (supplier.address.upazila.name + ', ') : '') +
+              (supplier.address.district ? (supplier.address.district.name + ', ') : '') +
+              (supplier.address.division ? (supplier.address.division.name + ', ') : '') +
+              (supplier.address.country ? supplier.address.country.name : '');
+          }
+        });
       })
   }
 
-  getSupplierAddress(supplier: Supplier): string {
-    if (!supplier.address) return 'N/A';
 
-    return (supplier.address.postOffice ? (supplier.address.postOffice.postOffice + ' ') : '') +
-      (supplier.address.postOffice ? ('(' + supplier.address.postOffice.postCode + '), ') : '') +
-      (supplier.address.upazila ? (supplier.address.upazila.name + ', ') : '') +
-      (supplier.address.district ? (supplier.address.district.name + ', ') : '') +
-      (supplier.address.division ? (supplier.address.division.name + ', ') : '') +
-      (supplier.address.country ? supplier.address.country.name : '');
-  }
 }

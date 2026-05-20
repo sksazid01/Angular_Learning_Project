@@ -14,25 +14,25 @@ export class AddressFormService {
     private http: HttpClient
   ) { }
 
-  public getCountries(): Observable<Country[]> {
+  public fetchCountries(): Observable<Country[]> {
     return this.http.get<Country[]>(ENDPOINTS.address.countries);
   }
 
-  public getDivisions(): Observable<Division[]> {
+  public fetchDivisions(): Observable<Division[]> {
     return this.http.get<Division[]>(ENDPOINTS.address.divisions);
   }
 
-  public getDistrictsByDivision(divisionId: number): Observable<District[]> {
+  public fetchDistrictsByDivision(divisionId: number): Observable<District[]> {
     const params = new HttpParams().set('division_id', String(divisionId));
     return this.http.get<District[]>(ENDPOINTS.address.districts, { params });
   }
 
-  public getUpazilasByDistrict(districtId: number): Observable<Upazila[]> {
+  public fetchUpazilasByDistrict(districtId: number): Observable<Upazila[]> {
     const params = new HttpParams().set('district_id', String(districtId));
     return this.http.get<Upazila[]>(ENDPOINTS.address.upazilas, { params });
   }
 
-  public getPostCodesByUpazila(upazilaId: number): Observable<PostOffice[]> {
+  public fetchPostCodesByUpazila(upazilaId: number): Observable<PostOffice[]> {
     const params = new HttpParams().set('upazila_id', String(upazilaId));
     return this.http.get<PostOffice[]>(ENDPOINTS.address.postOffice, { params });
   }
