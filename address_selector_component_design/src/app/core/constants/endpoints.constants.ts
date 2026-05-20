@@ -7,7 +7,7 @@ export const ENDPOINTS = {
     postOffice: '/postoffice'
   },
   suppliers: {
-    list: '/suppliers',
-    byId: (id: number) => `/suppliers/${id}`
+    list: '/supplier_list',
+    byId: (id: number) => `/supplier_list/${id}`
   }
 };

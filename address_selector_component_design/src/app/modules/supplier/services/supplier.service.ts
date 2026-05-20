@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ENDPOINTS } from '../../../core/constants/endpoints';
+import { ENDPOINTS } from '../../../core/constants/endpoints.constants';
 import { Supplier } from '../domain/supplier.domain';
 
 @Injectable({

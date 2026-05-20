@@ -2,7 +2,7 @@
   <div style="display: flex; justify-content: space-between; align-items: center;">
     <h2>Suppliers List:</h2>
     <div class="add-supplier-button">
-      <button [routerLink]="['/suppliers/new']" class="btn btn-primary">Add New Supplier</button>
+      <button [routerLink]="['/supplier/create']" class="btn btn-primary">Add New Supplier</button>
     </div>
   </div>
   <table border="1" cellpadding="10" cellspacing="2">
@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let supplier of suppliers" [routerLink]="['/suppliers', supplier.id]" class="clickable-row">
+      <tr *ngFor="let supplier of suppliers" [routerLink]="['/supplier', 'details', supplier.id]" class="clickable-row">
         <td>{{ supplier.id }}</td>
         <td>{{ supplier.name }}</td>
         <td>

@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: 'suppliers', loadChildren: './modules/supplier/supplier.module#SupplierModule' },
-  { path: '', redirectTo: '/suppliers', pathMatch: 'full' }
+  { path: 'supplier', loadChildren: './modules/supplier/supplier.module#SupplierModule' },
+  { path: '', redirectTo: 'supplier', pathMatch: 'full' }
 ];
 
 @NgModule({

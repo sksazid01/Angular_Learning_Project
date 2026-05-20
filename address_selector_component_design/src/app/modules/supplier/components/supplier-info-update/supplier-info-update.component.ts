@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { ConfirmationPopupService } from '../../../../shared/components/confirmation-popup/confirmation-popup.service';
 import { AddressFormComponent } from '../../../address/components/address-form/address-form.component';
 import { Address } from '../../../address/domain/address.domain';
 import { Supplier } from '../../domain/supplier.domain';
 import { SupplierService } from '../../services/supplier.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ROUTES } from 'src/app/core/constants/routes.constants';
 
 @Component({
   selector: 'app-supplier-info-update',
@@ -80,21 +81,21 @@ export class SupplierInfoUpdateComponent implements OnInit {
 
   private addSupplier(supplier: Supplier): void {
     this.supplierService.addSupplier(supplier).subscribe(newSupplier => {
-      this.router.navigate(['/suppliers', newSupplier.id]);
+      this.router.navigate(['/', 'supplier', 'details', newSupplier.id]);
     });
   }
 
   private updateExistingSupplier(supplier: Supplier): void {
     this.supplierService.updateSupplier(supplier.id, supplier).subscribe(() => {
-      this.router.navigate(['/suppliers', supplier.id]);
+      this.router.navigate(['/', 'supplier', 'details', supplier.id]);
     });
   }
 
   goBack(): void {
     if (this.isNewSupplier) {
-      this.router.navigate(['/suppliers']);
+      this.router.navigate(['/', 'supplier', ROUTES.supplier.list]);
     } else {
-      this.router.navigate(['/suppliers', this.supplier.id]);
+      this.router.navigate(['/', 'supplier', 'details', this.supplier.id]);
     }
   }
 }

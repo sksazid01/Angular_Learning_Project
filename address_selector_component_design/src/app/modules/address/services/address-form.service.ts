@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ENDPOINTS } from '../../../core/constants/endpoints';
+import { ENDPOINTS } from '../../../core/constants/endpoints.constants';
 import { Country, Division, District, Upazila, PostOffice } from '../domain/address.domain';
 
 @Injectable({

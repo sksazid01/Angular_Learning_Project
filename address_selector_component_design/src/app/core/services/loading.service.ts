@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ENDPOINTS } from '../constants/endpoints';
+import { ENDPOINTS } from '../constants/endpoints.constants';
 
 @Injectable({
   providedIn: 'root'
