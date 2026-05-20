@@ -49,8 +49,8 @@ export class AddressFormComponent implements OnInit, OnChanges {
       countryId: [address.country ? address.country.id : null, Validators.required],
       divisionId: [address.division ? address.division.id : null, Validators.required],
       districtId: [address.district ? address.district.id : null, Validators.required],
-      upazilaId: [address.upazila ? address.upazila.id : null, Validators.required],
-      postCode: [address.postOffice ? address.postOffice.postCode : null, Validators.required]
+      upazilaId: [address.upazila ? address.upazila.id : null],
+      postCode: [address.postOffice ? address.postOffice.postCode : null]
     });
 
     this.onCountryChange();
@@ -236,6 +236,15 @@ export class AddressFormComponent implements OnInit, OnChanges {
       upazila: upazila || null,
       postOffice: postCode || null,
     };
+  }
+
+  public isAddressFormValid(): boolean {
+    const formValue = this.addressForm.getRawValue();
+    if (!formValue.countryId || !formValue.divisionId || !formValue.districtId) {
+      this.notificationService.showNotification('Please fill district, division, and country fields', true);
+      return false;
+    }
+    return true;
   }
 
   private showLoadError(message: string): void {

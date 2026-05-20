@@ -16,7 +16,7 @@ import { SupplierService } from '../../services/supplier.service';
 export class SupplierInfoUpdateComponent implements OnInit {
   isNewSupplier = false;
   supplierForm!: FormGroup;
-  supplier: Supplier = { id: 0, name: '', address: null };
+  supplier: Supplier = new Supplier();
   @ViewChild(AddressFormComponent) addressForm!: AddressFormComponent;
 
   constructor(
@@ -30,7 +30,7 @@ export class SupplierInfoUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.prepareForm();
-    this.getSupplierList();
+    this.getSupplierById();
   }
 
   prepareForm(supplier?: Supplier): void {
@@ -39,7 +39,7 @@ export class SupplierInfoUpdateComponent implements OnInit {
     });
   }
 
-  getSupplierList(): void {
+  getSupplierById(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.supplierService
@@ -54,21 +54,31 @@ export class SupplierInfoUpdateComponent implements OnInit {
       this.isNewSupplier = true;
     }
   }
-
   onSupplierSave(): void {
-    if (!this.isSupplierNameValid()) return;
-    this.supplier.name = this.supplierForm.get('name') ? this.supplierForm.get('name')!.value : '';
-    this.supplier.address = this.buildAddressFromForm();
+    if (!this.isSupplierInfoValid()) return;
 
+    this.supplier.name = this.supplierForm.get('name') ? this.supplierForm.get('name')!.value : '';
     this.confirmationPopupService.confirm(() => {
+      this.supplier.address = this.buildAddressFromForm();
       this.isNewSupplier ? this.addSupplier(this.supplier) : this.updateExistingSupplier(this.supplier);
     });
+  }
+
+  private isSupplierInfoValid(): boolean {
+    return this.isSupplierNameValid() && this.isAddressValid();
   }
 
   private isSupplierNameValid(): boolean {
     if (this.supplierForm.invalid) {
       this.supplierForm.markAsTouched();
-      this.notificationService.showNotification('Supplier name is required', true);
+      this.notificationService.showNotification('Supplier information is invalid', true);
+      return false;
+    }
+    return true;
+  }
+
+  private isAddressValid(): boolean {
+    if (this.addressForm && !this.addressForm.isAddressFormValid()) {
       return false;
     }
     return true;

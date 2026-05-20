@@ -16,10 +16,20 @@ export class SupplierListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.supplierService
-      .getSupplierList()
-      .subscribe(
-        supplierList =>
-          this.supplierList = supplierList);
+    this.supplierService.getSupplierList()
+      .subscribe(supplierList => {
+        this.supplierList = supplierList
+      })
+  }
+
+  getSupplierAddress(supplier: Supplier): string {
+    if (!supplier.address) return 'N/A';
+
+    return (supplier.address.postOffice ? (supplier.address.postOffice.postOffice + ' ') : '') +
+      (supplier.address.postOffice ? ('(' + supplier.address.postOffice.postCode + '), ') : '') +
+      (supplier.address.upazila ? (supplier.address.upazila.name + ', ') : '') +
+      (supplier.address.district ? (supplier.address.district.name + ', ') : '') +
+      (supplier.address.division ? (supplier.address.division.name + ', ') : '') +
+      (supplier.address.country ? supplier.address.country.name : '');
   }
 }

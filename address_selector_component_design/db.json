@@ -12,32 +12,23 @@
           "lng": "90.3563"
         },
         "division": {
-          "id": 2,
+          "id": 1,
           "country_id": 1,
-          "name": "Chattogram",
-          "bn_name": "চট্টগ্রাম",
-          "lat": "22.356851",
-          "lng": "91.783182"
+          "name": "Barishal",
+          "bn_name": "বরিশাল",
+          "lat": "22.701002",
+          "lng": "90.353451"
         },
         "district": {
-          "id": 50,
-          "division_id": 2,
-          "name": "Rangamati",
-          "bn_name": "রাঙ্গামাটি",
-          "lat": "22.7324",
-          "lng": "92.2985"
+          "id": 36,
+          "division_id": 1,
+          "name": "Bhola",
+          "bn_name": "ভোলা",
+          "lat": "22.685923",
+          "lng": "90.648179"
         },
-        "upazila": {
-          "id": 139,
-          "district_id": 50,
-          "name": "Juraichhari",
-          "bn_name": "জুরাইছড়ি"
-        },
-        "postOffice": {
-          "upazila_id": 139,
-          "postOffice": "Jarachhari",
-          "postCode": "4560"
-        }
+        "upazila": null,
+        "postOffice": null
       }
     },
     {
@@ -88,7 +79,33 @@
     {
       "id": 7,
       "name": "MISL",
-      "address": null
+      "address": {
+        "country": {
+          "id": 1,
+          "name": "Bangladesh",
+          "bn_name": "বাংলাদেশ",
+          "lat": "23.6850",
+          "lng": "90.3563"
+        },
+        "division": {
+          "id": 2,
+          "country_id": 1,
+          "name": "Chattogram",
+          "bn_name": "চট্টগ্রাম",
+          "lat": "22.356851",
+          "lng": "91.783182"
+        },
+        "district": {
+          "id": 50,
+          "division_id": 2,
+          "name": "Rangamati",
+          "bn_name": "রাঙ্গামাটি",
+          "lat": "22.7324",
+          "lng": "92.2985"
+        },
+        "upazila": null,
+        "postOffice": null
+      }
     },
     {
       "id": 8,
@@ -131,8 +148,8 @@
       }
     },
     {
-      "id": 9,
-      "name": "sdsfdsf",
+      "id": 10,
+      "name": "Acme Corp",
       "address": null
     }
   ],
