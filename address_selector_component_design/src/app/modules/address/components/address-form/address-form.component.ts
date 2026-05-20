@@ -10,14 +10,13 @@ import { AddressFormService } from '../../services/address-form.service';
   styleUrls: ['./address-form.component.css']
 })
 export class AddressFormComponent implements OnInit, OnChanges {
-  @Input() address?: Address;
-
   public countries: Country[] = [];
   public divisions: Division[] = [];
   public districts: District[] = [];
   public upazilas: Upazila[] = [];
   public postOffice: PostOffice[] = [];
   public addressForm!: FormGroup;
+  @Input() address?: Address;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -25,36 +24,39 @@ export class AddressFormComponent implements OnInit, OnChanges {
     private notificationService: NotificationService
   ) { }
 
+  ngOnInit(): void {
+    this.prepareForm();
+    this.loadCountries();
+    this.loadDivisions();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['address']) {
       const address = changes['address'].currentValue;
       if (address && this.addressForm) {
+        this.prepareForm(address);
         this.loadCascadingOptionsForAddress(address);
-        this.patchAddressValues(address);
       } else if (!address && this.addressForm) {
         this.addressForm.reset();
       }
     }
   }
 
-  ngOnInit(): void {
-    this.buildForm();
-    this.loadCountries();
-    this.loadDivisions();
+  private prepareForm(address?: Address): void {
+    address = address || new Address();
+
+    this.addressForm = this.formBuilder.group({
+      countryId: [address.country ? address.country.id : null, Validators.required],
+      divisionId: [address.division ? address.division.id : null, Validators.required],
+      districtId: [address.district ? address.district.id : null, Validators.required],
+      upazilaId: [address.upazila ? address.upazila.id : null, Validators.required],
+      postCode: [address.postOffice ? address.postOffice.postCode : null, Validators.required]
+    });
+
     this.onCountryChange();
     this.onDivisionChange();
     this.onDistrictChange();
     this.onUpazilaChange();
-  }
-
-  private buildForm(): void {
-    this.addressForm = this.formBuilder.group({
-      countryId: [1, Validators.required],
-      divisionId: [null, Validators.required],
-      districtId: [null, Validators.required],
-      upazilaId: [null, Validators.required],
-      postCode: [null, Validators.required]
-    });
   }
 
   private loadCascadingOptionsForAddress(address: Address): void {
@@ -74,21 +76,10 @@ export class AddressFormComponent implements OnInit, OnChanges {
     }
   }
 
-  // Update the form values instead of reload the whole form
-  private patchAddressValues(address: Address): void {
-    this.addressForm.patchValue({
-      countryId: 1,
-      divisionId: address.division ? address.division.id : null,
-      districtId: address.district ? address.district.id : null,
-      upazilaId: address.upazila ? address.upazila.id : null,
-      postCode: address.postOffice ? address.postOffice.postCode : null
-    }, { emitEvent: false });
-  }
-
   // Dropdown Change Handlers
   private onCountryChange(): void {
     const control = this.addressForm.get('countryId');
-    if(control) {
+    if (control) {
       control.valueChanges.subscribe(() => {
         this.resetFromCountry();
         this.loadDivisions();
@@ -98,7 +89,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
 
   private onDivisionChange(): void {
     const control = this.addressForm.get('divisionId');
-    if(control) {
+    if (control) {
       control.valueChanges.subscribe(divisionId => {
         this.resetFromDivision();
         if (divisionId) {
@@ -110,7 +101,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
 
   private onDistrictChange(): void {
     const control = this.addressForm.get('districtId');
-    if(control) {
+    if (control) {
       control.valueChanges.subscribe(districtId => {
         this.resetFromDistrict();
         if (districtId) {
@@ -122,7 +113,7 @@ export class AddressFormComponent implements OnInit, OnChanges {
 
   private onUpazilaChange(): void {
     const control = this.addressForm.get('upazilaId');
-    if(control) {
+    if (control) {
       control.valueChanges.subscribe(upazilaId => {
         this.resetFromUpazila();
         if (upazilaId) {

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AddressModule } from '../address/address.module';
 import { SupplierDetailsComponent } from './components/supplier-details/supplier-details.component';
@@ -18,7 +18,8 @@ import { SupplierRoutingModule } from './supplier-routing.module';
     CommonModule,
     FormsModule,
     SupplierRoutingModule,
-    AddressModule
+    AddressModule,
+    ReactiveFormsModule
   ]
 })
 export class SupplierModule { }

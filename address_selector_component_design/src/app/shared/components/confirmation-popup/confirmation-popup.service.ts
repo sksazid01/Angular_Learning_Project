@@ -15,8 +15,8 @@ export class ConfirmationPopupService {
   confirm(
     confirmFn: Function,
     declineFn?: Function,
-    message: string = "Are you sure to submit?",
-    title: string = 'Submit Application',
+    message: string = "Are you sure to proceed?",
+    title: string = 'Confirmation',
     config?: Partial<ConfirmationConfig>
   ): Promise<boolean> {
     // Save the functions so the close() method can use them later
