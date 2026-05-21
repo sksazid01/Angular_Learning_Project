@@ -80,9 +80,10 @@ export class AddressFormComponent implements OnInit, OnChanges {
 
   // Data Loaders
   private fetchCountries(): void {
-    this.addressFormService.fetchCountries().subscribe(countries => {
-      this.countries = countries;
-    });
+    this.addressFormService.fetchCountries()
+      .subscribe(countries => {
+        this.countries = countries;
+      });
   }
 
   private fetchDivisions(): void {
@@ -153,20 +154,14 @@ export class AddressFormComponent implements OnInit, OnChanges {
 
   // To access data using ViewChild from Parent component
   public getAddressValues(): Address {
-    const formValue = this.addressForm.getRawValue();
-
-    const country = this.countries.find(item => item.id === formValue.countryId);
-    const division = this.divisions.find(item => item.id === formValue.divisionId);
-    const district = this.districts.find(item => item.id === formValue.districtId);
-    const upazila = this.upazilas.find(item => item.id === formValue.upazilaId);
-    const postCode = this.postOffice.find(item => item.postCode === formValue.postCode);
+    const { countryId, divisionId, districtId, upazilaId, postCode } = this.addressForm.getRawValue();
 
     return {
-      country: country || null,
-      division: division || null,
-      district: district || null,
-      upazila: upazila || null,
-      postOffice: postCode || null,
+      country: this.countries.find(c => c.id === countryId) ?? null,
+      division: this.divisions.find(d => d.id === divisionId) ?? null,
+      district: this.districts.find(d => d.id === districtId) ?? null,
+      upazila: this.upazilas.find(u => u.id === upazilaId) ?? null,
+      postOffice: this.postOffice.find(p => p.postCode === postCode) ?? null,
     };
   }
 

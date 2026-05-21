@@ -33,7 +33,7 @@ export class PostOffice {
   id;
   upazila_id: number;
   postOffice: string;
-  postCode: string;
+  postCode: number;
 }
 
 export class Address {
