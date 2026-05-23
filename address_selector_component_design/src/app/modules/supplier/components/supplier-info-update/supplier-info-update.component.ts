@@ -30,11 +30,12 @@ export class SupplierInfoUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.prepareForm(null);
-    this.route.params.subscribe((params) => {
-      this.supplierId = params.id;
-      this.isNewSupplier = !this.supplierId;
-      this.fetchSupplierById(this.supplierId);
-    })
+    this.route.params
+      .subscribe((params) => {
+        this.supplierId = params.id;
+        this.isNewSupplier = !this.supplierId;
+        this.fetchSupplierById(this.supplierId);
+      });
   }
 
   prepareForm(formData: Supplier): void {
@@ -53,8 +54,7 @@ export class SupplierInfoUpdateComponent implements OnInit {
       .subscribe(supplier => {
         this.supplier = supplier;
         this.prepareForm(supplier);
-      }
-      );
+      });
   }
   onSupplierSave(): void {
     this.supplierForm.markAsTouched();
@@ -79,15 +79,17 @@ export class SupplierInfoUpdateComponent implements OnInit {
   }
 
   private addSupplier(supplier: Supplier): void {
-    this.supplierService.addSupplier(supplier).subscribe(newSupplier => {
-      this.navigateToSupplierDetails();
-    });
+    this.supplierService.addSupplier(supplier)
+      .subscribe(newSupplier => {
+        this.navigateToSupplierDetails();
+      });
   }
 
   private updateExistingSupplier(supplier: Supplier): void {
-    this.supplierService.updateSupplier(supplier.id, supplier).subscribe(() => {
-      this.navigateToSupplierDetails();
-    });
+    this.supplierService.updateSupplier(supplier.id, supplier)
+      .subscribe(() => {
+        this.navigateToSupplierDetails();
+      });
   }
 
   navigateToSupplierDetails(): void {

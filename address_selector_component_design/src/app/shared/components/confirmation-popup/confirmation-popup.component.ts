@@ -14,7 +14,7 @@ export class ConfirmationPopupComponent implements OnInit {
   constructor(
     private confirmationPopupService: ConfirmationPopupService,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.listenToConfirmationConfig();
@@ -29,12 +29,13 @@ export class ConfirmationPopupComponent implements OnInit {
   }
 
   private listenToConfirmationConfig(): void {
-    this.confirmationPopupService.config$.subscribe(config => {
-      this.config = config;
-      this.isOpen = !!config;
-      
-      // Trigger change detection: very important to update the view when config changes
-      this.changeDetectorRef.detectChanges();
-    });
+    this.confirmationPopupService.config$
+      .subscribe(config => {
+        this.config = config;
+        this.isOpen = !!config;
+
+        // Trigger change detection: very important to update the view when config changes
+        this.changeDetectorRef.detectChanges();
+      });
   }
 }

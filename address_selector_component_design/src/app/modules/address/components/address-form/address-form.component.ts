@@ -45,33 +45,37 @@ export class AddressFormComponent implements OnInit, OnChanges {
       postCode: [address.postOffice ? address.postOffice.postCode : null]
     });
 
-    this.addressForm.get('countryId').valueChanges.subscribe(() => {
-      this.clearCountryDependentFields();
-      this.fetchDivisions();
-    });
+    this.addressForm.get('countryId').valueChanges
+      .subscribe(() => {
+        this.clearCountryDependentFields();
+        this.fetchDivisions();
+      });
 
-    this.addressForm.get('divisionId').valueChanges.subscribe(divisionId => {
-      this.clearDivisionDependentFields();
-      this.fetchDistricts(divisionId);
-    });
+    this.addressForm.get('divisionId').valueChanges
+      .subscribe(divisionId => {
+        this.clearDivisionDependentFields();
+        this.fetchDistricts(divisionId);
+      });
 
     if (address.division && address.division.id) {
       this.fetchDistricts(address.division.id);
     }
 
-    this.addressForm.get('districtId').valueChanges.subscribe(districtId => {
-      this.clearDistrictDependentFields();
-      this.fetchUpazilas(districtId);
-    });
+    this.addressForm.get('districtId').valueChanges
+      .subscribe(districtId => {
+        this.clearDistrictDependentFields();
+        this.fetchUpazilas(districtId);
+      });
 
     if (address.district && address.district.id) {
       this.fetchUpazilas(address.district.id);
     }
 
-    this.addressForm.get('upazilaId').valueChanges.subscribe(upazilaId => {
-      this.clearUpazilaDependentFields();
-      this.fetchPostCodes(upazilaId);
-    });
+    this.addressForm.get('upazilaId').valueChanges
+      .subscribe(upazilaId => {
+        this.clearUpazilaDependentFields();
+        this.fetchPostCodes(upazilaId);
+      });
 
     if (address.upazila && address.upazila.id) {
       this.fetchPostCodes(address.upazila.id);
